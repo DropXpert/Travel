@@ -1,0 +1,270 @@
+@reference "../globals.css";
+
+.hero {
+  display: grid;
+  gap: 1.75rem;
+  padding-block: 2rem 2.75rem;
+}
+
+.heroCopy { min-width: 0; }
+
+.eyebrow {
+  @apply flex items-center gap-2;
+  margin: 0 0 .8rem;
+  color: var(--color-ink-muted);
+  font-size: var(--text-meta);
+  font-weight: 750;
+  letter-spacing: .085em;
+  line-height: 1.25rem;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: .55rem;
+  height: .55rem;
+  border-radius: 50%;
+  background-color: var(--color-coral);
+  content: "";
+}
+
+.hero h1, .sectionIntro h2, .finalCta h2 {
+  font-family: var(--font-display);
+  font-weight: 790;
+}
+
+.hero h1 {
+  font-size: clamp(2.55rem, 11.7vw, 4.75rem);
+  line-height: .995;
+  letter-spacing: -.062em;
+}
+
+.hero h1 span { color: var(--color-teal-dark); }
+
+.heroDescription {
+  max-width: 30rem;
+  margin-top: 1rem;
+  color: var(--color-ink-muted);
+  font-size: clamp(1rem, 2.3vw, 1.125rem);
+  line-height: 1.55;
+}
+
+.heroActions, .finalActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .625rem;
+}
+
+.heroActions { margin-top: 1.25rem; }
+
+.heroPhoto, .peoplePhoto {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-teal-soft);
+}
+
+.heroPhoto, .peoplePhoto { border-radius: var(--radius-card); }
+.heroPhoto { aspect-ratio: 1.27; }
+.heroPhoto img, .peoplePhoto img { object-fit: cover; }
+.heroPhoto img { object-position: 57% 68%; }
+
+.heroPhoto figcaption {
+  position: absolute;
+  bottom: .75rem;
+  left: .75rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  max-width: calc(100% - 1.5rem);
+  padding: .45rem .68rem;
+  border-radius: .5rem;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-size: var(--text-meta);
+  font-weight: 690;
+}
+.heroPhoto figcaption svg { color: var(--color-teal-dark); flex: none; }
+
+.discovery {
+  padding-block: 2.75rem;
+  border-block: 1px solid var(--color-divider);
+  background-color: var(--color-surface-soft);
+}
+
+.sectionIntro h2, .finalCta h2 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  letter-spacing: -.052em;
+  line-height: 1.035;
+}
+
+.sectionIntro p {
+  max-width: 36rem;
+  margin-top: .625rem;
+  color: var(--color-ink-muted);
+}
+
+.filters {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  margin: .95rem calc(-1 * var(--gutter)) 0;
+  padding: .3rem var(--gutter) .55rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-control-border) transparent;
+}
+
+.filters button {
+  @apply inline-flex min-h-touch shrink-0 items-center gap-2;
+  padding: .55rem .875rem;
+  border: 1px solid var(--color-control-border);
+  border-radius: 999px;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-size: var(--text-label);
+  font-weight: 650;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.filters button[aria-pressed="true"] {
+  border-color: var(--color-teal-dark);
+  background-color: var(--color-teal-dark);
+  color: white;
+}
+
+.resultCount {
+  margin-block: .4rem .8rem;
+  color: var(--color-ink-muted);
+  font-size: var(--text-meta);
+  font-weight: 600;
+}
+
+.moreTrips {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.4rem;
+}
+
+.people {
+  display: grid;
+  gap: 1.5rem;
+  padding-block: 2.75rem;
+}
+
+.peopleCopy { grid-row: 1; }
+.peoplePhoto { aspect-ratio: 1.24; }
+.peoplePhoto img { object-position: 47% 50%; }
+
+.peopleList { margin-top: .95rem; }
+.peopleList li {
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  padding-block: .8rem;
+  border-bottom: 1px solid var(--color-divider);
+}
+.peopleList li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.peopleIcon, .stepIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border-radius: var(--radius-control);
+}
+
+.peopleIcon {
+  width: 2.625rem;
+  height: 2.625rem;
+  background-color: var(--color-teal-soft);
+  color: var(--color-teal-dark);
+}
+
+.peopleList h3, .steps h3 {
+  font: 750 1.2rem/1.25 var(--font-display);
+  letter-spacing: -.025em;
+}
+.peopleList p, .steps p {
+  margin-top: .18rem;
+  color: var(--color-ink-muted);
+  font-size: var(--text-label);
+  line-height: 1.5;
+}
+
+.how { padding-bottom: 2.75rem; }
+
+.steps {
+  display: grid;
+  gap: .875rem;
+  margin-top: 1.25rem;
+}
+
+.steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: .875rem;
+  padding-block: .75rem;
+  border-top: 1px solid var(--color-divider);
+}
+
+.stepIcon {
+  width: 2.875rem;
+  height: 2.875rem;
+  background: color-mix(in srgb, var(--color-coral) 23%, white);
+  color: var(--color-ink);
+}
+
+.finalCta {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: clamp(1.4rem, 4vw, 3.125rem);
+  border-radius: var(--radius-card);
+  background-color: var(--color-teal-dark);
+  color: white;
+}
+
+.finalCta p { max-width: 32rem; margin-top: .5rem; color: var(--color-teal-soft); }
+.finalCta :focus-visible { outline-color: white; }
+
+@media (width >= 640px) {
+  .hero { padding-block: 2.75rem 3.25rem; }
+  .heroPhoto { aspect-ratio: 1.8; }
+}
+
+@media (width >= 768px) {
+  .people {
+    grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: clamp(1.75rem, 5vw, 4.75rem);
+    padding-block: clamp(3.25rem, 6vw, 5.5rem);
+  }
+  .peopleCopy { grid-row: auto; }
+  .peoplePhoto { aspect-ratio: 1.16; }
+  .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+  .steps li { flex-direction: column; padding-block: 1rem; }
+  .steps p { max-width: 23rem; }
+  .how { padding-bottom: 3.5rem; }
+  .finalCta { flex-direction: row; align-items: center; justify-content: space-between; }
+  .finalActions { flex-shrink: 0; }
+}
+
+@media (width >= 1024px) {
+  .hero {
+    grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr);
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 3.25rem);
+    padding-block: 2.75rem 4rem;
+  }
+  .hero h1 { font-size: clamp(3.2rem, 5.3vw, 4.625rem); }
+  .heroDescription { margin-top: 1.2rem; }
+  .heroActions { margin-top: 1.6rem; }
+  .heroPhoto { height: clamp(24rem, 34vw, 31rem); aspect-ratio: auto; }
+  .heroPhoto figcaption { left: 1rem; bottom: 1rem; }
+  .discovery { padding-block: 3.5rem; }
+  .filters { flex-wrap: wrap; margin-inline: -.3rem; padding-inline: .3rem; }
+  .how { padding-bottom: 4rem; }
+}
+
+@media (hover: hover) {
+  .filters button[aria-pressed="false"]:hover { background-color: var(--color-teal-soft); }
+}

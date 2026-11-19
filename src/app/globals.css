@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme static {
+  --color-canvas: #faf9f6;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f1f3ed;
+  --color-ink: #202525;
+  --color-ink-muted: #56615d;
+  --color-teal: #168b80;
+  --color-teal-dark: #116d64;
+  --color-teal-soft: #ddefea;
+  --color-coral: #ff7955;
+  --color-divider: #dee4dd;
+  --color-control-border: #7b8580;
+  --color-danger: #a72b23;
+
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Bricolage Grotesque", var(--font-sans);
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.25rem;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.25rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-section: 1.5rem;
+  --text-section--line-height: 1.875rem;
+  --text-display: 2rem;
+  --text-display--line-height: 2.25rem;
+  --text-display-wide: 3rem;
+  --text-display-wide--line-height: 3.25rem;
+
+  --spacing-touch: 2.75rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1.25rem;
+  --radius-sheet: 1.5rem;
+}
+
+@layer base {
+  body {
+    min-block-size: 100dvh;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-teal-dark);
+    outline-offset: 3px;
+  }
+}
