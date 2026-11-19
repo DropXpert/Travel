@@ -9,19 +9,20 @@ import { Dialog } from "./dialog";
 import { LoginLink } from "./login-link";
 import styles from "./site.module.css";
 
-export function SiteShell({ children, isExplore = false, isCommunity = false, isCommunityDetail = false, isDashboard = false, isTrip = false, isCreate = false, isVerification = false, profilePage, mobileAction }: {
+export function SiteShell({ children, isExplore = false, isCommunity = false, isCommunityDetail = false, isDashboard = false, isTrip = false, isTripGroup = false, isCreate = false, isVerification = false, profilePage, mobileAction }: {
   children: ReactNode;
   isExplore?: boolean;
   isCommunity?: boolean;
   isCommunityDetail?: boolean;
   isDashboard?: boolean | "detail";
   isTrip?: boolean;
+  isTripGroup?: boolean;
   isCreate?: boolean;
   isVerification?: boolean;
   profilePage?: "own" | "public";
   mobileAction?: ReactNode;
 }) {
-  const homePath = isExplore || isCommunity || isCommunityDetail || isDashboard || isTrip || isCreate || isVerification || profilePage ? "/" : "";
+  const homePath = isExplore || isCommunity || isCommunityDetail || isDashboard || isTrip || isTripGroup || isCreate || isVerification || profilePage ? "/" : "";
   const exploreHref = isExplore ? "#top" : "/explore";
   const createHref = isCreate ? "#top" : "/trips/new";
   const ownProfile = profilePage === "own";
@@ -42,7 +43,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
           href={href === "/explore" ? exploreHref : href === "/trips/new" ? createHref : href === "/profile" ? profileHref : href}
           className={href === "/trips/new" ? styles.bottomCreate : undefined}
           aria-current={href === activeHref ? "page" : undefined}
-          data-section-active={((isCommunityDetail && href === "/community") || (dashboardDetail && href === "/dashboard")) || undefined}
+          data-section-active={((isCommunityDetail && href === "/community") || (dashboardDetail && href === "/dashboard") || (isTripGroup && href === "/explore")) || undefined}
         >
           <span><Icon size={21} aria-hidden="true" /></span>{label}
         </Link>
@@ -57,7 +58,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
         <div className={styles.container + " " + styles.headerInner}>
           <SiteBrand href={brandHref} />
           <nav className={styles.desktopNav} aria-label="Main">
-            <Link href={exploreHref} aria-current={isExplore ? "page" : undefined} data-section-active={isTrip || undefined}>Explore Trips</Link>
+            <Link href={exploreHref} aria-current={isExplore ? "page" : undefined} data-section-active={isTrip || isTripGroup || undefined}>Explore Trips</Link>
             <Link href="/community" aria-current={isCommunity ? "page" : undefined} data-section-active={isCommunityDetail || undefined}>Communities</Link>
             <Link href={homePath + "#how-it-works"}>How It Works</Link>
             <Link href="/dashboard" aria-current={isDashboard === true ? "page" : undefined} data-section-active={dashboardDetail || undefined}>My trips</Link>

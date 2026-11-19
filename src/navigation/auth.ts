@@ -28,7 +28,8 @@ export function safeAuthReturn(value: string | string[] | undefined) {
     const path = url.pathname.replace(/\/$/, "") || "/";
     const isPublicPage = ["/", "/explore", "/community", "/dashboard", "/dashboard/requests", "/profile", "/verification"].includes(path);
     const isDetailPage = /^\/(trips|travellers|community)\/[a-z0-9-]+$/.test(path);
-    return url.origin === origin && (isPublicPage || isDetailPage) ? path + url.search + url.hash : "/";
+    const isGroupPage = /^\/trips\/[a-z0-9-]+\/group$/.test(path);
+    return url.origin === origin && (isPublicPage || isDetailPage || isGroupPage) ? path + url.search + url.hash : "/";
   } catch {
     return "/";
   }

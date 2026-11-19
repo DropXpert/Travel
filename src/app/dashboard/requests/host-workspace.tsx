@@ -9,6 +9,7 @@ import type { TripListing } from "@/data/trip-listings";
 import { profileTypeLabels, travellerHref, travellerInterestLabels, tripHostName } from "@/domain/travel";
 import { ProfileAvatar } from "../../_profile/profile-view";
 import { Dialog } from "../../_shared/dialog";
+import { tripGroupHref } from "../../_shared/trip-navigation";
 import site from "../../_shared/site.module.css";
 import styles from "./host-workspace.module.css";
 
@@ -83,7 +84,10 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
 
   return (
     <article className={site.container + " " + styles.workspace} aria-labelledby="host-trip-title">
-      <Link className={styles.textLink} href="/dashboard?tab=hosting">Back to Hosting</Link>
+      <div className={styles.workspaceLinks}>
+        <Link className={styles.textLink} href="/dashboard?tab=hosting">Back to Hosting</Link>
+        <Link className={site.buttonOutline} href={tripGroupHref(trip.slug)}>Preview Trip Group Space</Link>
+      </div>
       <header className={styles.trip}>
         <div className={styles.cover}>
           <Image fill preload src={photo.src} alt={photo.alt}

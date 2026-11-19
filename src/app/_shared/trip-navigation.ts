@@ -4,6 +4,10 @@ export function tripHref(slug: string) {
   return "/trips/" + encodeURIComponent(slug);
 }
 
+export function tripGroupHref(slug: string) {
+  return tripHref(slug) + "/group";
+}
+
 export function rememberTripOpening(slug: string) {
   openedTripPath = tripHref(slug);
 }
