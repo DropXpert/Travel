@@ -14,7 +14,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
   isExplore?: boolean;
   isCommunity?: boolean;
   isCommunityDetail?: boolean;
-  isDashboard?: boolean;
+  isDashboard?: boolean | "detail";
   isTrip?: boolean;
   isCreate?: boolean;
   isVerification?: boolean;
@@ -26,7 +26,8 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
   const createHref = isCreate ? "#top" : "/trips/new";
   const ownProfile = profilePage === "own";
   const profileHref = ownProfile ? "#top" : "/profile";
-  const activeHref = isDashboard ? "/dashboard" : isExplore ? "/explore" : isCommunity ? "/community" : ownProfile ? "/profile" : undefined;
+  const dashboardDetail = isDashboard === "detail";
+  const activeHref = isDashboard === true ? "/dashboard" : isExplore ? "/explore" : isCommunity ? "/community" : ownProfile ? "/profile" : undefined;
   const brandHref = homePath || "#top";
   const profileLink = (
     <Link href={profileHref} className={styles.iconButton} aria-label="My profile" aria-current={ownProfile ? "page" : undefined}>
@@ -41,7 +42,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
           href={href === "/explore" ? exploreHref : href === "/trips/new" ? createHref : href === "/profile" ? profileHref : href}
           className={href === "/trips/new" ? styles.bottomCreate : undefined}
           aria-current={href === activeHref ? "page" : undefined}
-          data-section-active={(isCommunityDetail && href === "/community") || undefined}
+          data-section-active={((isCommunityDetail && href === "/community") || (dashboardDetail && href === "/dashboard")) || undefined}
         >
           <span><Icon size={21} aria-hidden="true" /></span>{label}
         </Link>
@@ -59,7 +60,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
             <Link href={exploreHref} aria-current={isExplore ? "page" : undefined} data-section-active={isTrip || undefined}>Explore Trips</Link>
             <Link href="/community" aria-current={isCommunity ? "page" : undefined} data-section-active={isCommunityDetail || undefined}>Communities</Link>
             <Link href={homePath + "#how-it-works"}>How It Works</Link>
-            <Link href="/dashboard" aria-current={isDashboard ? "page" : undefined}>My trips</Link>
+            <Link href="/dashboard" aria-current={isDashboard === true ? "page" : undefined} data-section-active={dashboardDetail || undefined}>My trips</Link>
           </nav>
           <div className={styles.mobileAccount}>
             <LoginLink className={styles.buttonText} />

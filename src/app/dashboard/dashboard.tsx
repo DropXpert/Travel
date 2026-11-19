@@ -130,7 +130,10 @@ export function Dashboard({ initialTab, listings, covers, planPhoto, savedPhoto 
                     <div>
                       <h2>No published trips yet.</h2>
                       <p>Publishing and managing live trips will be available with traveller accounts. For now, you can work on a plan in My Plans.</p>
-                      <button type="button" className={site.buttonPrimary} onClick={() => selectTab("plans", true)}>Go to My Plans</button>
+                      <div className={site.dialogActions}>
+                        <button type="button" className={site.buttonPrimary} onClick={() => selectTab("plans", true)}>Go to My Plans</button>
+                        <Link href="/dashboard/requests" className={site.buttonOutline}>Preview host workspace</Link>
+                      </div>
                     </div>
                   </div>
                 )}
