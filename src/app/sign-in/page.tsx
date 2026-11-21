@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { photos } from "@/data/trip-listings";
 import { safeAuthReturn } from "@/navigation/auth";
-import { SiteBrand, siteDisplay } from "../_shared/brand";
+import { SiteBrand } from "../_shared/brand";
 import site from "../_shared/site.module.css";
 import { AuthEntry } from "./auth-entry";
 import styles from "./sign-in.module.css";
@@ -22,7 +22,7 @@ export default async function SignInPage({ searchParams }: {
   const photo = photos.hero;
 
   return (
-    <div className={siteDisplay.variable + " " + styles.page}>
+    <div className={styles.page}>
       <a className={site.skipLink} href="#auth-main">Skip to content</a>
       <header className={styles.header}>
         <SiteBrand href="/" />

@@ -2,7 +2,6 @@
 
 .site {
   --gutter: 1rem;
-  --font-display: var(--sidetrail-display), var(--font-sans);
   --bottom-bar: 4.125rem;
   overflow-wrap: anywhere;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
@@ -53,13 +52,9 @@ html:has(.site dialog[open]) { overflow: hidden; }
 
 .brand {
   @apply inline-flex min-h-touch items-center;
-  color: var(--color-ink);
-  font: 740 clamp(1.35rem, 5.5vw, 1.65rem)/1.1 var(--font-display);
-  letter-spacing: -.055em;
-  white-space: nowrap;
 }
 
-.brand strong { color: var(--color-teal-dark); font-weight: 790; }
+.brand img { width: var(--brand-width, clamp(8.75rem, 24vw, 11.5rem)); height: auto; }
 
 .desktopNav, .desktopActions { display: none; }
 .desktopNav {
@@ -222,7 +217,7 @@ html:has(.site dialog[open]) { overflow: hidden; }
 .tripTitle {
   min-height: var(--spacing-touch);
   color: var(--color-ink);
-  font: 760 1.42rem/1.1 var(--font-display);
+  font: 800 1.42rem/1.1 var(--font-display);
   letter-spacing: -.035em;
   padding-block: .4rem .45rem;
   text-align: start;
@@ -289,8 +284,8 @@ a.tripTitle { display: inline-block; }
   background: var(--color-surface); border: 1px solid var(--color-control-border); border-radius: var(--radius-control);
 }
 .demoPanel { padding-block: 1.25rem; overflow-wrap: anywhere; }
-.demoPanel h1 { font: 770 clamp(1.75rem, 5vw, 2.7rem)/1.1 var(--font-display); }
-.demoPanel h2 { font: 750 1.45rem/1.2 var(--font-display); }
+.demoPanel h1 { font: 800 clamp(1.75rem, 5vw, 2.7rem)/1.1 var(--font-display); }
+.demoPanel h2 { font: 800 1.45rem/1.2 var(--font-display); }
 .demoPanel ul { display: grid; gap: .8rem; margin-block: .75rem; }
 .demoPanel li { background: var(--color-surface); border: 1px solid var(--color-divider); border-radius: var(--radius-card); padding: .85rem; }
 .demoPanel li > * + * { margin-block-start: .35rem; }
@@ -315,7 +310,7 @@ a.tripTitle { display: inline-block; }
 
 .tripCost strong {
   color: var(--color-ink);
-  font: 780 1.2rem/1.2 var(--font-display);
+  font: 800 1.2rem/1.2 var(--font-display);
   letter-spacing: -.02em;
 }
 
@@ -332,7 +327,7 @@ a.tripTitle { display: inline-block; }
 .footerInner { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1.5rem; }
 .footer nav { display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
 .footer nav .buttonText { padding-inline: .25rem; }
-.footer .brand { font-size: 1.4rem; }
+.footer .brand { --brand-width: 9.25rem; }
 
 .bottomNav {
   position: fixed;
@@ -412,7 +407,7 @@ a.tripTitle { display: inline-block; }
 }
 
 .dialogHeader h2 {
-  font: 780 1.85rem/1.08 var(--font-display);
+  font: 800 1.85rem/1.08 var(--font-display);
   letter-spacing: -.04em;
 }
 

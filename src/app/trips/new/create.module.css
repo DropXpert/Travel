@@ -24,7 +24,7 @@
 .discard { color: var(--color-danger); }
 .intro h1 {
   margin-block: .35rem .45rem;
-  font: 790 clamp(2.25rem, 7.9vw, 3.9rem)/1.015 var(--font-display);
+  font: 800 clamp(2.25rem, 7.9vw, 3.9rem)/1.015 var(--font-display);
   letter-spacing: -.056em;
 }
 .intro h1 span { color: var(--color-teal-dark); }
@@ -46,12 +46,12 @@
 .section + .section { border-top: 1px solid var(--color-divider); }
 
 .section h2, .livePreview h2 {
-  font: 770 clamp(1.65rem, 4vw, 2.05rem)/1.08 var(--font-display);
+  font: 800 clamp(1.65rem, 4vw, 2.05rem)/1.08 var(--font-display);
   letter-spacing: -.04em;
 }
 
 .section h3, .coverSection legend {
-  font: 750 1.32rem/1.14 var(--font-display);
+  font: 800 1.32rem/1.14 var(--font-display);
   letter-spacing: -.027em;
 }
 
@@ -138,7 +138,7 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 .days:empty { display: none; }
 .days > li { display: grid; gap: .75rem; padding: .85rem; border: 1px solid var(--color-divider); border-radius: var(--radius-control); }
 .dayHeader { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .4rem; }
-.dayHeader h4 { font: 750 1.12rem/1.2 var(--font-display); }
+.dayHeader h4 { font: 800 1.12rem/1.2 var(--font-display); }
 .dayHeader > div { display: flex; gap: .25rem; }
 .dayAction {
   @apply grid min-w-touch min-h-touch place-items-center;
@@ -233,7 +233,7 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 }
 
 .previewBody h3 {
-  font: 770 1.52rem/1.1 var(--font-display);
+  font: 800 1.52rem/1.1 var(--font-display);
   letter-spacing: -.035em;
 }
 
@@ -263,10 +263,10 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
   color: var(--color-ink-muted);
   font-size: var(--text-meta);
 }
-.previewCost strong { color: var(--color-ink); font: 750 1.15rem/1.25 var(--font-display); }
+.previewCost strong { color: var(--color-ink); font: 800 1.15rem/1.25 var(--font-display); }
 .previewCost > span { color: var(--color-teal-dark); font-weight: 700; }
 .previewSection { display: grid; gap: .35rem; padding-top: .7rem; border-top: 1px solid var(--color-divider); }
-.previewSection h4 { font: 750 1.14rem/1.2 var(--font-display); }
+.previewSection h4 { font: 800 1.14rem/1.2 var(--font-display); }
 .previewSection p { white-space: pre-wrap; color: var(--color-ink-muted); }
 .previewSection li + li { margin-top: .55rem; }
 

@@ -1,5 +1,4 @@
 .page {
-  --font-display: var(--sidetrail-display), var(--font-sans);
   --edge-start: max(1rem, env(safe-area-inset-left));
   --edge-end: max(1rem, env(safe-area-inset-right));
   min-height: 100dvh;
@@ -50,7 +49,7 @@
 .intro { margin-block: 0 1.05rem; }
 .intro h1 {
   max-width: 21ch;
-  font: 790 clamp(2.1rem, 6.5vw, 3.6rem)/1.02 var(--font-display);
+  font: 800 clamp(2.1rem, 6.5vw, 3.6rem)/1.02 var(--font-display);
   letter-spacing: -.055em;
   text-wrap: balance;
 }
@@ -206,7 +205,7 @@
 }
 .profileBody { position: relative; min-width: 0; padding: 0 .95rem 1rem; overflow-wrap: anywhere; }
 .profileBody .avatar { width: 3.7rem; height: 3.7rem; margin-top: -1.65rem; border-color: var(--color-surface); font-size: 1.2rem; }
-.profileBody h2 { margin-block: .25rem .55rem; font: 770 clamp(1.5rem, 4vw, 2.05rem)/1.08 var(--font-display); letter-spacing: -.035em; }
+.profileBody h2 { margin-block: .25rem .55rem; font: 800 clamp(1.5rem, 4vw, 2.05rem)/1.08 var(--font-display); letter-spacing: -.035em; }
 .profileMeta, .profileInterests { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .55rem; }
 .profileMeta li, .profileInterests li { display: inline-flex; align-items: center; gap: .32rem; font-size: var(--text-label); font-weight: 660; }
 .profileMeta li { color: var(--color-ink-muted); }

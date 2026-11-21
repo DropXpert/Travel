@@ -64,7 +64,7 @@
 .eyebrow { color: var(--color-teal-dark); font-size: var(--text-label); font-weight: 720; }
 .identity h1 {
   color: var(--color-ink);
-  font: 790 clamp(2.2rem, 6vw, 4.05rem)/.99 var(--font-display);
+  font: 800 clamp(2.2rem, 6vw, 4.05rem)/.99 var(--font-display);
   letter-spacing: -.06em;
   overflow-wrap: anywhere;
 }
@@ -77,10 +77,10 @@
 .content > * { min-width: 0; }
 .content h2, .missing h1 {
   margin-block-end: .55rem;
-  font: 770 clamp(1.65rem, 3.4vw, 2.25rem)/1.08 var(--font-display);
+  font: 800 clamp(1.65rem, 3.4vw, 2.25rem)/1.08 var(--font-display);
   letter-spacing: -.04em;
 }
-.content h3 { margin-block-end: .3rem; font-weight: 740; }
+.content h3 { margin-block-end: .3rem; }
 .content p { color: var(--color-ink-muted); }
 .about > p { max-width: 62ch; }
 .about h3 { margin-block-start: .9rem; }

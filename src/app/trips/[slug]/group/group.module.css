@@ -29,7 +29,7 @@
 .cover img { object-fit: cover; object-position: 50% 55%; }
 .identity { display: grid; align-content: center; min-width: 0; gap: .55rem; padding: clamp(.9rem, 3vw, 1.8rem); }
 .eyebrow { color: var(--color-teal-dark); font-size: var(--text-label); font-weight: 740; }
-.identity h1 { font: 790 clamp(2.1rem, 6vw, 3.8rem)/1.01 var(--font-display); letter-spacing: -.058em; text-wrap: balance; }
+.identity h1 { font: 800 clamp(2.1rem, 6vw, 3.8rem)/1.01 var(--font-display); letter-spacing: -.058em; text-wrap: balance; }
 .facts { display: flex; flex-wrap: wrap; gap: .25rem .8rem; }
 .facts li, .groupStatus { display: flex; align-items: center; gap: .34rem; color: var(--color-ink-muted); font-size: var(--text-label); }
 .groupStatus { font-weight: 680; }
@@ -60,8 +60,7 @@
 .tabs button[aria-selected="true"] { border-color: var(--color-teal-dark); background: var(--color-teal-soft); color: var(--color-teal-dark); }
 .panel { margin-block-start: .85rem; border-radius: var(--radius-card); min-width: 0; }
 .panel[hidden] { display: none; }
-.panel h2 { display: flex; align-items: center; gap: .4rem; font: 760 clamp(1.5rem, 3vw, 1.9rem)/1.1 var(--font-display); letter-spacing: -.035em; }
-.panel h3 { font-weight: 735; }
+.panel h2 { display: flex; align-items: center; gap: .4rem; font: 800 clamp(1.5rem, 3vw, 1.9rem)/1.1 var(--font-display); letter-spacing: -.035em; }
 .panel p, .missing p { color: var(--color-ink-muted); }
 .lead { margin-block: .33rem .8rem; }
 .overview { display: grid; gap: 1rem; align-items: start; }
@@ -133,7 +132,7 @@
 .checklist label:focus-within { outline: 2px solid var(--color-teal-dark); outline-offset: 2px; }
 .checklist input { flex: none; width: 1.2rem; height: 1.2rem; accent-color: var(--color-teal-dark); }
 .missing { display: grid; gap: .65rem; justify-items: start; padding-block: clamp(2rem, 8vw, 5rem); }
-.missing h1 { font: 780 clamp(2rem, 5vw, 3rem)/1.08 var(--font-display); letter-spacing: -.04em; }
+.missing h1 { font: 800 clamp(2rem, 5vw, 3rem)/1.08 var(--font-display); letter-spacing: -.04em; }
 
 @media (width >= 640px) {
   .space { padding-block-start: .9rem; }

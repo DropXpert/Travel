@@ -10,7 +10,7 @@ Solo travellers, couples and families have equal standing in discovery, hosting 
 
 ## 2. Brand personality
 
-Use the Share Yarana text wordmark in Bricolage Grotesque, with charcoal for “Share” and deep teal for “Yarana.” Keep it on one line in the header, footer and compact mobile trip toolbar. The intended production domain is `https://shareyarana.com`.
+Use the horizontal Share Yarana logo in the header, footer and compact mobile trip toolbar. It pairs the coral sun and trail pin with the charcoal and teal wordmark. Use the square app mark as the browser icon. The intended production domain is `https://shareyarana.com`.
 
 Young, adventurous and welcoming. Speak like a friendly fellow traveller. Lead with specifics such as “Sunrise hike from Pune”, “2 spots left” and “Request sent to Meera”. Use a calm, candid tone for shared expenses, difficulty, request decisions and safety.
 
@@ -25,7 +25,7 @@ Use real, licensed travel photography from India, with a mix of landscapes and c
 
 ## 4. Colour and typography tokens
 
-The Tailwind theme lives in `src/app/globals.css`. Bricolage Grotesque is self-hosted for display headings, with the system UI stack for body text.
+The Tailwind theme lives in `src/app/globals.css`. Nunito ExtraBold (800) is self-hosted for headings and trip titles, with the system UI stack for body text. [Nunito source and license](https://github.com/googlefonts/nunito)
 
 | Token | Value | Use |
 | --- | --- | --- |
@@ -42,9 +42,9 @@ The Tailwind theme lives in `src/app/globals.css`. Bricolage Grotesque is self-h
 | `meta` | 13 / 20px | 400, secondary metadata |
 | `label` | 14 / 20px | 600, actions, dates and status labels |
 | `body` | 16 / 24px | 400, paragraphs and form inputs |
-| `section` | 24 / 30px | 700, section headings and trip titles |
-| `display` | 32 / 36px | 700, mobile editorial headings |
-| `display-wide` | 48 / 52px | 700, wide editorial headings |
+| `section` | 24 / 30px | 800, section headings and trip titles |
+| `display` | 32 / 36px | 800, mobile editorial headings |
+| `display-wide` | 48 / 52px | 800, wide editorial headings |
 
 Typography is defined in rem. Keep long reading blocks near 65 characters per line. White on dark teal is approximately 6.2:1 and charcoal on coral is 6.0:1. Use those pairings for normal-sized text.
 

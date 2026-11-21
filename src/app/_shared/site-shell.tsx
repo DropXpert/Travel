@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { brandName } from "@/brand";
 import { photos } from "@/data/trip-listings";
 import { primaryNavigation } from "@/navigation/primary";
-import { SiteBrand, siteDisplay } from "./brand";
+import { SiteBrand } from "./brand";
 import { DemoAccount } from "./demo-account";
 import { DialogButton } from "./dialog-button";
 import { Dialog } from "./dialog";
@@ -54,7 +54,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
   );
 
   return (
-    <div className={[siteDisplay.variable, styles.site, isTrip && styles.tripSite, isCreate && styles.createSite, mobileAction && styles.siteWithAction].filter(Boolean).join(" ")} id="top">
+    <div className={[styles.site, isTrip && styles.tripSite, isCreate && styles.createSite, mobileAction && styles.siteWithAction].filter(Boolean).join(" ")} id="top">
       <a className={styles.skipLink} href="#main-content">Skip to content</a>
       <header className={isTrip ? styles.header + " " + styles.desktopOnly : styles.header}>
         <div className={styles.container + " " + styles.headerInner}>

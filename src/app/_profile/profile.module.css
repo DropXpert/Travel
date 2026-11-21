@@ -26,7 +26,7 @@
   border-radius: 50%;
   background: var(--color-teal-soft);
   color: var(--color-teal-dark);
-  font: 780 1.55rem/1 var(--font-display);
+  font: 800 1.55rem/1 var(--font-display);
   letter-spacing: -.03em;
 }
 .avatar[data-tone="clay"] {
@@ -44,7 +44,7 @@
 
 .identity h1, .missing h1 {
   margin: .24rem 0 .65rem;
-  font: 790 clamp(2.1rem, 8.5vw, 3.7rem)/1.02 var(--font-display);
+  font: 800 clamp(2.1rem, 8.5vw, 3.7rem)/1.02 var(--font-display);
   letter-spacing: -.055em;
   overflow-wrap: anywhere;
 }
@@ -97,7 +97,7 @@
 .trust { grid-area: trust; min-width: 0; }
 .profileBody h2 {
   margin-bottom: .7rem;
-  font: 770 clamp(1.55rem, 4vw, 1.9rem)/1.1 var(--font-display);
+  font: 800 clamp(1.55rem, 4vw, 1.9rem)/1.1 var(--font-display);
   letter-spacing: -.04em;
 }
 
@@ -139,7 +139,7 @@
   background: var(--color-teal-soft);
   color: var(--color-teal-dark);
 }
-.empty h3 { font: 740 1.18rem/1.2 var(--font-display); }
+.empty h3 { font: 800 1.18rem/1.2 var(--font-display); }
 .empty p { margin-block: .28rem .7rem; color: var(--color-ink-muted); }
 
 .trust {

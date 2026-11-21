@@ -27,11 +27,6 @@
   content: "";
 }
 
-.hero h1, .sectionIntro h2, .finalCta h2 {
-  font-family: var(--font-display);
-  font-weight: 790;
-}
-
 .hero h1 {
   font-size: clamp(2.55rem, 11.7vw, 4.75rem);
   line-height: .995;
@@ -180,7 +175,7 @@
 }
 
 .peopleList h3, .steps h3 {
-  font: 750 1.2rem/1.25 var(--font-display);
+  font: 800 1.2rem/1.25 var(--font-display);
   letter-spacing: -.025em;
 }
 .peopleList p, .steps p {

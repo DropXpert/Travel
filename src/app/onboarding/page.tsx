@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { photos } from "@/data/trip-listings";
 import { safeAuthReturn } from "@/navigation/auth";
-import { SiteBrand, siteDisplay } from "../_shared/brand";
+import { SiteBrand } from "../_shared/brand";
 import site from "../_shared/site.module.css";
 import { TravellerOnboarding, type TravellerOption } from "./traveller-onboarding";
 import styles from "./onboarding.module.css";
@@ -38,7 +38,7 @@ export default async function OnboardingPage({ searchParams }: {
   const photo = photos.people;
 
   return (
-    <div className={siteDisplay.variable + " " + styles.page}>
+    <div className={styles.page}>
       <a className={site.skipLink} href="#onboarding-main">Skip to content</a>
       <header className={styles.header}>
         <SiteBrand href="/" />

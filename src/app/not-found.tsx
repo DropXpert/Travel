@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { SiteBrand, siteDisplay } from "./_shared/brand";
+import { SiteBrand } from "./_shared/brand";
 import site from "./_shared/site.module.css";
 
 export default function NotFound() {
   return (
-    <main className={siteDisplay.variable + " " + site.site}>
+    <main className={site.site}>
       <div className={site.container + " " + site.demoPanel}>
         <SiteBrand href="/" />
         <div className="grid justify-items-start gap-3">

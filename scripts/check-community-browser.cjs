@@ -73,7 +73,7 @@ async function main() {
           await page.getByText("Free to explore, free to host, free to join. Find your people. Share the adventure.").waitFor();
           assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), "https://shareyarana.com");
           assert.equal(await page.locator('meta[property="og:site_name"]').getAttribute("content"), "Share Yarana");
-          assert.equal(await page.locator('link[rel="icon"]').getAttribute("href"), "/favicon.svg");
+          assert.equal(await page.locator('link[rel="icon"]').getAttribute("href"), "/share-yarana-icon.png");
         }
         results.push({ width, route, status: "pass" });
         if ([375, 1440].includes(width) && ["/explore", "/trips/new"].includes(route)) {

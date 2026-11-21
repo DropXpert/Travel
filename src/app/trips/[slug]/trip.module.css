@@ -24,7 +24,7 @@
 .toolbarActions { display: flex; justify-self: end; gap: .125rem; }
 
 .mobileBrand {
-  font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+  --brand-width: clamp(6.5rem, 33vw, 9.5rem);
 }
 
 .toolbarStatus {
@@ -70,7 +70,7 @@
 .overview h1 {
   max-width: 20ch;
   margin-block: .42rem .55rem;
-  font: 790 clamp(2.15rem, 8.7vw, 3.55rem)/1.01 var(--font-display);
+  font: 800 clamp(2.15rem, 8.7vw, 3.55rem)/1.01 var(--font-display);
   letter-spacing: -.056em;
   overflow-wrap: anywhere;
 }
@@ -115,7 +115,7 @@
 .section { padding-block: 1.4rem; border-top: 1px solid var(--color-divider); }
 .section h2, .safety h2, .joinPanel h2 {
   margin-bottom: .65rem;
-  font: 760 clamp(1.55rem, 4vw, 2rem)/1.1 var(--font-display);
+  font: 800 clamp(1.55rem, 4vw, 2rem)/1.1 var(--font-display);
   letter-spacing: -.038em;
 }
 
@@ -134,7 +134,7 @@
 .hostCard .hostAvatar { width: 2.95rem; height: 2.95rem; font-size: var(--text-label); }
 .hostText { min-width: 0; }
 .hostText h3, .itinerary h3 {
-  font: 740 1.18rem/1.22 var(--font-display);
+  font: 800 1.18rem/1.22 var(--font-display);
   letter-spacing: -.025em;
 }
 .hostText .hostMeta { margin-top: .1rem; font-size: var(--text-label); }
@@ -193,7 +193,7 @@
 .budget, .panelBudget { display: flex; align-items: baseline; flex-wrap: wrap; gap: .15rem .4rem; }
 .budget strong, .panelBudget strong, .mobileAction strong {
   color: var(--color-ink);
-  font: 780 1.7rem/1.1 var(--font-display);
+  font: 800 1.7rem/1.1 var(--font-display);
   letter-spacing: -.035em;
 }
 
@@ -239,7 +239,7 @@
   border-radius: var(--radius-control);
   background: var(--color-teal-soft);
 }
-.requestTrip strong { font: 740 1.19rem/1.15 var(--font-display); }
+.requestTrip strong { font: 800 1.19rem/1.15 var(--font-display); }
 .requestTrip span { color: var(--color-ink-muted); font-size: var(--text-label); }
 
 .verificationNotice { margin-block-end: .85rem; }
@@ -276,7 +276,7 @@
   background: var(--color-teal-soft);
   color: var(--color-teal-dark);
 }
-.confirmation h3 { font: 770 1.55rem/1.12 var(--font-display); letter-spacing: -.04em; }
+.confirmation h3 { font: 800 1.55rem/1.12 var(--font-display); letter-spacing: -.04em; }
 .confirmation h3:focus { outline: none; }
 .confirmation p { color: var(--color-ink-muted); }
 
@@ -287,7 +287,7 @@
   gap: .8rem;
   padding-block: clamp(2.5rem, 8vw, 6rem);
 }
-.missing h1 { font: 790 clamp(2.1rem, 7vw, 3.4rem)/1.05 var(--font-display); letter-spacing: -.055em; }
+.missing h1 { font: 800 clamp(2.1rem, 7vw, 3.4rem)/1.05 var(--font-display); letter-spacing: -.055em; }
 .missing p { max-width: 36ch; color: var(--color-ink-muted); }
 
 @media (width >= 640px) {

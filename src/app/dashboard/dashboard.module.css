@@ -22,7 +22,7 @@
   max-width: 22ch;
   margin-block: .4rem .55rem;
   color: var(--color-ink);
-  font: 790 clamp(2.1rem, 4.5vw, 3.75rem)/1.02 var(--font-display);
+  font: 800 clamp(2.1rem, 4.5vw, 3.75rem)/1.02 var(--font-display);
   letter-spacing: -.06em;
   text-wrap: balance;
 }
@@ -69,7 +69,7 @@
   gap: .25rem 1rem;
 }
 .sectionHeader h2, .savedHeading h2 {
-  font: 760 clamp(1.4rem, 2.5vw, 1.75rem)/1.15 var(--font-display);
+  font: 800 clamp(1.4rem, 2.5vw, 1.75rem)/1.15 var(--font-display);
   letter-spacing: -.03em;
 }
 .savedHeading p { margin-block-start: .3rem; color: var(--color-ink-muted); }
@@ -142,7 +142,7 @@
   overflow-wrap: anywhere;
 }
 .draftBody h3, .savedEmpty h3 {
-  font: 770 clamp(1.55rem, 3vw, 2.15rem)/1.08 var(--font-display);
+  font: 800 clamp(1.55rem, 3vw, 2.15rem)/1.08 var(--font-display);
   letter-spacing: -.04em;
   text-wrap: balance;
 }

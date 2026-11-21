@@ -8,7 +8,7 @@
 
 .intro { display: grid; gap: 1.15rem; }
 .intro h1 {
-  font: 790 clamp(2.35rem, 7vw, 3.85rem)/1.02 var(--font-display);
+  font: 800 clamp(2.35rem, 7vw, 3.85rem)/1.02 var(--font-display);
   letter-spacing: -.056em;
 }
 .intro h1 span { color: var(--color-teal-dark); }
@@ -117,7 +117,7 @@
 }
 
 .resultsBar h2 {
-  font: 740 1.06rem/1.2 var(--font-display);
+  font: 800 1.06rem/1.2 var(--font-display);
   letter-spacing: -.02em;
 }
 
@@ -187,7 +187,7 @@
   color: var(--color-teal-dark);
 }
 
-.empty h3 { font: 760 1.5rem/1.12 var(--font-display); letter-spacing: -.03em; }
+.empty h3 { font: 800 1.5rem/1.12 var(--font-display); letter-spacing: -.03em; }
 .empty p { max-width: 32ch; color: var(--color-ink-muted); }
 .empty button { margin-top: .25rem; }
 

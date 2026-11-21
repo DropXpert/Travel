@@ -17,7 +17,7 @@ html:has(.masthead) { scrollbar-gutter: stable; }
 .intro h1 {
   max-width: 15ch;
   margin-block: .35rem .6rem;
-  font: 780 clamp(2.35rem, 5vw, 3.6rem)/.99 var(--font-display);
+  font: 800 clamp(2.35rem, 5vw, 3.6rem)/.99 var(--font-display);
   letter-spacing: -.062em;
   text-wrap: balance;
 }
@@ -123,7 +123,7 @@ html:has(.masthead) { scrollbar-gutter: stable; }
   margin-block-end: .65rem;
 }
 .resultsBar h2 {
-  font: 740 1.35rem/1.15 var(--font-display);
+  font: 800 1.35rem/1.15 var(--font-display);
   letter-spacing: -.028em;
 }
 .resetButton, .textAction {
@@ -169,7 +169,7 @@ html:has(.masthead) { scrollbar-gutter: stable; }
 }
 .cardBody h3 {
   margin-block: .2rem .25rem;
-  font: 755 1.6rem/1.05 var(--font-display);
+  font: 800 1.6rem/1.05 var(--font-display);
   letter-spacing: -.033em;
   overflow-wrap: anywhere;
 }
@@ -231,7 +231,7 @@ html:has(.masthead) { scrollbar-gutter: stable; }
   text-align: center;
 }
 .empty h3, .preview h3 {
-  font: 750 1.35rem/1.15 var(--font-display);
+  font: 800 1.35rem/1.15 var(--font-display);
   letter-spacing: -.025em;
 }
 .empty p { margin-block: .45rem 1rem; color: var(--color-ink-muted); }

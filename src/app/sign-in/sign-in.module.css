@@ -1,5 +1,4 @@
 .page {
-  --font-display: var(--sidetrail-display), var(--font-sans);
   --entry-width: 41rem;
   min-height: 100dvh;
   padding: env(safe-area-inset-top) max(1rem, env(safe-area-inset-right))
@@ -96,7 +95,7 @@
 
 .intro { margin-block: .2rem 0; }
 .intro h1, .confirmation h1 {
-  font: 790 clamp(2.1rem, 5vw, 3.5rem)/1.03 var(--font-display);
+  font: 800 clamp(2.1rem, 5vw, 3.5rem)/1.03 var(--font-display);
   letter-spacing: -.06em;
   text-wrap: balance;
 }
