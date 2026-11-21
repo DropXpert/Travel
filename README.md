@@ -1,6 +1,8 @@
-# SideTrail
+# Share Yarana
 
-SideTrail is a free social travel demo for finding trips, hosting plans and travelling together. It uses fictional travellers and sample trips. Published demo trips, requests, drafts and bookmarks are stored in the browser. Data is scoped to the browser profile and site address.
+Share Yarana is a free social travel demo for finding trips, hosting plans and travelling together. It uses fictional travellers and sample trips. Published demo trips, requests, drafts and bookmarks are stored in the browser. Data is scoped to the browser profile and site address.
+
+**Find your people. Share the adventure.** The intended production address is `https://shareyarana.com`. Opening a different site address starts with that origin’s own browser storage. Existing data stays available at the address where it was saved.
 
 Use the [five-minute tester guide](docs/DEMO_TESTING_GUIDE.md) for usability sessions. The [design blueprint](docs/DESIGN_BLUEPRINT.md), [connected demo report](docs/CONNECTED_DEMO_REPORT.md) and [frontend audit](docs/FRONTEND_AUDIT_REPORT.md) describe the existing app.
 
@@ -27,7 +29,7 @@ node scripts/check-community-model.cjs
 To test the production build, start it in its own terminal with `npm start -- --port 3100`. The browser regression targets `http://127.0.0.1:3100` by default. It uses Playwright, which can be installed outside the project. For example, on PowerShell run:
 
 ```powershell
-$demoTestTools = Join-Path $env:TEMP "sidetrail-test-tools"
+$demoTestTools = Join-Path $env:TEMP "share-yarana-test-tools"
 npm install --prefix $demoTestTools playwright
 $env:NODE_PATH = Join-Path $demoTestTools "node_modules"
 $env:PLAYWRIGHT_SKIP_BROWSER_GC = "1"
@@ -36,6 +38,10 @@ node scripts/check-community-browser.cjs
 ```
 
 Set `SIDETRAIL_TEST_URL` to test an authorized HTTPS demo URL. Use a base URL without a trailing slash. The runner starts a separate browser context and exercises local creation, requests, approvals, cancellation and reset. To test Firefox or WebKit, install that browser with the same Playwright CLI and set `SIDETRAIL_BROWSER` to `firefox` or `webkit`. Test artifacts are written to the system temporary directory.
+
+## Run on Render
+
+The app runs on the existing Render Node.js Web Service with the standard Next.js build and start scripts. The build command is `npm ci && npm run build` and the start command is `npm start`. Canonical URLs point to the intended production domain while navigation and browser storage continue to use the current address. [Render’s Next.js guide](https://render.com/docs/deploy-nextjs-app)
 
 ## Deploy to Vercel
 

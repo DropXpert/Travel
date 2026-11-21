@@ -4,8 +4,8 @@ import { SiteShell } from "../../_shared/site-shell";
 import { TripEditor } from "./trip-editor";
 
 export const metadata: Metadata = {
-  title: "Create a Trip | SideTrail",
-  description: "Draft a trip, choose who can join, and preview how it looks on SideTrail.",
+  title: "Create a Trip",
+  description: "Draft a trip, choose who can join, and preview how it looks on Share Yarana.",
 };
 
 export default async function NewTripPage({ searchParams }: { searchParams: Promise<{ edit?: string | string[] }> }) {

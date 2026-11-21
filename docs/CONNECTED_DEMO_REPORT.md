@@ -1,4 +1,4 @@
-# SideTrail connected demo
+# Share Yarana connected demo
 
 Start in **Create a Trip**, enter a fictional plan, and select **Preview listing** → **Publish trip (demo)**. Use **Demo account** to switch from the host to a traveller. Find the trip in **Explore**, open its details, and send a free demo request. Switch back to the host and open **My Trips → Hosting → Manage requests**. Once accepted, the traveller can open **Trip Group Space** from the trip or **My Trips → Join Requests**.
 

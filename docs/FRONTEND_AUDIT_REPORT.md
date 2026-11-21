@@ -1,6 +1,6 @@
-# SideTrail frontend audit
+# Share Yarana frontend audit
 
-SideTrail is a free social travel demo. The audit followed one person switching between fictional accounts on one browser, including two tabs sharing the same demo state. It covered the production build, the design blueprint, the connected demo report, the route and component code, and the regression scripts.
+Share Yarana is a free social travel demo. The audit followed one person switching between fictional accounts on one browser, including two tabs sharing the same demo state. It covered the production build, the design blueprint, the connected demo report, the route and component code, and the regression scripts.
 
 ## Confirmed issues and fixes
 
@@ -15,7 +15,7 @@ SideTrail is a free social travel demo. The audit followed one person switching 
 | Medium | Local trip sharing offered ordinary share or copy feedback for a URL that another browser could not resolve. | Local trips open a copyable link with an explanation that it resolves in the current browser. Fixture links retain the normal sharing flow. |
 | Medium | Reset confirmation replaced the focused button and lost the user’s place inside the dialog. | Focus moves to **Keep demo data** when confirming and returns to **Reset Demo Data** when backing out or completing the reset. |
 | Medium | A profile validation error became part of the field’s accessible name and was also associated as its description. | Profile name and city fields keep stable labels. Error text is announced through the field description. |
-| Low | Explore counted user-published trips as sample trips. Missing local edit and group URLs suggested switching accounts. The root 404 lacked a recovery link. | Explore counts trips neutrally. Local routes distinguish missing data from the wrong account. The group fallback directs users to My Trips and the SideTrail 404 links back to Explore. |
+| Low | Explore counted user-published trips as sample trips. Missing local edit and group URLs suggested switching accounts. The root 404 lacked a recovery link. | Explore counts trips neutrally. Local routes distinguish missing data from the wrong account. The group fallback directs users to My Trips and the Share Yarana 404 links back to Explore. |
 
 ## Screens and design checks
 

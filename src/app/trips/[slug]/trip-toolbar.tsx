@@ -3,6 +3,7 @@
 import { ArrowLeft, Bookmark, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { SiteBrand } from "../../_shared/brand";
 import { Dialog } from "../../_shared/dialog";
 import { updateSavedTrip, useSavedTripIds } from "../../_shared/saved-trips";
 import { shareLink as shareTripLink } from "../../_shared/share-link";
@@ -55,7 +56,7 @@ export function TripToolbar({ id, title, slug, local }: { id: string; title: str
           <ArrowLeft size={20} aria-hidden="true" />
           <span>Back to trips</span>
         </Link>
-        <Link className={styles.mobileBrand} href="/">SideTrail</Link>
+        <SiteBrand className={styles.mobileBrand} href="/" />
         <div className={styles.toolbarActions}>
           <button type="button" className={styles.toolButton} aria-label={local ? "View local trip link" : "Share trip"} onClick={shareTrip}>
             <Share2 size={19} aria-hidden="true" />

@@ -14,7 +14,7 @@ export function ShareProfile({ handle, name }: { handle: string; name: string })
   const dialog = useRef<HTMLDialogElement>(null);
 
   async function share() {
-    const result = await shareLink(name + " on SideTrail", travellerHref(handle));
+    const result = await shareLink(name + " on Share Yarana", travellerHref(handle));
     if (result.kind === "shared") setStatus("Share options opened.");
     if (result.kind === "copied") setStatus("Profile link copied.");
     if (result.kind === "manual") {

@@ -189,7 +189,7 @@ type Action =
 function failure(error: string): Result { return { ok: false, error }; }
 
 export async function updateDemo(action: Action, expectedAccount?: string): Promise<Result> {
-  if (!navigator.locks) return failure("Open SideTrail over HTTPS or localhost to save demo changes.");
+  if (!navigator.locks) return failure("Open Share Yarana over HTTPS or localhost to save demo changes.");
   try {
     return await navigator.locks.request(key, (): Result => {
       function commit(state: DemoState, id?: string): Result {

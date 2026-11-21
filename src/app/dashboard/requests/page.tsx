@@ -3,8 +3,8 @@ import { SiteShell } from "../../_shared/site-shell";
 import { HostWorkspace } from "./host-workspace";
 
 export const metadata: Metadata = {
-  title: "Host workspace demo | SideTrail",
-  description: "Try reviewing fictional join requests and managing places for a sample SideTrail trip.",
+  title: "Host workspace demo",
+  description: "Try reviewing fictional join requests and managing places for a sample Share Yarana trip.",
 };
 
 export default async function HostWorkspacePage({ searchParams }: { searchParams: Promise<{ trip?: string | string[] }> }) {

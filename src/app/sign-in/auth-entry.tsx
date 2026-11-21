@@ -76,7 +76,7 @@ export function AuthEntry({ mode, returnTo }: { mode: AuthMode; returnTo: string
         <div className={styles.confirmation}>
           <span className={styles.previewIcon}><MessageSquareText size={25} strokeWidth={1.8} aria-hidden="true" /></span>
           <h1 ref={previewHeading} id="auth-title" tabIndex={-1}>OTP preview<span>.</span></h1>
-          <p><strong>No OTP has been sent.</strong> On live SideTrail, you’d enter a one-time code here to verify your mobile number.</p>
+          <p><strong>No OTP has been sent.</strong> On live Share Yarana, you’d enter a one-time code here to verify your mobile number.</p>
           {signUp && traveller && <p className={styles.selection}>Traveller type preview · {profileTypeLabels[traveller]}</p>}
           <p className={styles.demoNote}>This demo never sends or saves your details.</p>
           <Link href={onboardingHref(returnTo, signUp ? traveller : undefined)} className={site.buttonPrimary + " " + styles.fullButton}>

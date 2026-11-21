@@ -12,7 +12,7 @@ export function generateStaticParams() {
   return tripGroupSlugs.map((slug) => ({ slug }));
 }
 
-export const metadata: Metadata = { title: "Trip Group Space | SideTrail" };
+export const metadata: Metadata = { title: "Trip Group Space" };
 
 export default async function TripGroupPage({ params }: Props) {
   const { slug } = await params;

@@ -1,6 +1,7 @@
 import { Plus, UserRound } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { brandName } from "@/brand";
 import { photos } from "@/data/trip-listings";
 import { primaryNavigation } from "@/navigation/primary";
 import { SiteBrand, siteDisplay } from "./brand";
@@ -37,7 +38,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
     </Link>
   );
   const bottomNav = !isTrip && !isCreate && (
-    <nav className={styles.bottomNav} aria-label="Main">
+    <nav className={styles.bottomNav} aria-label={`${brandName} main navigation`}>
       {primaryNavigation.map(({ href, label, icon: Icon }) => (
         <Link
           key={href}
@@ -58,7 +59,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
       <header className={isTrip ? styles.header + " " + styles.desktopOnly : styles.header}>
         <div className={styles.container + " " + styles.headerInner}>
           <SiteBrand href={brandHref} />
-          <nav className={styles.desktopNav} aria-label="Main">
+          <nav className={styles.desktopNav} aria-label={`${brandName} main navigation`}>
             <Link href={exploreHref} aria-current={isExplore ? "page" : undefined} data-section-active={isTrip || isTripGroup || undefined}>Explore Trips</Link>
             <Link href="/community" aria-current={isCommunity ? "page" : undefined} data-section-active={isCommunityDetail || undefined}>Communities</Link>
             <Link href={homePath + "#how-it-works"}>How It Works</Link>

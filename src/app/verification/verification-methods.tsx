@@ -54,7 +54,7 @@ export function VerificationMethods({ requestedMethod }: { requestedMethod?: str
           <p className={styles.unavailable}>Verification isn’t available in this demo yet.</p>
           <dl className={styles.previewDetails}>
             <div><dt>What a live check could involve</dt><dd>{method.process}</dd></div>
-            <div><dt>Why we would ask</dt><dd>An identity check would help confirm that an adult traveller matches the identity they use on SideTrail.</dd></div>
+            <div><dt>Why we would ask</dt><dd>An identity check would help confirm that an adult traveller matches the identity they use on Share Yarana.</dd></div>
             <div><dt>Privacy expectations</dt><dd>{method.privacy}</dd></div>
             <div><dt>What a host would see</dt><dd>The intended design would show only whether the check was completed. Hosts would receive no documents or ID numbers.</dd></div>
           </dl>

@@ -14,7 +14,7 @@ export function ShareCommunity({ slug, name }: { slug: string; name: string }) {
   const dialog = useRef<HTMLDialogElement>(null);
 
   async function share() {
-    const result = await shareLink(name + " on SideTrail", communityHref(slug));
+    const result = await shareLink(name + " on Share Yarana", communityHref(slug));
     if (result.kind === "shared") setFeedback("Share options opened.");
     if (result.kind === "copied") setFeedback("Community link copied.");
     if (result.kind === "manual") {

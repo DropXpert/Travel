@@ -1,16 +1,17 @@
 import {
   CalendarDays, CircleAlert, Compass, Flag, MapPin, MessageCircle, Shield, UsersRound, Wallet,
 } from "lucide-react";
-import type { Metadata } from "next";
+import { publicPageMetadata } from "../_shared/public-metadata";
 import { SiteShell } from "../_shared/site-shell";
 import site from "../_shared/site.module.css";
 import { VerificationMethods } from "./verification-methods";
 import styles from "./verification.module.css";
 
-export const metadata: Metadata = {
-  title: "Traveller Verification & Safety | SideTrail",
-  description: "Explore SideTrail’s proposed identity checks, privacy approach and practical travel safety tips.",
-};
+export const metadata = publicPageMetadata(
+  "Traveller Verification & Safety",
+  "Explore Share Yarana’s proposed identity checks, privacy approach and practical travel safety tips.",
+  "/verification",
+);
 
 const benefits = [
   "Reduce impersonation and fake profiles.",

@@ -10,8 +10,8 @@ import { TravellerOnboarding, type TravellerOption } from "./traveller-onboardin
 import styles from "./onboarding.module.css";
 
 export const metadata: Metadata = {
-  title: "Traveller Onboarding | SideTrail",
-  description: "Try SideTrail’s traveller onboarding and preview a profile with the trips and places you enjoy.",
+  title: "Traveller Onboarding",
+  description: "Try Share Yarana’s traveller onboarding and preview a profile with the trips and places you enjoy.",
 };
 
 const options = [

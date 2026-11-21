@@ -2,15 +2,17 @@ import { Backpack, Compass, HeartHandshake, MapPin, Plus, Send, UserRound, Users
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { brandTagline } from "@/brand";
 import { photos, tripListings } from "@/data/trip-listings";
 import { TripDiscovery } from "./_home/trip-discovery";
 import styles from "./_home/home.module.css";
+import { siteOpenGraph } from "./_shared/public-metadata";
 import { SiteShell } from "./_shared/site-shell";
 import site from "./_shared/site.module.css";
 
 export const metadata: Metadata = {
-  title: "SideTrail | Good trips. Better company.",
-  description: "Discover hikes, road trips and weekend getaways across India with people who travel like you.",
+  alternates: { canonical: "/" },
+  openGraph: { ...siteOpenGraph, url: "/", images: [{ url: photos.hero.src, alt: photos.hero.alt }] },
 };
 
 const communities = [
@@ -99,7 +101,7 @@ export default function HomePage() {
         <div className={styles.finalCta}>
           <div>
             <h2 id="final-title">Where to next?</h2>
-            <p>Free to explore, free to host, free to join. Find your people and share the adventure.</p>
+            <p>Free to explore, free to host, free to join. {brandTagline}</p>
           </div>
           <div className={styles.finalActions}>
             <Link href="/explore" className={site.buttonCoral}>Explore Trips</Link>

@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import { publicPageMetadata } from "../_shared/public-metadata";
 import { SiteShell } from "../_shared/site-shell";
 import { readExploreState } from "./browse-trips";
 import { ExploreTrips } from "./explore-trips";
 
-export const metadata: Metadata = {
-  title: "Explore trips | SideTrail",
-  description: "Find a hike, weekend getaway, or road trip to share with travellers across India.",
-};
+export const metadata = publicPageMetadata(
+  "Explore trips",
+  "Find a hike, weekend getaway, or road trip to share with travellers across India.",
+  "/explore",
+);
 
 export default async function ExplorePage({ searchParams }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

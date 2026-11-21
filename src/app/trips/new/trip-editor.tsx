@@ -181,7 +181,7 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
             }}>Discard draft</button>}
           </div>
           <h1>{published ? "Edit demo trip" : <>Where are we going<span>?</span></>}</h1>
-          <p>{published ? "Update your published plan in this browser." : "Share a fictional travel plan. Hosting on SideTrail is free."}</p>
+          <p>{published ? "Update your published plan in this browser." : "Share a fictional travel plan. Hosting on Share Yarana is free."}</p>
           {!published && migrated && <p role="status">Your saved plan now uses the community-trip format. Review any previous amount as an estimated shared expense before saving. Your original draft will be backed up on this device.</p>}
           <div className={styles.progress}>
             <nav aria-label="Draft sections">
@@ -291,7 +291,7 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
               <label className={styles.field}>
                 <span>Approximate cost per person (₹) <span className={styles.optional}>Optional</span></span>
                 <input {...field("budget")} aria-describedby={errors.budget ? "budget-error budget-hint" : "budget-hint"} type="number" min="0" step="any" inputMode="decimal" placeholder="e.g. 850" />
-                <span id="budget-hint" className={styles.hint}>Leave blank if undecided. Enter 0 for no expected expenses. This is an estimate, not a booking fee; SideTrail collects no payments.</span>
+                <span id="budget-hint" className={styles.hint}>Leave blank if undecided. Enter 0 for no expected expenses. This is an estimate, not a booking fee; Share Yarana collects no payments.</span>
                 {errorFor("budget")}
               </label>
               <details>

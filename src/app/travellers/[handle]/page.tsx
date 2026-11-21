@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { profileCovers, publicTravellerProfiles, upcomingHostedTrips } from "@/data/traveller-profiles";
+import { travellerHref } from "@/domain/travel";
 import { ProfileView } from "../../_profile/profile-view";
+import { publicPageMetadata } from "../../_shared/public-metadata";
 import { SiteShell } from "../../_shared/site-shell";
 
 type ProfilePageProps = { params: Promise<{ handle: string }> };
@@ -19,8 +21,8 @@ function findProfile(handle: string) {
 export async function generateMetadata({ params }: ProfilePageProps): Promise<Metadata> {
   const profile = findProfile((await params).handle);
   return profile
-    ? { title: profile.displayName + " | SideTrail", description: profile.bio }
-    : { title: "Traveller not found | SideTrail" };
+    ? publicPageMetadata(profile.displayName, profile.bio, travellerHref(profile.handle))
+    : { title: "Traveller not found" };
 }
 
 export default async function TravellerPage({ params }: ProfilePageProps) {

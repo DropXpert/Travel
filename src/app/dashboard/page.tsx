@@ -5,7 +5,7 @@ import { SiteShell } from "../_shared/site-shell";
 import { Dashboard } from "./dashboard";
 
 export const metadata: Metadata = {
-  title: "My Trips | SideTrail",
+  title: "My Trips",
   description: "Pick up a trip draft, revisit saved adventures and keep track of your travel plans.",
 };
 

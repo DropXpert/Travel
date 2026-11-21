@@ -30,7 +30,7 @@ export function ProfileAvatar({ name, tone, className }: {
 }) {
   return (
     <span className={[styles.avatar, className].filter(Boolean).join(" ")} data-tone={tone} aria-hidden="true">
-      {travellerInitials(name.trim() || "SideTrail")}
+      {travellerInitials(name.trim() || "Share Yarana")}
     </span>
   );
 }

@@ -3,7 +3,7 @@ import { avatarTones, demoProfile, profileCovers } from "@/data/traveller-profil
 import { ProfileEditor } from "../_profile/profile-editor";
 import { SiteShell } from "../_shared/site-shell";
 
-export const metadata: Metadata = { title: "My profile | SideTrail" };
+export const metadata: Metadata = { title: "My profile" };
 
 export default function MyProfilePage() {
   return (

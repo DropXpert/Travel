@@ -1,14 +1,16 @@
-# SideTrail design blueprint
+# Share Yarana design blueprint
 
-SideTrail is a free, community-driven social travel frontend demo. All profiles, communities and public listings are fictional. Drafts, bookmarks, demo trips and request decisions stay in the browser. Three fictional traveller accounts let the same browser demonstrate publishing, joining, hosting and group coordination. Account and verification screens remain informational demos.
+Share Yarana is a free, community-driven social travel frontend demo. All profiles, communities and public listings are fictional. Drafts, bookmarks, demo trips and request decisions stay in the browser. Three fictional traveller accounts let the same browser demonstrate publishing, joining, hosting and group coordination. Account and verification screens remain informational demos.
 
 ## 1. Product vision and audience
 
-Help people across India find companions for hikes, treks, road trips and weekend breaks, then turn shared trips into lasting connections. The core journey is discover a trip, get to know the host, request places for your party and receive the host’s decision. Hosting is a parallel journey with a short listing form and a request inbox. Registration, listings, discovery, join requests and community participation are free. There are no platform fees, commissions or subscriptions. Optional shared travel expenses belong to the travellers; SideTrail collects no payments.
+Help people across India find companions for hikes, treks, road trips and weekend breaks, then turn shared trips into lasting connections. The core journey is discover a trip, get to know the host, request places for your party and receive the host’s decision. Hosting is a parallel journey with a short listing form and a request inbox. Registration, listings, discovery, join requests and community participation are free. There are no platform fees, commissions or subscriptions. Optional shared travel expenses belong to the travellers; Share Yarana collects no payments.
 
 Solo travellers, couples and families have equal standing in discovery, hosting and community. Support first-time hikers, experienced trekkers and parents planning around pace, distance and school holidays. Treat group type as how someone travels. Match people around activities, departure city and pace.
 
 ## 2. Brand personality
+
+Use the Share Yarana text wordmark in Bricolage Grotesque, with charcoal for “Share” and deep teal for “Yarana.” Keep it on one line in the header, footer and compact mobile trip toolbar. The intended production domain is `https://shareyarana.com`.
 
 Young, adventurous and welcoming. Speak like a friendly fellow traveller. Lead with specifics such as “Sunrise hike from Pune”, “2 spots left” and “Request sent to Meera”. Use a calm, candid tone for shared expenses, difficulty, request decisions and safety.
 
@@ -98,7 +100,7 @@ The landing page gives public entry points into Explore and Community. Dashboard
 
 1. **Browse.** Lead with results, activity chips and a Filters button. Filter by destination, departure city, dates, activity, traveller group, available spots and estimated budget. Use a bottom-sheet dialog on mobile. Numeric budget ranges exclude unspecified budgets. A maximum of 0 finds zero-expense trips. Lowest-budget sorting puts unspecified budgets last.
 2. **Scan.** Show the destination photo, title, dates, departure city, activity, host, places and optional estimated budget. All listings are community trips. Display positive estimates in INR with “est. budget / person”, zero as “No expected expenses”, and omitted amounts as “Budget not specified”. Never interpret an omitted budget as zero.
-3. **Decide.** Group details into overview, itinerary, suitability, estimated shared expenses and host information. Keep **Request to Join** reachable and sticky on mobile. Explain that travel budgets cover transport, accommodation, food or common expenses, are estimates rather than booking fees, and are never collected by SideTrail. Show full status in place of the request action when appropriate.
+3. **Decide.** Group details into overview, itinerary, suitability, estimated shared expenses and host information. Keep **Request to Join** reachable and sticky on mobile. Explain that travel budgets cover transport, accommodation, food or common expenses, are estimates rather than booking fees, and are never collected by Share Yarana. Show full status in place of the request action when appropriate.
 4. **Request.** Joining is free. Confirm party size using the selected demo traveller’s category. Save a pending demo request under the selected traveller. My Trips shows Pending, Accepted, Declined and Cancelled. A trip has one request per demo traveller. The host can accept or decline eligible parties, with availability checked again at the point of acceptance. A traveller can cancel a pending or accepted request.
 5. **Host.** Start with title, destination, starting city, dates and description, then traveller eligibility and available places. Budget is optional. Keep itinerary, cover selection, Save draft and Preview listing. Publish trip (demo) creates a listing with a stable ID. Edit or cancel it through My Trips > Hosting. Put optional expense details in a disclosure. Hosting feels like sharing a plan with friends and never asks for a listing type or selling price.
 6. **Messaging.** “Find your people. Share the adventure.” Pair it with “Create trips, meet fellow travellers and explore together. No platform fees.” Explain free registration, hosting, joining and participation at relevant decision points without promotional FREE badges.

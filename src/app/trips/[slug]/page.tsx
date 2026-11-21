@@ -4,6 +4,8 @@ import { tripListings } from "@/data/trip-listings";
 import { SiteShell } from "../../_shared/site-shell";
 
 import { demoTripId } from "../../_shared/demo-id";
+import { publicPageMetadata, siteOpenGraph } from "../../_shared/public-metadata";
+import { tripHref } from "../../_shared/trip-navigation";
 import { TripDetails } from "./trip-details";
 
 type TripPageProps = { params: Promise<{ slug: string }> };
@@ -18,9 +20,9 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: TripPageProps): Promise<Metadata> {
   const listing = findListing((await params).slug);
-  return listing
-    ? { title: listing.trip.title + " | SideTrail", description: listing.trip.details?.description }
-    : { title: "Trip details | SideTrail" };
+  if (!listing) return { title: "Trip details" };
+  const { trip } = listing;
+  return publicPageMetadata(trip.title, trip.details?.description ?? siteOpenGraph.description, tripHref(trip.slug));
 }
 
 export default async function TripPage({ params }: TripPageProps) {

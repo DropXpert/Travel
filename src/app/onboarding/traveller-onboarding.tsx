@@ -33,8 +33,8 @@ const headings = [
   ["Let’s find your kind of adventure.", "A little about you helps us find trips worth joining."],
   ["What gets you out the door?", "Pick as many things as you like."],
   ["Make it your kind of trip.", "Tell us where you start from and how you like to travel."],
-  ["Here’s your profile preview.", "See how your choices come together on SideTrail."],
-  ["See you out there.", "You’ve reached the end of SideTrail’s onboarding demo. Explore the sample trips whenever you’re ready."],
+  ["Here’s your profile preview.", "See how your choices come together on Share Yarana."],
+  ["See you out there.", "You’ve reached the end of Share Yarana’s onboarding demo. Explore the sample trips whenever you’re ready."],
 ] as const;
 
 const listFormat = new Intl.ListFormat("en-IN", { style: "long", type: "conjunction" });

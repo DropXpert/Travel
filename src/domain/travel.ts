@@ -47,7 +47,7 @@ export interface Trip extends TripSummary {
   hostGroupName?: string;
 }
 
-export const sharedExpenseNote = "Travel budgets are estimates for transport, accommodation, food and common expenses. They are not booking fees. SideTrail collects no payments.";
+export const sharedExpenseNote = "Travel budgets are estimates for transport, accommodation, food and common expenses. They are not booking fees. Share Yarana collects no payments.";
 
 const moneyFormat = new Intl.NumberFormat("en-IN", {
   style: "currency", currency: "INR", maximumFractionDigits: 2,

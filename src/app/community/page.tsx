@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
 import { communities } from "@/data/communities";
 import { upcomingCommunityTrips } from "@/data/community-trips";
 import { photos } from "@/data/trip-listings";
+import { publicPageMetadata } from "../_shared/public-metadata";
 import { SiteShell } from "../_shared/site-shell";
 import { CommunityDiscovery } from "./community-discovery";
 
-export const metadata: Metadata = {
-  title: "Travel communities | SideTrail",
-  description: "Find hiking groups, weekend crews, and travel circles for solo travellers, couples, and families across India.",
-};
+export const metadata = publicPageMetadata(
+  "Travel communities",
+  "Find hiking groups, weekend crews, and travel circles for solo travellers, couples, and families across India.",
+  "/community",
+);
 
 export const revalidate = 86400;
 

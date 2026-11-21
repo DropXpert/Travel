@@ -1,6 +1,6 @@
-# Test SideTrail in five minutes
+# Test Share Yarana in five minutes
 
-Open the public HTTPS demo link in Safari, Chrome or Firefox. Keep the whole test in the same browser on the same site address. Use fictional details and the built-in demo accounts. SideTrail is free, and any trip budget you enter is an estimate for shared expenses.
+Open the public HTTPS demo link in Safari, Chrome or Firefox. Keep the whole test in the same browser on the same site address. Use fictional details and the built-in demo accounts. Share Yarana is free, and any trip budget you enter is an estimate for shared expenses.
 
 ## Try a trip from both sides
 

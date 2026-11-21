@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { communities, communityCategories, participationLabels } from "@/data/communities";
+import { communities, communityCategories, communityHref, participationLabels } from "@/data/communities";
 import { upcomingCommunityTrips } from "@/data/community-trips";
 import { photos } from "@/data/trip-listings";
 import { travellerGroupLabels, travellerInterestLabels } from "@/domain/travel";
 import { DialogButton } from "../../_shared/dialog-button";
+import { publicPageMetadata } from "../../_shared/public-metadata";
 import { TripCard } from "../../_shared/trip-card";
 import { SiteShell } from "../../_shared/site-shell";
 import site from "../../_shared/site.module.css";
@@ -37,8 +38,8 @@ function findCommunity(slug: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const community = findCommunity((await params).slug);
-  return community ? { title: community.name + " | SideTrail", description: community.description }
-    : { title: "Community not found | SideTrail" };
+  return community ? publicPageMetadata(community.name, community.description, communityHref(community.id))
+    : { title: "Community not found" };
 }
 
 export default async function CommunityDetailsPage({ params }: Props) {

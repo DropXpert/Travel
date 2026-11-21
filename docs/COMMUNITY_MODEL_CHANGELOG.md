@@ -2,7 +2,7 @@
 
 ## Product changes
 
-SideTrail now uses one community-trip model. Registration, hosting, discovery, join requests and community participation are free. Shared travel expenses are optional estimates. Blank budgets mean “Budget not specified”; zero means “No expected expenses”. SideTrail does not collect payments.
+Share Yarana now uses one community-trip model. Registration, hosting, discovery, join requests and community participation are free. Shared travel expenses are optional estimates. Blank budgets mean “Budget not specified”; zero means “No expected expenses”. Share Yarana does not collect payments.
 
 Removed the personal/commercial discriminator, organiser name and selling-price fields, conditional pricing helper, commercial badges and search terms, trip-type selector, required-budget validation, and unused selector styles. The existing app had no checkout or payment integration to remove. Safety guidance about suspicious payment requests remains intact.
 

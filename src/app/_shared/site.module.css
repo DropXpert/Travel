@@ -52,22 +52,14 @@ html:has(.site dialog[open]) { overflow: hidden; }
 }
 
 .brand {
-  @apply inline-flex min-h-touch items-center gap-2;
+  @apply inline-flex min-h-touch items-center;
   color: var(--color-ink);
-  font: 780 1.65rem/1 var(--font-display);
-  letter-spacing: -.065em;
+  font: 740 clamp(1.35rem, 5.5vw, 1.65rem)/1.1 var(--font-display);
+  letter-spacing: -.055em;
+  white-space: nowrap;
 }
 
-.brand > span {
-  display: grid;
-  width: 2.125rem;
-  height: 2.125rem;
-  flex: none;
-  place-items: center;
-  border-radius: .65rem;
-  background: var(--color-teal-dark);
-  color: white;
-}
+.brand strong { color: var(--color-teal-dark); font-weight: 790; }
 
 .desktopNav, .desktopActions { display: none; }
 .desktopNav {
@@ -341,8 +333,6 @@ a.tripTitle { display: inline-block; }
 .footer nav { display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
 .footer nav .buttonText { padding-inline: .25rem; }
 .footer .brand { font-size: 1.4rem; }
-.footer .brand > span { width: 1.85rem; height: 1.85rem; }
-.footer .brand svg { width: 1.15rem; height: 1.15rem; }
 
 .bottomNav {
   position: fixed;

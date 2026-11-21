@@ -65,7 +65,16 @@ async function main() {
       for (const route of routes) {
         await visitAtWidth(route, width);
         await assertFits(route);
-        assert.doesNotMatch(await page.locator("body").innerText(), /commercial trip|organiser price|book now|buy ticket|checkout|pay now/i);
+        await page.getByRole("link", { name: "Share Yarana home", exact: true }).first().waitFor();
+        assert.match(await page.title(), /Share Yarana/);
+        assert.doesNotMatch(await page.locator("body").innerText(), /sidetrail|commercial trip|organiser price|book now|buy ticket|checkout|pay now/i);
+        if (route === "/") {
+          await page.getByRole("navigation", { name: "Share Yarana main navigation" }).waitFor();
+          await page.getByText("Free to explore, free to host, free to join. Find your people. Share the adventure.").waitFor();
+          assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), "https://shareyarana.com");
+          assert.equal(await page.locator('meta[property="og:site_name"]').getAttribute("content"), "Share Yarana");
+          assert.equal(await page.locator('link[rel="icon"]').getAttribute("href"), "/favicon.svg");
+        }
         results.push({ width, route, status: "pass" });
         if ([375, 1440].includes(width) && ["/explore", "/trips/new"].includes(route)) {
           await page.screenshot({ path: path.join(artifacts, width + route.replaceAll("/", "-") + ".png"), fullPage: true });
@@ -380,7 +389,7 @@ async function main() {
     await unsupported.goto(base + "/explore");
     await unsupported.getByRole("button", { name: /^Demo account/ }).click();
     await unsupported.getByLabel("Switch demo traveller").selectOption("traveller-kavya-dev");
-    await unsupported.getByText("Open SideTrail over HTTPS or localhost to save demo changes.", { exact: true }).waitFor();
+    await unsupported.getByText("Open Share Yarana over HTTPS or localhost to save demo changes.", { exact: true }).waitFor();
     await unsupported.close();
     console.log("Connected demo journey passed, including editing, eligibility, overbooking, cross-tab cancellation, reset and protected data.");
     assert.deepEqual(errors, [], "Browser console and runtime errors");

@@ -10,8 +10,8 @@ import { AuthEntry } from "./auth-entry";
 import styles from "./sign-in.module.css";
 
 export const metadata: Metadata = {
-  title: "Login and Sign Up | SideTrail",
-  description: "Preview the SideTrail account experience with sample details.",
+  title: "Login and Sign Up",
+  description: "Preview the Share Yarana account experience with sample details.",
 };
 
 export default async function SignInPage({ searchParams }: {
@@ -26,7 +26,7 @@ export default async function SignInPage({ searchParams }: {
       <a className={site.skipLink} href="#auth-main">Skip to content</a>
       <header className={styles.header}>
         <SiteBrand href="/" />
-        <Link href={returnTo} className={styles.back}>Back to SideTrail</Link>
+        <Link href={returnTo} className={styles.back}>Back to Share Yarana</Link>
       </header>
       <main id="auth-main" tabIndex={-1} className={styles.layout}>
         <figure className={styles.photo}>
