@@ -2,6 +2,7 @@
 
 import { useMemo, useSyncExternalStore } from "react";
 import type { Trip } from "@/domain/travel";
+import { subscribeToStorage } from "./local-storage";
 
 const storageKey = "sidetrail-saved-trip-ids-v1";
 const savedTripsChanged = "sidetrail-saved-trips-changed";
@@ -30,15 +31,7 @@ function decodeIds(raw: string | null): readonly Trip["id"][] {
 }
 
 function subscribe(listener: () => void) {
-  function handleStorage(event: StorageEvent) {
-    if (event.key === storageKey || event.key === null) listener();
-  }
-  window.addEventListener("storage", handleStorage);
-  window.addEventListener(savedTripsChanged, listener);
-  return () => {
-    window.removeEventListener("storage", handleStorage);
-    window.removeEventListener(savedTripsChanged, listener);
-  };
+  return subscribeToStorage(storageKey, savedTripsChanged, listener);
 }
 
 export function useSavedTripIds() {

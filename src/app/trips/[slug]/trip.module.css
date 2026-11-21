@@ -40,7 +40,7 @@
 
 .layout { padding-bottom: 1rem; }
 .article { min-width: 0; }
-.hero { display: grid; }
+.hero { display: grid; grid-template-columns: minmax(0, 1fr); }
 
 .photo {
   position: relative;
@@ -192,8 +192,8 @@
   font-weight: 650;
 }
 
-.budget, .panelPrice { display: flex; align-items: baseline; flex-wrap: wrap; gap: .15rem .4rem; }
-.budget strong, .panelPrice strong, .mobileAction strong {
+.budget, .panelBudget { display: flex; align-items: baseline; flex-wrap: wrap; gap: .15rem .4rem; }
+.budget strong, .panelBudget strong, .mobileAction strong {
   color: var(--color-ink);
   font: 780 1.7rem/1.1 var(--font-display);
   letter-spacing: -.035em;
@@ -218,6 +218,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: .5rem;
   min-height: calc(var(--bottom-bar) + env(safe-area-inset-bottom));
   padding: .65rem max(1rem, env(safe-area-inset-right))
@@ -229,7 +230,8 @@
 .mobileAction p { color: var(--color-ink-muted); font-size: var(--text-meta); line-height: 1.25; }
 .mobileAction p + p { margin-top: .2rem; color: var(--color-teal-dark); font-weight: 700; }
 .mobileAction strong { font-size: 1.4rem; }
-.mobileAction > button { flex: none; }
+.mobileAction > div { flex: 1 1 7rem; min-width: 0; }
+.expenseNotes { white-space: pre-line; overflow-wrap: anywhere; }
 
 .requestTrip {
   display: grid;
@@ -330,8 +332,8 @@
     box-shadow: 0 8px 20px #2025250c;
   }
   .joinPanel h2 { font-size: 1.45rem; }
-  .panelPrice { color: var(--color-ink-muted); font-size: var(--text-label); }
-  .panelPrice strong { font-size: 2rem; }
+  .panelBudget { color: var(--color-ink-muted); font-size: var(--text-label); }
+  .panelBudget strong { font-size: 2rem; }
   .panelAvailability { margin-top: .65rem; font-size: var(--text-label); }
   .panelFacts { display: grid; gap: .6rem; margin-block: .9rem; padding-block: .85rem; border-block: 1px solid var(--color-divider); }
   .panelFacts dt { color: var(--color-ink-muted); font-size: var(--text-meta); }

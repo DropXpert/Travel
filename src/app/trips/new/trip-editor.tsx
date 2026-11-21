@@ -3,15 +3,17 @@
 import { ArrowDown, ArrowLeft, ArrowUp, Eye, Plus, Shield, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import type { DraftCover } from "@/data/trip-covers";
 import { travellerGroupLabels, type TravellerGroup } from "@/domain/travel";
 import { Dialog } from "../../_shared/dialog";
-import { DialogButton } from "../../_shared/dialog-button";
 import {
-  draftCategories, draftLimits, editTripDraft, emptyTripDraft, persistTripDraft,
+  discardTripDraft, draftCategories, draftLimits, editTripDraft, emptyTripDraft, persistTripDraft,
   todayInIndia, useTripDraft, validateTripDraft, type DraftDay, type DraftErrors, type TripDraft,
 } from "../../_shared/trip-draft";
+import { useRouter } from "next/navigation";
+import { demoProfileFor, updateDemo, useDemoTravel, type PublishedTrip } from "../../_shared/demo-travel";
+import { tripHref } from "../../_shared/trip-navigation";
 import site from "../../_shared/site.module.css";
 import { DraftPreview } from "./draft-preview";
 import styles from "./create.module.css";
@@ -19,28 +21,72 @@ import styles from "./create.module.css";
 const groups = Object.keys(travellerGroupLabels) as TravellerGroup[];
 const sections = [
   ["trip-basics", "Trip basics"],
-  ["people-and-cost", "People & cost"],
+  ["people-and-cost", "People & budget"],
   ["plan-and-cover", "Plan & cover"],
 ] as const;
 
-type TextField = Exclude<keyof TripDraft, "kind" | "category" | "groups" | "itinerary" | "cover">;
+type TextField = Exclude<keyof TripDraft, "category" | "groups" | "itinerary" | "cover">;
 const storageUnavailable = "Device storage is unavailable. Keep this tab open to keep your edits.";
 
-export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
-  const { saved, working } = useTripDraft();
-  const draft = working ?? saved ?? emptyTripDraft;
+export function TripEditor({ covers, editId }: { covers: readonly DraftCover[]; editId?: string }) {
+  const { state, ready } = useDemoTravel();
+  const published = state.trips.find(({ id }) => id === editId);
+  if (editId && (!ready || !published || published.cancelled || published.hostId !== state.account)) {
+    return <div className={site.container + " " + site.demoPanel}>
+      <h1>Edit demo trip</h1>
+      <p>{!ready ? "Loading demo trip..." : !published ? "This demo trip is unavailable in this browser."
+        : published.cancelled ? "Cancelled trips can’t be edited." : "Switch to the host’s demo account to edit this trip."}</p>
+      <Link className={site.buttonOutline} href="/dashboard?tab=hosting">Back to Hosting</Link>
+    </div>;
+  }
+  return <Editor key={editId ?? "new"} covers={covers} published={published} account={state.account} ready={ready} />;
+}
+
+function Editor({ covers, published, account, ready }: { covers: readonly DraftCover[]; published?: PublishedTrip; account: string; ready: boolean }) {
+  const { saved, savedText, working, migrated } = useTripDraft();
+  const [edits, setEdits] = useState(published?.draft);
+  const [revision] = useState(published?.revision);
+  const draft = published ? edits! : working ?? saved ?? emptyTripDraft;
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [publishError, setPublishError] = useState("");
+  const validate = () => validateTripDraft(draft, published?.postedOn ?? todayInIndia());
   const cover = covers.find(({ src }) => src === draft.cover);
-  const commercial = draft.kind === "commercial";
   const [attemptedPreview, setAttemptedPreview] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [notice, setNotice] = useState("");
   const form = useRef<HTMLFormElement>(null);
+  const actions = useRef<HTMLDivElement>(null);
   const preview = useRef<HTMLDialogElement>(null);
   const discard = useRef<HTMLDialogElement>(null);
-  const errors = attemptedPreview ? validateTripDraft(draft, todayInIndia()) : {};
+  const pendingDiscard = useRef({ savedText, working });
+  const [discardError, setDiscardError] = useState("");
+  const errors = attemptedPreview ? validate() : {};
+
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    function keepFieldVisible() {
+      const field = document.activeElement;
+      if (!viewport || !(field instanceof HTMLElement) || !form.current?.contains(field)) return;
+      if (!actions.current || getComputedStyle(actions.current).position !== "fixed") return;
+      const bounds = field.getBoundingClientRect();
+      const top = viewport.offsetTop;
+      const bottom = Math.min(top + viewport.height, actions.current.getBoundingClientRect().top);
+      if (bounds.top >= top && bounds.bottom + 8 <= bottom) return;
+      const safeTop = top + Math.max(8, (bottom - top - bounds.height) / 2);
+      window.scrollBy({ top: bounds.top - safeTop, behavior: "instant" });
+    }
+
+    viewport.addEventListener("resize", keepFieldVisible);
+    return () => viewport.removeEventListener("resize", keepFieldVisible);
+  }, []);
 
   function edit(patch: Partial<TripDraft>) {
-    editTripDraft({ ...draft, ...patch });
+    if (published) setEdits({ ...draft, ...patch });
+    else editTripDraft({ ...draft, ...patch });
+    setPublishError("");
     setNotice("");
   }
 
@@ -61,7 +107,7 @@ export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
 
   function openPreview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const problems = validateTripDraft(draft, todayInIndia());
+    const problems = validate();
     const [first] = Object.keys(problems);
     setAttemptedPreview(true);
     if (first) {
@@ -74,11 +120,24 @@ export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
     preview.current?.showModal();
   }
 
+  async function publish() {
+    setBusy(true);
+    setPublishError("");
+    const result = await updateDemo(published && revision !== undefined
+      ? { type: "edit", id: published.id, revision, draft }
+      : { type: "publish", draft }, account);
+    if (result.ok && result.id) {
+      preview.current?.close();
+      router.push(tripHref(result.id));
+    } else if (!result.ok) setPublishError(result.error);
+    setBusy(false);
+  }
+
   function discardDraft(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!persistTripDraft(null)) {
-      discard.current?.close();
-      setNotice(storageUnavailable);
+    const result = discardTripDraft(pendingDiscard.current);
+    if (result !== "discarded") {
+      setDiscardError(result === "changed" ? "This draft changed in another tab. Close this window and review the draft." : storageUnavailable);
       return;
     }
     setAttemptedPreview(false);
@@ -115,10 +174,15 @@ export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
         <div className={site.container}>
           <div className={styles.introToolbar}>
             <Link href="/explore" className={styles.back}><ArrowLeft size={18} aria-hidden="true" />Back to Explore</Link>
-            {(saved || working) && <DialogButton dialogId="discard-draft" className={styles.discard}>Discard draft</DialogButton>}
+            {!published && (saved || working) && <button type="button" className={styles.discard} aria-haspopup="dialog" onClick={() => {
+              pendingDiscard.current = { savedText, working };
+              setDiscardError("");
+              discard.current?.showModal();
+            }}>Discard draft</button>}
           </div>
-          <h1>Where are we going<span>?</span></h1>
-          <p>Got a trip in mind? Find your people and make it happen.</p>
+          <h1>{published ? "Edit demo trip" : <>Where are we going<span>?</span></>}</h1>
+          <p>{published ? "Update your published plan in this browser." : "Share a fictional travel plan. Hosting on SideTrail is free."}</p>
+          {!published && migrated && <p role="status">Your saved plan now uses the community-trip format. Review any previous amount as an estimated shared expense before saving. Your original draft will be backed up on this device.</p>}
           <div className={styles.progress}>
             <nav aria-label="Draft sections">
               {sections.map(([id, label]) => <a key={id} href={"#" + id}>{label}</a>)}
@@ -140,19 +204,6 @@ export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
                 </Link>
               </div>
             </div>
-            <fieldset>
-              <legend>Trip type</legend>
-              <div className={styles.typeChoices}>
-                <label>
-                  <input type="radio" name="kind" value="personal" checked={!commercial} onChange={() => edit({ kind: "personal" })} />
-                  <span><strong>Personal community trip</strong><small>Plan together and share estimated expenses.</small></span>
-                </label>
-                <label>
-                  <input type="radio" name="kind" value="commercial" checked={commercial} onChange={() => edit({ kind: "commercial" })} />
-                  <span><strong>Organised commercial trip</strong><small>List a trip at an advertised organiser price.</small></span>
-                </label>
-              </div>
-            </fieldset>
             <label className={styles.field}>
               Trip title
               <input {...field("title")} required maxLength={draftLimits.title} placeholder="e.g. Sunrise hike up Nandi Hills" />
@@ -224,9 +275,9 @@ export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
                 {errorFor("capacity")}
               </label>
               <label className={styles.field}>
-                Available spots
+                {published ? "Spots offered" : "Available spots"}
                 <input {...field("spots")} type="number" min="0" max={draft.capacity || undefined} step="1" inputMode="numeric" placeholder="All spots by default" aria-describedby={errors.spots ? "spots-error" : "spots-hint"} />
-                <span id="spots-hint" className={styles.hint}>Leave empty if all places are open.</span>
+                <span id="spots-hint" className={styles.hint}>{published ? "Accepted parties are deducted from the spots offered." : "Leave empty if all places are open."}</span>
                 {errorFor("spots")}
               </label>
             </div>
@@ -236,26 +287,30 @@ export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
             </label>
 
             <div className={styles.subsection}>
-              <h3>Trip cost</h3>
+              <h3>Estimated trip budget</h3>
               <label className={styles.field}>
-                {commercial ? "Advertised price per person (₹)" : "Estimated share per person (₹)"}
-                <input {...field("budget")} required type="number" min="0" step="any" inputMode="decimal" placeholder="e.g. 850" />
+                <span>Approximate cost per person (₹) <span className={styles.optional}>Optional</span></span>
+                <input {...field("budget")} aria-describedby={errors.budget ? "budget-error budget-hint" : "budget-hint"} type="number" min="0" step="any" inputMode="decimal" placeholder="e.g. 850" />
+                <span id="budget-hint" className={styles.hint}>Leave blank if undecided. Enter 0 for no expected expenses. This is an estimate, not a booking fee; SideTrail collects no payments.</span>
                 {errorFor("budget")}
               </label>
-              <div className={styles.pair}>
+              <details>
+                <summary>Shared expense details (optional)</summary>
+                <div className={styles.pair}>
+                  <label className={styles.field}>
+                    <span>Expenses covered by the estimate <span className={styles.optional}>Optional</span></span>
+                    <textarea {...field("included")} rows={2} maxLength={draftLimits.included} placeholder="e.g. Transport ₹400, stay ₹300, food ₹150" />
+                  </label>
+                  <label className={styles.field}>
+                    <span>Expenses to plan for separately <span className={styles.optional}>Optional</span></span>
+                    <textarea {...field("excluded")} rows={2} maxLength={draftLimits.excluded} placeholder="e.g. Meals and entry fees" />
+                  </label>
+                </div>
                 <label className={styles.field}>
-                  <span>What’s included <span className={styles.optional}>Optional</span></span>
-                  <textarea {...field("included")} rows={2} maxLength={draftLimits.included} placeholder="e.g. Shared transport" />
+                  <span>Shared expense notes <span className={styles.optional}>Optional</span></span>
+                  <textarea {...field("costNotes")} rows={2} maxLength={draftLimits.costNotes} placeholder="How will you split transport, accommodation, food or common expenses?" />
                 </label>
-                <label className={styles.field}>
-                  <span>What’s excluded <span className={styles.optional}>Optional</span></span>
-                  <textarea {...field("excluded")} rows={2} maxLength={draftLimits.excluded} placeholder="e.g. Meals and entry fees" />
-                </label>
-              </div>
-              <label className={styles.field}>
-                <span>Additional cost notes <span className={styles.optional}>Optional</span></span>
-                <textarea {...field("costNotes")} rows={2} maxLength={draftLimits.costNotes} placeholder="Add anything travellers should budget for." />
-              </label>
+              </details>
             </div>
           </section>
 
@@ -318,25 +373,33 @@ export function TripEditor({ covers }: { covers: readonly DraftCover[] }) {
             <h2>Your listing</h2>
             <DraftPreview draft={draft} cover={cover} compact />
           </div>
-          <div className={styles.actions}>
-            <p role="status">{storageStatus}</p>
+          <div className={styles.actions} ref={actions}>
+            <p role="status">{published ? notice : storageStatus}</p>
             <div>
-              <button type="button" className={site.buttonOutline} onClick={() => {
-                setNotice(persistTripDraft(draft) ? "Draft saved on this device." : storageUnavailable);
-              }}>Save draft</button>
+              {published ? <Link className={site.buttonOutline} href={tripHref(published.id)}>Cancel edit</Link>
+                : <button type="button" className={site.buttonOutline} onClick={() => {
+                  setNotice(persistTripDraft(draft) ? "Draft saved on this device." : storageUnavailable);
+                }}>Save draft</button>}
               <button type="submit" form="trip-editor" className={site.buttonPrimary}><Eye size={18} aria-hidden="true" />Preview listing</button>
             </div>
           </div>
         </aside>
       </div>
 
-      <Dialog id="listing-preview" title="Listing preview" dialogRef={preview} onClose={() => setShowPreview(false)}>
-        <p>This preview is visible to you on this device.</p>
+      <Dialog id="listing-preview" title="Listing preview" dialogRef={preview} onClose={() => { setShowPreview(false); setPublishError(""); }}>
+        <p>{published ? "Editing as " : "Publishing as "}{demoProfileFor(account).displayName}. Use fictional details only. The listing stays in this browser.</p>
         {showPreview && <DraftPreview draft={draft} cover={cover} />}
-        <form method="dialog" className={styles.previewDone}><button type="submit" className={site.buttonPrimary}>Keep editing</button></form>
+        {publishError && <p role="alert" className={styles.fieldError}>{publishError}</p>}
+        <div className={site.dialogActions}>
+          <form method="dialog"><button type="submit" className={site.buttonOutline}>Keep editing</button></form>
+          <button type="button" className={site.buttonPrimary} disabled={!ready || busy} onClick={publish}>
+            {published ? "Save demo changes" : "Publish trip (demo)"}
+          </button>
+        </div>
       </Dialog>
       <Dialog id="discard-draft" title="Discard this draft?" dialogRef={discard}>
         <p>This clears your form and removes the draft saved on this device.</p>
+        {discardError && <p role="alert">{discardError}</p>}
         <div className={site.dialogActions}>
           <form method="dialog"><button type="submit" className={site.buttonOutline}>Keep editing</button></form>
           <form onSubmit={discardDraft}><button type="submit" className={styles.discardConfirm}>Discard draft</button></form>

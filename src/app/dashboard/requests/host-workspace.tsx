@@ -4,21 +4,19 @@ import { CalendarDays, MapPin, Shield, UsersRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import type { HostRequest, HostRequestStatus } from "@/data/host-workspace";
+import { demoRequestSeeds, type HostRequest } from "@/data/host-workspace";
 import type { TripListing } from "@/data/trip-listings";
-import { profileTypeLabels, travellerHref, travellerInterestLabels, tripHostName } from "@/domain/travel";
+import { availableSpots, requestStatusLabels as labels, profileTypeLabels, travellerHref, travellerInterestLabels, tripHostName } from "@/domain/travel";
 import { ProfileAvatar } from "../../_profile/profile-view";
+import { demoProfileFor, updateDemo, useDemoTravel } from "../../_shared/demo-travel";
 import { Dialog } from "../../_shared/dialog";
 import { tripGroupHref } from "../../_shared/trip-navigation";
 import site from "../../_shared/site.module.css";
 import styles from "./host-workspace.module.css";
 
-const labels: Record<HostRequestStatus, string> = { pending: "Pending", accepted: "Accepted", declined: "Declined" };
-const filters = ["all", "pending", "accepted", "declined"] as const;
+const filters = ["all", "pending", "accepted", "declined", "cancelled"] as const;
 type Filter = (typeof filters)[number];
 type Decision = { requestId: string; status: "accepted" | "declined" };
-type Ledger = { requests: readonly HostRequest[]; notice: string };
-const demoNotice = "Demo only. No traveller has been notified and no real request was updated.";
 
 const safetyTips = [
   "Read the traveller’s profile and agree on the pace and expectations.",
@@ -27,29 +25,31 @@ const safetyTips = [
   "Report suspicious behaviour through reporting tools where available.",
 ];
 
-function acceptedParticipants(requests: readonly HostRequest[]) {
-  return requests.filter(({ status }) => status === "accepted").reduce((count, { partySize }) => count + partySize, 0);
-}
-
 function participantLabel(count: number) {
   return count + (count === 1 ? " participant" : " participants");
 }
 
-function takeDecision(ledger: Ledger, decision: Decision, capacity: number): Ledger {
-  const request = ledger.requests.find(({ id }) => id === decision.requestId);
-  if (!request || request.status !== "pending") return ledger;
-  if (decision.status === "accepted" && request.partySize > capacity - acceptedParticipants(ledger.requests)) {
-    return { ...ledger, notice: "There aren’t enough spots for this party. The request is still pending." };
+export function HostWorkspace({ tripId }: { tripId: string }) {
+  const { state, ready, listings } = useDemoTravel();
+  const listing = listings.find(({ trip }) => trip.id === tripId);
+  if (!listing || state.account !== listing.trip.hostId) {
+    return <div className={site.container + " " + site.demoPanel}>
+      <h1>Host Workspace</h1>
+      <p>{!ready ? "Loading demo trip..." : listing ? "Switch to " + listing.host.displayName + " to manage this trip." : "This demo trip is unavailable in this browser."}</p>
+      <Link className={site.buttonOutline} href="/dashboard?tab=hosting">Back to Hosting</Link>
+    </div>;
   }
-  return {
-    requests: ledger.requests.map((entry) => entry.id === request.id ? { ...entry, status: decision.status } : entry),
-    notice: labels[decision.status] + " the request from " + request.traveller.displayName + ". " + demoNotice,
-  };
+  const requests = state.requests.filter((request) => request.tripId === tripId).map((request) => ({
+    ...demoRequestSeeds.find(({ id }) => request.id === id),
+    ...request,
+    traveller: demoProfileFor(request.requesterId),
+  }));
+  return <HostInbox key={tripId + state.account} listing={listing} requests={requests} account={state.account} />;
 }
 
-export function HostWorkspace({ listing, initialRequests }: { listing: TripListing; initialRequests: readonly HostRequest[] }) {
-  const { trip, host, photo, date } = listing;
-  const [{ requests, notice }, setLedger] = useState<Ledger>({ requests: initialRequests, notice: "" });
+function HostInbox({ listing, requests, account }: { listing: TripListing; requests: readonly HostRequest[]; account: string }) {
+  const { trip, host, photo, date, local, cancelled } = listing;
+  const [notice, setNotice] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [reviewing, setReviewing] = useState<HostRequest>();
   const [decision, setDecision] = useState<Decision>();
@@ -57,8 +57,7 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
   const confirmDialog = useRef<HTMLDialogElement>(null);
   const requestHeading = useRef<HTMLHeadingElement>(null);
   const accepted = requests.filter(({ status }) => status === "accepted");
-  const occupied = acceptedParticipants(requests);
-  const remaining = trip.capacity - occupied;
+  const remaining = availableSpots(trip);
   const pending = requests.filter(({ status }) => status === "pending").length;
   const visible = requests.filter(({ status }) => filter === "all" || filter === status);
   const deciding = requests.find(({ id }) => id === decision?.requestId);
@@ -73,9 +72,10 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
     confirmDialog.current?.showModal();
   }
 
-  function confirmDecision() {
+  async function confirmDecision() {
     if (!decision) return;
-    setLedger((current) => takeDecision(current, decision, trip.capacity));
+    const result = await updateDemo({ type: "decision", id: decision.requestId, status: decision.status }, account);
+    setNotice(result.ok ? labels[decision.status] + " the demo request." : result.error);
     confirmDialog.current?.close();
     requestAnimationFrame(() => {
       (document.getElementById("request-title-" + decision.requestId) ?? requestHeading.current)?.focus();
@@ -86,7 +86,7 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
     <article className={site.container + " " + styles.workspace} aria-labelledby="host-trip-title">
       <div className={styles.workspaceLinks}>
         <Link className={styles.textLink} href="/dashboard?tab=hosting">Back to Hosting</Link>
-        <Link className={site.buttonOutline} href={tripGroupHref(trip.slug)}>Preview Trip Group Space</Link>
+        {!cancelled && <Link className={site.buttonOutline} href={tripGroupHref(trip.slug)}>Trip Group Space</Link>}
       </div>
       <header className={styles.trip}>
         <div className={styles.cover}>
@@ -94,26 +94,26 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
             sizes="(min-width: 1264px) 505px, (min-width: 900px) 44vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)" />
         </div>
         <div className={styles.tripIdentity}>
-          <p className={styles.eyebrow}>Host workspace · Sample trip</p>
+          <p className={styles.eyebrow}>Host workspace · {cancelled ? "Cancelled" : local ? "Published demo trip" : "Sample trip"}</p>
           <h1 id="host-trip-title">{trip.title}</h1>
           <ul className={styles.tripFacts}>
             <li><MapPin size={17} aria-hidden="true" />{trip.destination}</li>
             <li><CalendarDays size={17} aria-hidden="true" />{date}</li>
           </ul>
-          <p className={styles.hostName}>Hosted by {tripHostName(trip, host)} <span>· {trip.kind === "personal" ? "Personal trip" : "Commercial trip"}</span></p>
+          <p className={styles.hostName}>Hosted by {tripHostName(trip, host)} <span>· Community trip</span></p>
         </div>
       </header>
-      <dl className={styles.capacity} aria-label="Sample trip capacity">
+      <dl className={styles.capacity} aria-label="Demo trip capacity">
         <div><dt>Capacity</dt><dd>{trip.capacity}</dd></div>
-        <div><dt>Accepted people</dt><dd>{occupied}</dd></div>
-        <div><dt>Spots left</dt><dd>{remaining}</dd></div>
+        <div><dt>Spots filled</dt><dd>{trip.confirmedTravellers}</dd></div>
+        <div><dt>Spots left</dt><dd>{cancelled ? 0 : remaining}</dd></div>
         <div><dt>Pending requests</dt><dd>{pending}</dd></div>
       </dl>
 
       <div className={styles.layout}>
         <section className={styles.inbox} aria-labelledby="host-inbox-title">
           <h2 id="host-inbox-title" ref={requestHeading} tabIndex={-1}>Join requests</h2>
-          <p className={styles.lead}>Review sample travellers and try making a decision.</p>
+          <p className={styles.lead}>Review requests from demo travellers. Your decisions stay in this browser.</p>
           <div className={styles.filters} role="group" aria-label="Filter join requests">
             {filters.map((item) => (
               <button type="button" key={item} aria-pressed={filter === item} onClick={() => setFilter(item)}>
@@ -127,6 +127,7 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
               {visible.map((request) => {
                 const { id, traveller, partySize, startingCity, status, introduction } = request;
                 const tooLarge = partySize > remaining;
+                const ineligible = !trip.welcomeGroups.includes(traveller.group);
                 return (
                   <li key={id} className={styles.request}>
                     <div className={styles.requestHeading}>
@@ -138,14 +139,15 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
                       <span className={styles.status} data-status={status}>{labels[status]}</span>
                     </div>
                     {startingCity && <p className={styles.city}><MapPin size={15} aria-hidden="true" />Starting in {startingCity}</p>}
-                    <p className={styles.message}>{introduction}</p>
+                    {introduction && <p className={styles.message}>{introduction}</p>}
                     <button type="button" className={styles.textLink} aria-haspopup="dialog" onClick={() => review(request)}>
                       View profile<span className="sr-only"> for {traveller.displayName}</span>
                     </button>
                     {status === "pending" && (
                       <div className={styles.decisions}>
+                        {ineligible && <p>This traveller category is no longer eligible.</p>}
                         {tooLarge && <p id={"capacity-" + id}>This party needs {partySize} spots. {remaining} {remaining === 1 ? "spot remains" : "spots remain"}.</p>}
-                        <button type="button" className={site.buttonPrimary} aria-haspopup="dialog" disabled={tooLarge}
+                        <button type="button" className={site.buttonPrimary} aria-haspopup="dialog" disabled={tooLarge || ineligible}
                           aria-label={"Accept request from " + traveller.displayName}
                           aria-describedby={tooLarge ? "capacity-" + id : undefined} onClick={() => askToDecide(id, "accepted")}>
                           Accept request
@@ -217,7 +219,7 @@ export function HostWorkspace({ listing, initialRequests }: { listing: TripListi
           <>
             <p>{deciding.traveller.displayName} requested {participantLabel(deciding.partySize)}.</p>
             <p>{decision.status === "accepted"
-              ? "Accepting reserves " + (deciding.partySize === 1 ? "1 spot" : deciding.partySize + " spots") + " in this demo."
+              ? "Accepting confirms " + (deciding.partySize === 1 ? "1 spot" : deciding.partySize + " spots") + " in this demo."
               : "Declining keeps the same number of spots open in this demo."}</p>
             <div className={site.dialogActions}>
               <form method="dialog"><button type="submit" className={site.buttonOutline}>Cancel</button></form>

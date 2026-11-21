@@ -4,9 +4,10 @@ import { CalendarDays, ClipboardList, MapPin, Megaphone, MessageCircle, UsersRou
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
-import type { TripGroupDemo } from "@/data/trip-groups";
+import { getGroupContent, type TripGroupDemo } from "@/data/trip-groups";
 import { profileTypeLabels, travellerHref } from "@/domain/travel";
 import { ProfileAvatar } from "../../../_profile/profile-view";
+import { demoProfileFor, useDemoTravel } from "../../../_shared/demo-travel";
 import { tripHref } from "../../../_shared/trip-navigation";
 import site from "../../../_shared/site.module.css";
 import styles from "./group.module.css";
@@ -43,12 +44,37 @@ function browserTab(): Tab {
   return tabs.find(({ id }) => id === tab)?.id ?? "overview";
 }
 
-export function TripGroupSpace({ group }: { group: TripGroupDemo }) {
+export function ConnectedTripGroup({ slug }: { slug: string }) {
+  const { state, ready, listings } = useDemoTravel();
+  const listing = listings.find(({ trip }) => trip.slug === slug);
+  const accepted = state.requests.filter(({ tripId, status }) => tripId === listing?.trip.id && status === "accepted");
+  const canOpen = listing && !listing.cancelled
+    && (state.account === listing.trip.hostId || accepted.some(({ requesterId }) => requesterId === state.account));
+
+  if (!ready || !canOpen) return <div className={site.container + " " + site.demoPanel}>
+    <h1>Trip Group Space</h1>
+    <p>{!ready ? "Loading demo group..." : !listing ? "This demo group is unavailable in this browser."
+      : listing.cancelled ? "This demo trip was cancelled." : "Switch to the demo host or an accepted traveller to open the group."}</p>
+    <Link className={site.buttonOutline} href={tripHref(slug)}>Back to trip details</Link>
+  </div>;
+
+  return <TripGroupSpace key={slug + state.account} group={{
+    listing,
+    members: [
+      { traveller: demoProfileFor(listing.trip.hostId), partySize: 0, host: true },
+      ...accepted.map(({ requesterId, partySize }) => ({ traveller: demoProfileFor(requesterId), partySize, host: false })),
+    ],
+    ...getGroupContent(slug, listing.trip.hostId),
+  }} />;
+}
+
+function TripGroupSpace({ group }: { group: TripGroupDemo }) {
   const { listing: { trip, host, photo, date }, members, meeting, messages, announcements } = group;
   const active = useSyncExternalStore<Tab>(subscribeTab, browserTab, () => "overview");
   const [checked, setChecked] = useState<readonly string[]>([]);
   const tabList = useRef<HTMLDivElement>(null);
   const partySize = members.reduce((sum, member) => sum + member.partySize, 0);
+  const alreadyFilled = trip.confirmedTravellers - partySize;
   const itinerary = trip.details?.itinerary;
 
   useEffect(() => {
@@ -94,13 +120,13 @@ export function TripGroupSpace({ group }: { group: TripGroupDemo }) {
             sizes="(min-width: 1152px) 485px, (min-width: 900px) 44vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)" />
         </figure>
         <div className={styles.identity}>
-          <p className={styles.eyebrow}>Trip group space · Public demo preview</p>
+          <p className={styles.eyebrow}>Trip group space · Browser demo</p>
           <h1 id="group-title">{trip.title}</h1>
           <ul className={styles.facts}>
             <li><MapPin size={17} aria-hidden="true" />{trip.destination}</li>
             <li><CalendarDays size={17} aria-hidden="true" />{date}</li>
           </ul>
-          <p className={styles.groupStatus}><UsersRound size={17} aria-hidden="true" />{partySize} sample participants</p>
+          <p className={styles.groupStatus}><UsersRound size={17} aria-hidden="true" />{partySize} accepted {partySize === 1 ? "participant" : "participants"}</p>
         </div>
       </header>
 
@@ -119,7 +145,7 @@ export function TripGroupSpace({ group }: { group: TripGroupDemo }) {
             <div className={styles.overview}>
               <section className={styles.announcements} aria-labelledby="group-announcements">
                 <h2 id="group-announcements"><Megaphone size={23} aria-hidden="true" />Host announcements</h2>
-                <p className={styles.lead}>Fictional examples from {host.displayName}.</p>
+                <p className={styles.lead}>{announcements.length ? "Fictional examples from " + host.displayName + "." : "No demo announcements for this trip yet."}</p>
                 <ul>{announcements.map(({ title, text }) => <li key={title}><h3>{title}</h3><p>{text}</p></li>)}</ul>
               </section>
               <section className={styles.meeting} aria-labelledby="group-meeting">
@@ -133,15 +159,16 @@ export function TripGroupSpace({ group }: { group: TripGroupDemo }) {
 
           {id === active && id === "members" && (
             <>
-              <h2>Meet the sample crew</h2>
-              <p className={styles.lead}>{partySize} sample participants across {members.length} traveller profiles. Adults manage family participation.</p>
+              <h2>Meet the demo crew</h2>
+              <p className={styles.lead}>{partySize} accepted {partySize === 1 ? "participant" : "participants"} in the request roster. Adults manage family participation.</p>
+              {alreadyFilled > 0 && <p>{alreadyFilled} {alreadyFilled === 1 ? "spot was" : "spots were"} already filled when this listing was created.</p>}
               <ul className={styles.members}>
                 {members.map(({ traveller, partySize, host: isHost }) => (
                   <li key={traveller.id}>
                     <ProfileAvatar name={traveller.displayName} tone={traveller.avatarTone} className={styles.avatar} />
                     <div>
                       <h3><Link className={styles.textLink} href={travellerHref(traveller.handle)}>{traveller.displayName}</Link></h3>
-                      <p>{profileTypeLabels[traveller.group]} · {partySize} {partySize === 1 ? "person" : "people"}</p>
+                      <p>{profileTypeLabels[traveller.group]}{!isHost && (" · " + partySize + (partySize === 1 ? " person" : " people"))}</p>
                     </div>
                     <span className={styles.memberStatus} data-host={isHost || undefined}>{isHost ? "Sample host" : "Sample participant"}</span>
                   </li>
@@ -156,7 +183,7 @@ export function TripGroupSpace({ group }: { group: TripGroupDemo }) {
               <p className={styles.lead}>{date} · Trip outline</p>
               {itinerary?.length ? (
                 <ol>{itinerary.map(({ title, note }, index) => (
-                  <li key={title}><span>Day {index + 1}</span><div><h3>{title}</h3><p>{note}</p></div></li>
+                  <li key={index}><span>Day {index + 1}</span><div><h3>{title}</h3><p>{note}</p></div></li>
                 ))}</ol>
               ) : <p>The host is still outlining the route and activities.</p>}
               {trip.details?.suitability && <aside className={styles.meeting}><h3>Host note</h3><p>{trip.details.suitability}</p></aside>}
@@ -168,7 +195,7 @@ export function TripGroupSpace({ group }: { group: TripGroupDemo }) {
               <h2><MessageCircle size={23} aria-hidden="true" />Group Chat</h2>
               <p className={styles.lead}>Fictional conversation · All times IST</p>
               <aside className={styles.chatAnnouncement}><Megaphone size={19} aria-hidden="true" /><div>
-                <h3>Sample host announcement</h3><p>{announcements[0]?.text}</p>
+                <h3>Sample host announcement</h3><p>{announcements[0]?.text ?? "No demo messages for this trip."}</p>
               </div></aside>
               <ol className={styles.messages}>
                 {messages.map(({ id, traveller, host: isHost, text, time }) => (

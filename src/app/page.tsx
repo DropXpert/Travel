@@ -32,7 +32,7 @@ export default function HomePage() {
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>Travel together in India</p>
           <h1 id="hero-title">Good trips.<br /><span>Better company.</span></h1>
-          <p className={styles.heroDescription}>Find your people, discover new places, and make every trip a story worth sharing.</p>
+          <p className={styles.heroDescription}>Create trips, meet fellow travellers and explore together. No platform fees.</p>
           <div className={styles.heroActions}>
             <Link href="/explore" className={site.buttonPrimary}>
               <Compass size={19} aria-hidden="true" />Explore Trips
@@ -99,7 +99,7 @@ export default function HomePage() {
         <div className={styles.finalCta}>
           <div>
             <h2 id="final-title">Where to next?</h2>
-            <p>Join a plan that’s already taking shape, or start one of your own.</p>
+            <p>Free to explore, free to host, free to join. Find your people and share the adventure.</p>
           </div>
           <div className={styles.finalActions}>
             <Link href="/explore" className={site.buttonCoral}>Explore Trips</Link>

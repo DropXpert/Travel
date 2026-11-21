@@ -19,5 +19,5 @@ export const travelStyles = [
   "Relaxed Explorer", "Adventure Seeker", "Weekend Wanderer", "Flexible Traveller",
 ] as const;
 
-export const budgetBands = ["Below ₹3,000", "₹3,000–₹7,999", "₹8,000–₹15,000", "Above ₹15,000"] as const;
+export const budgetBands = ["No expected expenses", "Below ₹3,000", "₹3,000–₹7,999", "₹8,000–₹15,000", "Above ₹15,000"] as const;
 export const ageBands = ["0–5 years", "6–11 years", "12–17 years", "More than one age range"] as const;

@@ -225,7 +225,7 @@ export function TravellerOnboarding({ options, preselected }: {
                     </select>
                   </label>
                   <label className={styles.field}>
-                    Typical budget per person
+                    Estimated travel budget per person
                     <select value={choices.budget} onChange={(event) => update({ budget: event.currentTarget.value })}>
                       <option value="">No preference</option>
                       {budgetBands.map((band) => <option key={band}>{band}</option>)}

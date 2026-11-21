@@ -94,11 +94,11 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 .field [aria-invalid="true"] { border-color: var(--color-danger); }
 .field [aria-invalid="true"]:focus-visible { outline-color: var(--color-danger); }
 
-.pair, .subsection, .typeChoices { display: grid; gap: .8rem; }
+.pair, .subsection { display: grid; gap: .8rem; }
 .subsection { gap: .85rem; }
 .subsection > .hint { margin-top: -.3rem; }
 
-.typeChoices label, .groupChoices label {
+.groupChoices label {
   display: flex;
   align-items: flex-start;
   gap: .6rem;
@@ -110,23 +110,20 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
   background: var(--color-surface);
   cursor: pointer;
 }
-.typeChoices label:has(input:checked), .groupChoices label:has(input:checked), .coverGrid label:has(input:checked) {
+.groupChoices label:has(input:checked), .coverGrid label:has(input:checked) {
   border-color: var(--color-teal-dark);
   background: var(--color-teal-soft);
 }
-.typeChoices label:has(input:focus-visible), .groupChoices label:has(input:focus-visible), .coverGrid label:has(input:focus-visible) {
+.groupChoices label:has(input:focus-visible), .coverGrid label:has(input:focus-visible) {
   outline: 2px solid var(--color-teal-dark);
   outline-offset: 2px;
 }
-.typeChoices input, .groupChoices input {
+.groupChoices input {
   flex: none;
   width: 1rem;
   height: 1rem;
   accent-color: var(--color-teal-dark);
 }
-.typeChoices input { margin-top: .24rem; }
-.typeChoices strong { display: block; font-size: var(--text-label); line-height: 1.35; }
-.typeChoices small { display: block; margin-top: .15rem; color: var(--color-ink-muted); font-size: var(--text-meta); line-height: 1.45; }
 
 .groupChoices { display: flex; flex-wrap: wrap; gap: .5rem; }
 .groupChoices label {
@@ -272,7 +269,6 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 .previewSection h4 { font: 750 1.14rem/1.2 var(--font-display); }
 .previewSection p { white-space: pre-wrap; color: var(--color-ink-muted); }
 .previewSection li + li { margin-top: .55rem; }
-.previewDone { margin-top: 1rem; }
 
 .discardConfirm {
   @apply inline-flex min-h-touch items-center justify-center;
@@ -295,8 +291,7 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
   .intro { padding-bottom: 1.2rem; }
   .intro h1 { margin-block: .3rem .55rem; }
   .layout { padding-block: 1.6rem 2.1rem; }
-  .pair, .typeChoices { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
-  .typeChoices { align-items: stretch; }
+  .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
   .coverGrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
@@ -320,3 +315,6 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
   .back:hover, .discard:hover { text-decoration: underline; text-underline-offset: .15em; }
   .progress a:hover, .dayAction:not(:disabled):hover { background: var(--color-teal-soft); }
 }
+
+.subsection details > summary { min-height: var(--spacing-touch); padding-block: .7rem; cursor: pointer; font-weight: 650; }
+.subsection details[open] > .field { margin-top: .85rem; }

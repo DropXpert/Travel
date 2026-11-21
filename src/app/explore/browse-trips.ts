@@ -1,5 +1,5 @@
 import type { TripListing } from "@/data/trip-listings";
-import { activityLabels, availableSpots, tripCostPerPerson, type Activity, type TravellerGroup } from "@/domain/travel";
+import { activityLabels, availableSpots, type Activity, type TravellerGroup } from "@/domain/travel";
 
 export const categories = [
   { value: "all", label: "All Trips" },
@@ -13,7 +13,7 @@ export const categories = [
 
 export const sortOptions = [
   { value: "upcoming", label: "Upcoming first" },
-  { value: "budget", label: "Lowest estimated cost" },
+  { value: "budget", label: "Lowest estimated budget" },
   { value: "newest", label: "Newest listings" },
 ] as const;
 
@@ -47,6 +47,10 @@ const activitySearchWords: Record<Activity, string> = {
   trekking: "trek treks hike hiking trail trails",
   "road-trip": "drive driving road trips",
   "weekend-getaway": "weekend trips short breaks",
+  camping: "camp camps campsite",
+  adventure: "outdoors",
+  leisure: "relaxed sightseeing",
+  other: "outing",
 };
 
 function validNumber(value: string) {
@@ -126,15 +130,16 @@ export function browseTrips(listings: readonly TripListing[], { query, sort, fil
     if (filters.end && trip.endsOn > filters.end) return false;
     if (filters.spots && availableSpots(trip) < Number(filters.spots)) return false;
 
-    const cost = tripCostPerPerson(trip);
-    if (filters.minBudget && cost < Number(filters.minBudget)) return false;
-    if (filters.maxBudget && cost > Number(filters.maxBudget)) return false;
+    const cost = trip.estimatedSharePerPersonInr;
+    if ((filters.minBudget || filters.maxBudget) && cost === undefined) return false;
+    if (cost !== undefined) {
+      if (filters.minBudget && cost < Number(filters.minBudget)) return false;
+      if (filters.maxBudget && cost > Number(filters.maxBudget)) return false;
+    }
 
-    const type = trip.kind === "commercial"
-      ? "commercial trip organised organized guided " + trip.organizerName
-      : "personal trip " + (trip.hostGroupName ?? "");
+    const type = "community trip " + (trip.hostGroupName ?? "");
     const searchable = [
-      trip.destination, trip.title, trip.departureCity, trip.activity, activityLabels[trip.activity],
+      trip.departureCity, trip.destination, trip.title, trip.activity, activityLabels[trip.activity],
       activitySearchWords[trip.activity], type,
     ].join(" ").toLowerCase();
     return words.every((word) => searchable.includes(word));
@@ -142,7 +147,7 @@ export function browseTrips(listings: readonly TripListing[], { query, sort, fil
 
   return matching.sort(({ trip: a }, { trip: b }) => {
     if (sort === "budget") {
-      const costDifference = tripCostPerPerson(a) - tripCostPerPerson(b);
+      const costDifference = (a.estimatedSharePerPersonInr ?? Infinity) - (b.estimatedSharePerPersonInr ?? Infinity);
       if (costDifference) return costDifference;
     }
     if (sort === "newest") {

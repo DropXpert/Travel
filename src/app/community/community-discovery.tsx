@@ -143,7 +143,7 @@ export function CommunityDiscovery({ communities }: { communities: readonly Disc
             <div>
               <p className={styles.eyebrow}>Travel communities</p>
               <h1>Find your kind <span>of people.</span></h1>
-              <p className={styles.subtitle}>From sunrise hikes to spontaneous weekend plans, there’s a crew for every adventure.</p>
+              <p className={styles.subtitle}>From sunrise hikes to spontaneous weekend plans, find your crew. Community participation is free.</p>
             </div>
             <div className={styles.controls}>
               <div className={styles.searchField} role="search">

@@ -1,7 +1,7 @@
 import { CalendarDays, ImageIcon, MapPin, Route, UsersRound } from "lucide-react";
 import Image from "next/image";
 import type { DraftCover } from "@/data/trip-covers";
-import { travellerGroupLabels } from "@/domain/travel";
+import { sharedExpenseNote, travellerGroupLabels } from "@/domain/travel";
 import { draftCost, draftDates, type TripDraft } from "../../_shared/trip-draft";
 import site from "../../_shared/site.module.css";
 import styles from "./create.module.css";
@@ -11,9 +11,8 @@ export function DraftPreview({ draft, cover, compact = false }: {
   cover?: DraftCover;
   compact?: boolean;
 }) {
-  const commercial = draft.kind === "commercial";
   const groupNames = draft.groups.map((group) => travellerGroupLabels[group]);
-  const price = draftCost(draft.budget);
+  const budget = draftCost(draft.budget);
   const spots = draft.spots || draft.capacity;
   const days = draft.itinerary.map((day, index) => ({ ...day, number: index + 1 }))
     .filter((day) => day.title.trim() || day.note.trim());
@@ -44,15 +43,16 @@ export function DraftPreview({ draft, cover, compact = false }: {
         {draft.departureCity.trim() && <p className={styles.previewFact}><Route size={16} aria-hidden="true" />From {draft.departureCity.trim()}</p>}
         <div className={styles.previewHost}>
           <span className={site.avatar} aria-hidden="true">Y</span>
-          <p><strong>You · host</strong><span>{commercial ? "Commercial trip" : "Personal community trip"}</span></p>
+          <p><strong>You · host</strong><span>Community trip</span></p>
         </div>
         {groupNames.length > 0 && <p className={styles.previewFact}><UsersRound size={16} aria-hidden="true" />{groupNames.join(" · ")}</p>}
         <div className={styles.previewCost}>
-          <p><strong>{price || "Amount to be decided"}</strong> <span>{commercial ? "organiser price / person" : "est. share / person"}</span></p>
+          <p><strong>{budget}</strong> {Number(draft.budget) > 0 && <span>est. budget / person</span>}</p>
           {spots && <span>{Number(spots) === 0 ? "Trip full" : spots + (Number(spots) === 1 ? " spot available" : " spots available")}</span>}
         </div>
         {!compact && (
           <>
+            <p className={styles.hint}>{sharedExpenseNote}</p>
             <section className={styles.previewSection}>
               <h4>What to expect</h4>
               <p>{draft.description.trim() || "Trip description to be added."}</p>
@@ -60,10 +60,10 @@ export function DraftPreview({ draft, cover, compact = false }: {
             </section>
             {(draft.included.trim() || draft.excluded.trim() || draft.costNotes.trim()) && (
               <section className={styles.previewSection}>
-                <h4>Cost breakdown</h4>
-                {draft.included.trim() && <p><strong>Included</strong><br />{draft.included.trim()}</p>}
-                {draft.excluded.trim() && <p><strong>Excluded</strong><br />{draft.excluded.trim()}</p>}
-                {draft.costNotes.trim() && <p><strong>Cost notes</strong><br />{draft.costNotes.trim()}</p>}
+                <h4>Estimated shared expenses</h4>
+                {draft.included.trim() && <p><strong>Covered by the estimate</strong><br />{draft.included.trim()}</p>}
+                {draft.excluded.trim() && <p><strong>Plan for separately</strong><br />{draft.excluded.trim()}</p>}
+                {draft.costNotes.trim() && <p><strong>Expense notes</strong><br />{draft.costNotes.trim()}</p>}
               </section>
             )}
             <section className={styles.previewSection}>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { getHostWorkspaceDemo } from "@/data/host-workspace";
 import { SiteShell } from "../../_shared/site-shell";
 import { HostWorkspace } from "./host-workspace";
 
@@ -8,11 +7,11 @@ export const metadata: Metadata = {
   description: "Try reviewing fictional join requests and managing places for a sample SideTrail trip.",
 };
 
-export default function HostWorkspacePage() {
-  const { listing, requests } = getHostWorkspaceDemo();
+export default async function HostWorkspacePage({ searchParams }: { searchParams: Promise<{ trip?: string | string[] }> }) {
+  const { trip } = await searchParams;
   return (
     <SiteShell isDashboard="detail">
-      <HostWorkspace listing={listing} initialRequests={requests} />
+      <HostWorkspace tripId={typeof trip === "string" ? trip : "trip-sinhagad"} />
     </SiteShell>
   );
 }

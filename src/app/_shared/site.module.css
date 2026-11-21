@@ -4,11 +4,19 @@
   --gutter: 1rem;
   --font-display: var(--sidetrail-display), var(--font-sans);
   --bottom-bar: 4.125rem;
+  overflow-wrap: anywhere;
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     calc(var(--bottom-bar) + var(--mobile-action, 0px) + env(safe-area-inset-bottom)) env(safe-area-inset-left);
 }
 .siteWithAction { --mobile-action: 4.25rem; }
-html:has(.siteWithAction) { scroll-padding-bottom: calc(8.375rem + env(safe-area-inset-bottom)); }
+
+@media (width < 1024px) {
+  html:has(.site) { --dock-clearance: 4.125rem; }
+  html:has(.tripSite) { --dock-clearance: 5rem; }
+  html:has(.createSite) { --dock-clearance: 6.5rem; }
+  html:has(.siteWithAction) { --dock-clearance: 8.375rem; }
+  html:has(.site) { scroll-padding-block-end: calc(var(--dock-clearance) + .5rem + env(safe-area-inset-bottom)); }
+}
 
 .container {
   width: min(calc(100% - 2 * var(--gutter)), 75rem);
@@ -39,7 +47,8 @@ html:has(.site dialog[open]) { overflow: hidden; }
 .headerInner {
   @apply flex items-center justify-between;
   min-height: 4rem;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: .25rem 1rem;
 }
 
 .brand {
@@ -53,6 +62,7 @@ html:has(.site dialog[open]) { overflow: hidden; }
   display: grid;
   width: 2.125rem;
   height: 2.125rem;
+  flex: none;
   place-items: center;
   border-radius: .65rem;
   background: var(--color-teal-dark);
@@ -278,6 +288,21 @@ a.tripTitle { display: inline-block; }
 .hostName { font-size: var(--text-label); line-height: 1.25; font-weight: 680; }
 .hostType { font-size: var(--text-meta); line-height: 1.25; color: var(--color-ink-muted); }
 
+.demoBar { border-bottom: 1px solid var(--color-divider); background: var(--color-canvas); }
+.demoBar > div { display: flex; justify-content: flex-end; }
+.demoBar button > span { margin-inline-start: .3em; color: var(--color-ink-muted); }
+.demoField { display: grid; gap: .35rem; font-weight: 650; }
+.demoField select, .demoField input {
+  width: 100%; min-width: 0; min-height: var(--spacing-touch); padding: .45rem .65rem;
+  background: var(--color-surface); border: 1px solid var(--color-control-border); border-radius: var(--radius-control);
+}
+.demoPanel { padding-block: 1.25rem; overflow-wrap: anywhere; }
+.demoPanel h1 { font: 770 clamp(1.75rem, 5vw, 2.7rem)/1.1 var(--font-display); }
+.demoPanel h2 { font: 750 1.45rem/1.2 var(--font-display); }
+.demoPanel ul { display: grid; gap: .8rem; margin-block: .75rem; }
+.demoPanel li { background: var(--color-surface); border: 1px solid var(--color-divider); border-radius: var(--radius-card); padding: .85rem; }
+.demoPanel li > * + * { margin-block-start: .35rem; }
+
 .tripBottom {
   @apply flex items-center justify-between;
   flex-wrap: wrap;
@@ -461,7 +486,6 @@ a.tripTitle { display: inline-block; }
 @media (width >= 1024px) {
   .site { --gutter: 2rem; --bottom-bar: 0rem; }
   .siteWithAction { --mobile-action: 0rem; }
-  html:has(.siteWithAction) { scroll-padding-bottom: 0; }
   .desktopOnly { display: block; }
   .headerInner { min-height: 4.75rem; }
   .desktopNav, .desktopActions { display: flex; }

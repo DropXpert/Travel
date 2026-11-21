@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { tripListings } from "@/data/trip-listings";
 import { SiteShell } from "../_shared/site-shell";
 import { readExploreState } from "./browse-trips";
 import { ExploreTrips } from "./explore-trips";
@@ -20,7 +19,7 @@ export default async function ExplorePage({ searchParams }: {
 
   return (
     <SiteShell isExplore>
-      <ExploreTrips listings={tripListings} initialState={initialState} />
+      <ExploreTrips initialState={initialState} />
     </SiteShell>
   );
 }

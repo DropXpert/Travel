@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CalendarDays, Camera, Footprints, IdCard, Leaf, MapPin, Mountain, Phone, Route, Shield, TentTree,
 } from "lucide-react";
@@ -7,9 +9,11 @@ import type { ReactNode } from "react";
 import type { TripListing } from "@/data/trip-listings";
 import type { ProfileCover, TravellerProfileView } from "@/data/traveller-profiles";
 import { profileTypeLabels, travellerInitials, travellerInterestLabels } from "@/domain/travel";
+import { useDemoTravel } from "../_shared/demo-travel";
 import { Dialog } from "../_shared/dialog";
 import { DialogButton } from "../_shared/dialog-button";
 import { TripCard } from "../_shared/trip-card";
+import { todayInIndia } from "../_shared/trip-draft";
 import site from "../_shared/site.module.css";
 import { ShareProfile } from "./share-profile";
 import styles from "./profile.module.css";
@@ -38,6 +42,12 @@ export function ProfileView({ profile, cover, hostedTrips = [], own = false, act
   own?: boolean;
   actions?: ReactNode;
 }) {
+  const { listings, ready } = useDemoTravel();
+  const today = ready ? todayInIndia() : "";
+  const upcoming = ready && !own ? listings.filter(({ trip, cancelled }) =>
+    !cancelled && trip.hostId === profile.id && trip.startsOn >= today)
+    .sort(({ trip: a }, { trip: b }) => a.startsOn.localeCompare(b.startsOn)) : hostedTrips;
+
   return (
     <article className={site.container + " " + styles.profile} aria-labelledby="profile-title">
       <header className={styles.hero} data-cover={Boolean(cover) || undefined}>
@@ -49,13 +59,14 @@ export function ProfileView({ profile, cover, hostedTrips = [], own = false, act
         )}
         <div className={styles.identity}>
           <ProfileAvatar name={profile.displayName} tone={profile.avatarTone} />
-          <p className={styles.profileTag}>{own ? "Your demo profile" : "Sample traveller profile"}</p>
+          <p className={styles.profileTag}>{own ? "Editable sample profile" : "Sample traveller profile"}</p>
           <h1 id="profile-title">{profile.displayName}</h1>
           <ul className={styles.metadata}>
             {profile.homeCity && <li><MapPin size={17} aria-hidden="true" />{profile.homeCity}</li>}
             <li className={styles.type}>{profileTypeLabels[profile.group]}</li>
           </ul>
           {profile.bio && <p className={styles.bio}>{profile.bio}</p>}
+          {own && <p className={styles.profileNote}>Profile edits are separate from the Demo account used for trips.</p>}
           {profile.group === "couple" && profile.partnerDisplayName && (
             <p className={styles.profileNote}>Travels with {profile.partnerDisplayName}</p>
           )}
@@ -95,10 +106,10 @@ export function ProfileView({ profile, cover, hostedTrips = [], own = false, act
         </section>
 
         <section id="hosted-trips" className={styles.hosted} aria-labelledby="hosted-title">
-          <h2 id="hosted-title">Trips I’m hosting</h2>
-          {hostedTrips.length ? (
+          <h2 id="hosted-title">Hosted trips</h2>
+          {upcoming.length ? (
             <ul className={site.tripGrid + " " + styles.hostedGrid}>
-              {hostedTrips.map((listing) => (
+              {upcoming.map((listing) => (
                 <li key={listing.trip.id}><TripCard listing={listing} showTravelDetails /></li>
               ))}
             </ul>
@@ -122,7 +133,7 @@ export function ProfileView({ profile, cover, hostedTrips = [], own = false, act
           </dl>
           {own && (
             <>
-              <p className={styles.verificationStatus}><IdCard size={16} aria-hidden="true" />Identity verification not completed</p>
+              <p className={styles.verificationStatus}><IdCard size={16} aria-hidden="true" />Identity verification preview</p>
               <Link href="/verification" className={site.verificationLink}>Learn about verification</Link>
             </>
           )}

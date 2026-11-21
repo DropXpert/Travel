@@ -88,7 +88,7 @@ export function AuthEntry({ mode, returnTo }: { mode: AuthMode; returnTo: string
         <>
           <div className={styles.intro}>
             <h1 id="auth-title">{signUp ? "Good trips start here" : "Welcome back, explorer"}<span>.</span></h1>
-            <p>{signUp ? "Meet your people. Go somewhere new." : "Your next adventure is waiting."}</p>
+            <p>{signUp ? "Registration is free. Meet your people and go somewhere new." : "Your next adventure is waiting."}</p>
           </div>
           <p className={styles.demoNote} id="auth-demo-note"><strong>Account demo.</strong> Use sample details.</p>
           <form className={styles.form} aria-describedby="auth-demo-note" onSubmit={continuePreview} noValidate autoComplete="off">

@@ -82,7 +82,8 @@ function FilterForm({ initial, cities, destinations, maxSpots, onApply }: Filter
           </TripSelect>
         </label>
         <fieldset>
-          <legend>Budget per person (₹)</legend>
+          <legend>Estimated budget per person (₹)</legend>
+          <p>Use 0 to find trips with no expected expenses. Budget ranges exclude unspecified estimates.</p>
           <div className={styles.fieldPair}>
             <label>
               Minimum
@@ -109,12 +110,8 @@ function FilterForm({ initial, cities, destinations, maxSpots, onApply }: Filter
         </fieldset>
         <label>
           Available spots
-          <TripSelect name="spots" value={draft.spots} onChange={changeField}>
-            <option value="">Any number</option>
-            {Array.from({ length: maxSpots }, (_, index) => index + 1).map((count) => (
-              <option key={count} value={count}>{count} or more</option>
-            ))}
-          </TripSelect>
+          <input name="spots" type="number" inputMode="numeric" min="1" max={maxSpots || undefined} step="1"
+            placeholder="Minimum spots" value={draft.spots} onChange={changeField} />
         </label>
       </div>
       <div className={styles.filterFooter}>

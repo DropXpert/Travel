@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, Compass, Luggage, Map, Plus, Send, TentTree } from "lucide-react";
+import { Bookmark, Luggage, Map, Plus, Send, TentTree } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
@@ -9,6 +9,8 @@ import type { TripListing } from "@/data/trip-listings";
 import { updateSavedTrip, useSavedTripIds } from "../_shared/saved-trips";
 import site from "../_shared/site.module.css";
 import { TripCard } from "../_shared/trip-card";
+import { useDemoTravel } from "../_shared/demo-travel";
+import { DemoActivity } from "./demo-activity";
 import { DraftPlan } from "./draft-plan";
 import styles from "./dashboard.module.css";
 
@@ -40,16 +42,8 @@ function subscribe(listener: () => void) {
   };
 }
 
-const requestStatuses = [
-  ["Pending", "Waiting for a host to respond."],
-  ["Accepted", "The host confirmed a place for your party."],
-  ["Declined", "The host couldn’t offer your party a place."],
-  ["Cancelled", "You withdrew the request."],
-] as const;
-
-export function Dashboard({ initialTab, listings, covers, planPhoto, savedPhoto }: {
+export function Dashboard({ initialTab, covers, planPhoto, savedPhoto }: {
   initialTab: string | null;
-  listings: readonly TripListing[];
   covers: readonly DraftCover[];
   planPhoto: Photo;
   savedPhoto: Photo;
@@ -123,37 +117,8 @@ export function Dashboard({ initialTab, listings, covers, planPhoto, savedPhoto 
             {id === active && (
               <>
                 {id === "plans" && <DraftPlan covers={covers} emptyPhoto={planPhoto} />}
-                {id === "saved" && <SavedTrips listings={listings} emptyPhoto={savedPhoto} />}
-                {id === "hosting" && (
-                  <div className={styles.hostingEmpty}>
-                    <span className={styles.hostingIcon}><TentTree size={30} strokeWidth={1.7} aria-hidden="true" /></span>
-                    <div>
-                      <h2>No published trips yet.</h2>
-                      <p>Publishing and managing live trips will be available with traveller accounts. For now, you can work on a plan in My Plans.</p>
-                      <div className={site.dialogActions}>
-                        <button type="button" className={site.buttonPrimary} onClick={() => selectTab("plans", true)}>Go to My Plans</button>
-                        <Link href="/dashboard/requests" className={site.buttonOutline}>Preview host workspace</Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {id === "join-requests" && (
-                  <div className={styles.requestsEmpty}>
-                    <span className={styles.requestsIcon}><Send size={25} strokeWidth={1.8} aria-hidden="true" /></span>
-                    <h2>No join requests yet.</h2>
-                    <p>You can try the request preview on a trip. This prototype keeps previews private and never sends them to hosts.</p>
-                    <Link className={site.buttonPrimary} href="/explore"><Compass size={18} aria-hidden="true" />Explore Trips</Link>
-                    <details className={styles.requestGuide}>
-                      <summary>How request statuses will work</summary>
-                      <p>Each request card will show the trip, dates, your party size, and the host’s response.</p>
-                      <dl>
-                        {requestStatuses.map(([status, description]) => (
-                          <div key={status}><dt>{status}</dt><dd>{description}</dd></div>
-                        ))}
-                      </dl>
-                    </details>
-                  </div>
-                )}
+                {id === "saved" && <SavedTrips emptyPhoto={savedPhoto} />}
+                {(id === "hosting" || id === "join-requests") && <DemoActivity hosting={id === "hosting"} />}
               </>
             )}
           </section>
@@ -163,8 +128,9 @@ export function Dashboard({ initialTab, listings, covers, planPhoto, savedPhoto 
   );
 }
 
-function SavedTrips({ listings, emptyPhoto }: { listings: readonly TripListing[]; emptyPhoto: Photo }) {
+function SavedTrips({ emptyPhoto }: { emptyPhoto: Photo }) {
   const ids = useSavedTripIds();
+  const { listings } = useDemoTravel();
   const saved = ids.flatMap((id) => {
     const listing = listings.find(({ trip }) => trip.id === id);
     return listing ? [listing] : [];

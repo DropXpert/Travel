@@ -5,23 +5,25 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { TripListing } from "@/data/trip-listings";
-import { activityLabels, availableSpots, travellerGroupLabels, travellerInitials, tripHostName } from "@/domain/travel";
+import { activityLabels, availableSpots, travellerGroupLabels, travellerInitials, tripHostName, sharedExpenseNote } from "@/domain/travel";
+import { useDemoTravel } from "./demo-travel";
 import { DialogButton } from "./dialog-button";
 import { Dialog } from "./dialog";
 import { rememberTripOpening, tripHref } from "./trip-navigation";
 import styles from "./site.module.css";
 
-export function TripCard({ listing: { trip, host, photo, date, cost }, showTravelDetails = false, eagerImage = false, savedAction, linkToDetails = false }: {
+export function TripCard({ listing, showTravelDetails = false, eagerImage = false, savedAction, linkToDetails = false }: {
   listing: TripListing;
   showTravelDetails?: boolean;
   eagerImage?: boolean;
   savedAction?: ReactNode;
   linkToDetails?: boolean;
 }) {
+  const { listings } = useDemoTravel();
+  const { trip, host, photo, date, cost, local, cancelled } = listings.find(({ trip }) => trip.id === listing.trip.id) ?? listing;
   const id = "preview-" + trip.slug;
   const available = availableSpots(trip);
-  const availability = available === 1 ? "1 spot left" : available > 0 ? available + " spots left" : "Trip full";
-  const commercial = trip.kind === "commercial";
+  const availability = cancelled ? "Cancelled" : available === 1 ? "1 spot left" : available > 0 ? available + " spots left" : "Trip full";
   const hostName = tripHostName(trip, host);
   const welcomeGroups = trip.welcomeGroups.map((group) => travellerGroupLabels[group]).join(" · ");
   const initials = travellerInitials(hostName);
@@ -56,7 +58,7 @@ export function TripCard({ listing: { trip, host, photo, date, cost }, showTrave
           <span className={styles.avatar} data-group={host.group} aria-hidden="true">{initials}</span>
           <div>
             <span className={styles.hostName}>{hostName}</span>
-            <span className={styles.hostType}>{commercial ? "Commercial trip" : "Personal trip"}</span>
+            <span className={styles.hostType}>{local ? "Published demo trip" : "Community trip"}</span>
           </div>
         </div>
         {showTravelDetails && (
@@ -68,25 +70,26 @@ export function TripCard({ listing: { trip, host, photo, date, cost }, showTrave
         <div className={styles.tripBottom}>
           <div className={styles.tripCost}>
             <strong>{cost}</strong>
-            <span>{commercial ? "price / person" : "est. share / person"}</span>
+            {(trip.estimatedSharePerPersonInr ?? 0) > 0 && <span>est. budget / person</span>}
           </div>
           <span className={styles.availability}><span aria-hidden="true" />{availability}</span>
         </div>
       </div>
 
       {!direct && <Dialog id={id} title={trip.title}>
-        <p>{trip.destination} · {activityLabels[trip.activity]} · {commercial ? "Commercial trip" : "Personal trip"}</p>
+        <p>{trip.destination} · {activityLabels[trip.activity]} · Community trip</p>
         <dl className={styles.dialogFacts}>
           <div><dt>Dates</dt><dd>{date}</dd></div>
           <div><dt>Departing from</dt><dd>{trip.departureCity}</dd></div>
           <div><dt>Difficulty</dt><dd className="capitalize">{trip.difficulty}</dd></div>
-          <div><dt>{commercial ? "Organiser" : "Host"}</dt><dd>{hostName}</dd></div>
-          <div><dt>{commercial ? "Price per person" : "Estimated share per person"}</dt><dd>{cost}</dd></div>
+          <div><dt>Host</dt><dd>{hostName}</dd></div>
+          <div><dt>Estimated shared expenses per person</dt><dd>{cost}</dd></div>
           <div><dt>Availability</dt><dd>{availability}</dd></div>
           {showTravelDetails && <div><dt>Open to</dt><dd>{welcomeGroups}</dd></div>}
         </dl>
-        {!commercial && <p>{host.bio}</p>}
-        <p className={styles.previewNote}>Sample listing. On live trips, the host reviews requests before confirming a place.</p>
+        <p>{host.bio}</p>
+        <p>{sharedExpenseNote}</p>
+        <p className={styles.previewNote}>Free to join. The demo host reviews requests in this browser.</p>
         <div className={styles.dialogActions}>
           <Link className={styles.buttonPrimary} href={tripHref(trip.slug)} onNavigate={() => rememberTripOpening(trip.slug)}>
             View trip details

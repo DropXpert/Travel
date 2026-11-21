@@ -16,7 +16,7 @@ import styles from "./dashboard.module.css";
 type Photo = { src: string; alt: string };
 
 export function DraftPlan({ covers, emptyPhoto }: { covers: readonly DraftCover[]; emptyPhoto: Photo }) {
-  const { saved, savedText, working } = useTripDraft();
+  const { saved, savedText, working, migrated } = useTripDraft();
   const draft = working ?? saved;
   const cover = covers.find(({ src }) => src === draft?.cover);
   const preview = useRef<HTMLDialogElement>(null);
@@ -65,6 +65,7 @@ export function DraftPlan({ covers, emptyPhoto }: { covers: readonly DraftCover[
           <div className={styles.draftBody}>
             <p className={styles.draftStatus}>{working ? "Unsaved changes in this tab" : "Saved on this device"}</p>
             <h3>{draft.title.trim() || "Untitled trip plan"}</h3>
+            {migrated && <p>Your saved plan now uses the community-trip format. Review its estimated expenses in the editor.</p>}
             <ul className={styles.facts}>
               <li><MapPin size={17} aria-hidden="true" />{draft.destination.trim() || "Destination to be decided"}</li>
               <li><CalendarDays size={17} aria-hidden="true" />{draftDates(draft.startsOn, draft.endsOn)}</li>
@@ -72,8 +73,8 @@ export function DraftPlan({ covers, emptyPhoto }: { covers: readonly DraftCover[
                 {draft.groups.length ? draft.groups.map((group) => travellerGroupLabels[group]).join(" · ") : "Traveller groups to be decided"}
               </li>
             </ul>
-            <p className={styles.draftType}>{draft.kind === "commercial" ? "Commercial trip" : "Personal trip"}
-              {cost && <> · {cost} {draft.kind === "commercial" ? "per person" : "estimated share per person"}</>}
+            <p className={styles.draftType}>Community trip
+              {cost && <> · {cost} {Number(draft.budget) > 0 ? "estimated budget per person" : ""}</>}
             </p>
             <div className={styles.draftActions}>
               <Link href="/trips/new" className={site.buttonPrimary}>Continue editing</Link>

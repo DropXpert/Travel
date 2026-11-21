@@ -22,7 +22,7 @@ const guidelines = [
   "Ask before sharing photos or contact details. Respect people’s privacy and boundaries.",
   "Agree on shared costs and how you’ll split them before setting off.",
   "Follow outdoor safety guidance and the safety plans your group has agreed on.",
-  "Flag suspicious behaviour to the organiser or through reporting tools where available.",
+  "Flag suspicious behaviour to the host or through reporting tools where available.",
 ] as const;
 
 export const revalidate = 86400;
@@ -98,7 +98,7 @@ export default async function CommunityDetailsPage({ params }: Props) {
             <div className={styles.joinAction}>
               <DialogButton dialogId={joinDialogId} className={site.buttonPrimary + " " + styles.joinButton}>Request to Join</DialogButton>
             </div>
-            <p className={styles.joinNote}>Demo only. Join requests stay on this screen.</p>
+            <p className={styles.joinNote}>Free to participate. Demo join requests stay on this screen.</p>
           </aside>
 
           <section className={styles.related} aria-labelledby="community-trips">

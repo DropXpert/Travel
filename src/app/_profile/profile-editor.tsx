@@ -165,18 +165,20 @@ export function ProfileEditor({ initial, covers, tones }: {
           <div className={styles.editFields} ref={fields}>
             <p>Changes stay on this device.</p>
             <div className={styles.fieldPair}>
-              <label className={styles.field}>Display name
-                <input name="displayName" required value={draft.displayName} maxLength={limits.displayName}
+              <div className={styles.field}>
+                <label htmlFor="profile-display-name">Display name</label>
+                <input id="profile-display-name" name="displayName" required value={draft.displayName} maxLength={limits.displayName}
                   aria-invalid={Boolean(errors.displayName) || undefined} aria-describedby={errors.displayName ? "name-error" : undefined}
                   onChange={(event) => update({ displayName: event.currentTarget.value })} />
                 {errors.displayName && <span id="name-error" className={styles.error}>{errors.displayName}</span>}
-              </label>
-              <label className={styles.field}>Starting city
-                <input name="homeCity" value={draft.homeCity} maxLength={limits.homeCity} placeholder="e.g. Mumbai"
+              </div>
+              <div className={styles.field}>
+                <label htmlFor="profile-home-city">Starting city</label>
+                <input id="profile-home-city" name="homeCity" value={draft.homeCity} maxLength={limits.homeCity} placeholder="e.g. Mumbai"
                   aria-invalid={Boolean(errors.homeCity) || undefined} aria-describedby={errors.homeCity ? "city-error" : undefined}
                   onChange={(event) => update({ homeCity: event.currentTarget.value })} />
                 {errors.homeCity && <span id="city-error" className={styles.error}>{errors.homeCity}</span>}
-              </label>
+              </div>
             </div>
             <label className={styles.field}>Traveller type
               <select name="group" value={draft.group} onChange={(event) => update({ group: event.currentTarget.value as TravellerGroup })}>

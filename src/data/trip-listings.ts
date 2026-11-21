@@ -1,5 +1,5 @@
 import { travellerProfiles, trips } from "@/data/fixtures";
-import { tripCostPerPerson, type TravellerGroup, type TravellerProfile, type Trip } from "@/domain/travel";
+import { formatTripBudget, type TravellerGroup, type TravellerProfile, type Trip } from "@/domain/travel";
 
 export interface TripListing {
   trip: Trip;
@@ -8,6 +8,8 @@ export interface TripListing {
   suggestedFor: readonly TravellerGroup[];
   date: string;
   cost: string;
+  local?: boolean;
+  cancelled?: boolean;
 }
 
 export const photos = {
@@ -114,12 +116,6 @@ const dateFormat = new Intl.DateTimeFormat("en-IN", {
   timeZone: "UTC",
 });
 
-const moneyFormat = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  maximumFractionDigits: 0,
-});
-
 export const tripListings: TripListing[] = trips.map((trip) => {
   const host = travellerProfiles.find((profile) => profile.id === trip.hostId);
   if (!host) throw new Error("Missing host for sample trip " + trip.slug);
@@ -131,6 +127,6 @@ export const tripListings: TripListing[] = trips.map((trip) => {
     photo: { src: photo.src, alt: photo.alt },
     suggestedFor,
     date: dateFormat.formatRange(new Date(trip.startsOn), new Date(trip.endsOn)),
-    cost: moneyFormat.format(tripCostPerPerson(trip)),
+    cost: formatTripBudget((trip as Trip).estimatedSharePerPersonInr),
   };
 });

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
-import type { TravellerGroup, Trip } from "@/domain/travel";
+import { formatTripBudget, type TravellerGroup } from "@/domain/travel";
+import { subscribeToStorage } from "./local-storage";
 
 export const draftCategories = [
   "Hiking & Trekking", "Weekend Getaway", "Road Trip", "Camping", "Adventure", "Leisure", "Other",
@@ -23,7 +24,6 @@ export const draftLimits = {
 export interface DraftDay { id: number; title: string; note: string }
 
 export interface TripDraft {
-  kind: Trip["kind"];
   title: string;
   destination: string;
   departureCity: string;
@@ -44,7 +44,7 @@ export interface TripDraft {
 }
 
 export const emptyTripDraft: TripDraft = {
-  kind: "personal", title: "", destination: "", departureCity: "", startsOn: "", endsOn: "",
+  title: "", destination: "", departureCity: "", startsOn: "", endsOn: "",
   category: "", description: "", groups: [], capacity: "", spots: "", preferences: "",
   budget: "", included: "", excluded: "", costNotes: "", itinerary: [], cover: "",
 };
@@ -61,9 +61,6 @@ export function validPlace(value: string) {
 const draftDateFormat = new Intl.DateTimeFormat("en-IN", {
   day: "numeric", month: "short", year: "numeric", timeZone: "UTC",
 });
-const draftMoneyFormat = new Intl.NumberFormat("en-IN", {
-  style: "currency", currency: "INR", minimumFractionDigits: 0, maximumFractionDigits: 2,
-});
 
 export function draftDates(start: string, end: string) {
   if (!validDate(start)) return "Dates to be decided";
@@ -75,7 +72,7 @@ export function draftDates(start: string, end: string) {
 
 export function draftCost(budget: string) {
   const amount = Number(budget);
-  return budget.trim() && Number.isFinite(amount) && amount >= 0 ? draftMoneyFormat.format(amount) : "";
+  return formatTripBudget(budget.trim() && Number.isFinite(amount) && amount >= 0 ? amount : undefined);
 }
 
 function validDate(value: unknown): value is string {
@@ -109,8 +106,8 @@ export function validateTripDraft(draft: TripDraft, today: string) {
   if (draft.spots && (!Number.isSafeInteger(spots) || spots < 0 || (!errors.capacity && spots > capacity))) {
     errors.spots = "Enter a whole number between 0 and the maximum participants.";
   }
-  if (!draft.budget.trim() || !Number.isFinite(Number(draft.budget)) || Number(draft.budget) < 0) {
-    errors.budget = "Enter an amount of ₹0 or more.";
+  if (draft.budget.trim() && (!Number.isFinite(Number(draft.budget)) || Number(draft.budget) < 0)) {
+    errors.budget = "Leave the budget empty or enter an amount of ₹0 or more.";
   }
   return errors;
 }
@@ -127,7 +124,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function decodeDraft(text: string | null): TripDraft | null {
+export function decodeDraft(text: string | null): TripDraft | null {
   if (!text) return null;
   try {
     const stored: unknown = JSON.parse(text);
@@ -138,7 +135,6 @@ function decodeDraft(text: string | null): TripDraft | null {
     const groups = allowedGroups.filter((group) => savedGroups.includes(group));
     const days: unknown[] = Array.isArray(stored.itinerary) ? stored.itinerary : [];
     return {
-      kind: stored.kind === "commercial" ? "commercial" : "personal",
       title: read(stored.title, draftLimits.title),
       destination: read(stored.destination, draftLimits.destination),
       departureCity: read(stored.departureCity, draftLimits.departureCity),
@@ -165,15 +161,7 @@ function decodeDraft(text: string | null): TripDraft | null {
 }
 
 function subscribe(listener: () => void) {
-  function onStorage(event: StorageEvent) {
-    if (event.key === draftKey || event.key === null) listener();
-  }
-  window.addEventListener("storage", onStorage);
-  window.addEventListener(draftChanged, listener);
-  return () => {
-    window.removeEventListener("storage", onStorage);
-    window.removeEventListener(draftChanged, listener);
-  };
+  return subscribeToStorage(draftKey, draftChanged, listener);
 }
 
 function warnBeforeLeaving(event: BeforeUnloadEvent) {
@@ -188,7 +176,8 @@ export function useTripDraft() {
   const savedText = useSyncExternalStore(subscribe, readSavedText, noDraft);
   const saved = useMemo(() => decodeDraft(savedText), [savedText]);
   const working = useSyncExternalStore(subscribe, readWorking, noDraft);
-  return { saved, savedText, working };
+  const migrated = Boolean(saved && savedText && "kind" in JSON.parse(savedText));
+  return { saved, savedText, working, migrated };
 }
 
 export function editTripDraft(draft: TripDraft) {
@@ -199,7 +188,18 @@ export function editTripDraft(draft: TripDraft) {
 
 export function persistTripDraft(draft: TripDraft | null) {
   try {
-    if (draft) window.localStorage.setItem(draftKey, JSON.stringify(draft));
+    if (draft) {
+      const original = window.localStorage.getItem(draftKey);
+      // Preserve the original before the first save in the new format, including unknown legacy fields.
+      if (original && !window.localStorage.getItem(draftKey + "-original")) {
+        let stored: unknown;
+        try { stored = JSON.parse(original); } catch { stored = null; }
+        if (!isRecord(stored) || stored.schemaVersion !== 2) {
+          window.localStorage.setItem(draftKey + "-original", original);
+        }
+      }
+      window.localStorage.setItem(draftKey, JSON.stringify({ ...decodeDraft(JSON.stringify(draft)), schemaVersion: 2 }));
+    }
     else window.localStorage.removeItem(draftKey);
   } catch {
     return false;

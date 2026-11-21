@@ -2,9 +2,9 @@
 
 import { CarFront, Compass, MapPinned, Mountain, Search, SlidersHorizontal, TentTree, UserRound, UsersRound, X } from "lucide-react";
 import { useRef, useState, useSyncExternalStore } from "react";
-import type { TripListing } from "@/data/trip-listings";
 import { availableSpots, travellerGroupLabels } from "@/domain/travel";
 import { TripCard } from "../_shared/trip-card";
+import { useDemoTravel } from "../_shared/demo-travel";
 import site from "../_shared/site.module.css";
 import { browseTrips, categories, emptyFilters, exploreQuery, readExploreState, sortOptions, type ExploreState, type TripFilters } from "./browse-trips";
 import { TripFilterDialog, TripSelect } from "./trip-filters";
@@ -52,7 +52,7 @@ function filterTags(filters: TripFilters) {
   return tags;
 }
 
-export function ExploreTrips({ listings, initialState }: { listings: readonly TripListing[]; initialState: ExploreState }) {
+export function ExploreTrips({ initialState }: { initialState: ExploreState }) {
   const urlQuery = useSyncExternalStore(subscribeToQuery, browserQuery, () => exploreQuery(initialState));
   const state = readExploreState(new URLSearchParams(urlQuery));
   const [filterVersion, setFilterVersion] = useState(0);
@@ -60,12 +60,14 @@ export function ExploreTrips({ listings, initialState }: { listings: readonly Tr
   const filterTrigger = useRef<HTMLButtonElement>(null);
   const filterDialog = useRef<HTMLDialogElement>(null);
   const { filters, query, sort } = state;
-  const results = browseTrips(listings, state);
+  const { listings } = useDemoTravel();
+  const available = listings.filter((listing) => !listing.cancelled);
+  const results = browseTrips(available, state);
   const tags = filterTags(filters);
   const activeCount = tags.length + Number(filters.category !== "all");
-  const cities = [...new Set(listings.map(({ trip }) => trip.departureCity))].sort();
-  const destinations = [...new Set(listings.map(({ trip }) => trip.destination))].sort();
-  const maxSpots = Math.max(0, ...listings.map(({ trip }) => availableSpots(trip)));
+  const cities = [...new Set(available.map(({ trip }) => trip.departureCity))].sort();
+  const destinations = [...new Set(available.map(({ trip }) => trip.destination))].sort();
+  const maxSpots = Math.max(0, ...available.map(({ trip }) => availableSpots(trip)));
 
   function update(next: ExploreState) {
     const params = exploreQuery(next);
@@ -168,7 +170,7 @@ export function ExploreTrips({ listings, initialState }: { listings: readonly Tr
           </div>
         )}
         <div className={styles.resultsBar}>
-          <h2 id="results-title" aria-live="polite">{results.length} sample {results.length === 1 ? "trip" : "trips"}</h2>
+          <h2 id="results-title" aria-live="polite">{results.length} {results.length === 1 ? "trip" : "trips"}</h2>
           <label className={styles.sort}>
             <span>Sort by</span>
             <TripSelect value={sort} onChange={(event) => {

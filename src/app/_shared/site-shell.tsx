@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { photos } from "@/data/trip-listings";
 import { primaryNavigation } from "@/navigation/primary";
 import { SiteBrand, siteDisplay } from "./brand";
+import { DemoAccount } from "./demo-account";
 import { DialogButton } from "./dialog-button";
 import { Dialog } from "./dialog";
 import { LoginLink } from "./login-link";
@@ -78,6 +79,7 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
       </header>
 
       <main id="main-content" tabIndex={-1}>
+        <DemoAccount />
         {children}
       </main>
 

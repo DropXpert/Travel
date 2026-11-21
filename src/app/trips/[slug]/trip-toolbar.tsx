@@ -10,13 +10,18 @@ import { canGoBackFromTrip, tripHref } from "../../_shared/trip-navigation";
 import site from "../../_shared/site.module.css";
 import styles from "./trip.module.css";
 
-export function TripToolbar({ id, title, slug }: { id: string; title: string; slug: string }) {
+export function TripToolbar({ id, title, slug, local }: { id: string; title: string; slug: string; local?: boolean }) {
   const saved = useSavedTripIds().includes(id);
   const [feedback, setFeedback] = useState("");
   const [shareLink, setShareLink] = useState("");
   const shareDialog = useRef<HTMLDialogElement>(null);
 
   async function shareTrip() {
+    if (local) {
+      setShareLink(new URL(tripHref(slug), window.location.origin).href);
+      shareDialog.current?.showModal();
+      return;
+    }
     const result = await shareTripLink(title, tripHref(slug));
     if (result.kind === "shared") setFeedback("Share options opened.");
     if (result.kind === "copied") setFeedback("Trip link copied.");
@@ -52,9 +57,9 @@ export function TripToolbar({ id, title, slug }: { id: string; title: string; sl
         </Link>
         <Link className={styles.mobileBrand} href="/">SideTrail</Link>
         <div className={styles.toolbarActions}>
-          <button type="button" className={styles.toolButton} aria-label="Share trip" onClick={shareTrip}>
+          <button type="button" className={styles.toolButton} aria-label={local ? "View local trip link" : "Share trip"} onClick={shareTrip}>
             <Share2 size={19} aria-hidden="true" />
-            <span>Share</span>
+            <span>{local ? "Trip link" : "Share"}</span>
           </button>
           <button type="button" className={styles.toolButton} aria-label="Save trip" aria-pressed={saved} onClick={toggleSaved}>
             <Bookmark size={19} fill={saved ? "currentColor" : "none"} aria-hidden="true" />
@@ -64,8 +69,8 @@ export function TripToolbar({ id, title, slug }: { id: string; title: string; sl
       </div>
       <p className={styles.toolbarStatus} role="status">{feedback}</p>
 
-      <Dialog id="share-trip" title="Share this trip" dialogRef={shareDialog}>
-        <p>Select and copy the link to share it with someone.</p>
+      <Dialog id="share-trip" title={local ? "Local trip link" : "Share this trip"} dialogRef={shareDialog}>
+        <p>{local ? "This link opens the demo trip in this browser only." : "Select and copy the link to share it with someone."}</p>
         <label className={styles.shareField}>
           Trip link
           <input readOnly value={shareLink} onFocus={(event) => event.currentTarget.select()} />

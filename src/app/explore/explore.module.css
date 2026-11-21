@@ -109,6 +109,7 @@
 
 .resultsBar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: .5rem;
@@ -122,6 +123,8 @@
 
 .sort {
   display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
   gap: .55rem;
   align-items: center;
   color: var(--color-ink-muted);
@@ -161,7 +164,7 @@
 }
 
 .sort .select select { font-size: var(--text-label); }
-.sort .select { min-width: 10.7rem; }
+.sort .select { min-width: min(10.7rem, 100%); max-width: 100%; }
 
 .empty {
   display: grid;
