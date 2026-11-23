@@ -42,7 +42,7 @@ export default async function OnboardingPage({ searchParams }: {
       <a className={site.skipLink} href="#onboarding-main">Skip to content</a>
       <header className={styles.header}>
         <SiteBrand href="/" />
-        <Link href={back} className={styles.exit}>Exit demo</Link>
+        <Link href={back} className={styles.exit}>Exit</Link>
       </header>
       <main id="onboarding-main" tabIndex={-1} className={styles.layout}>
         <figure className={styles.editorialPhoto}>

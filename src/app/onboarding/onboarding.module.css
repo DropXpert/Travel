@@ -49,8 +49,8 @@
 .intro { margin-block: 0 1.05rem; }
 .intro h1 {
   max-width: 21ch;
-  font: 800 clamp(2.1rem, 6.5vw, 3.6rem)/1.02 var(--font-display);
-  letter-spacing: -.055em;
+  font: 800 var(--text-page-title)/1.2 var(--font-display);
+  letter-spacing: -.025em;
   text-wrap: balance;
 }
 .intro p { max-width: 42ch; margin-block-start: .45rem; color: var(--color-ink-muted); }
@@ -89,7 +89,7 @@
 }
 .typePhoto img, .editorialPhoto img, .profilePhoto img { object-fit: cover; }
 .typeCopy { display: grid; gap: .13rem; line-height: 1.27; }
-.typeCopy strong { font-size: var(--text-body); }
+.typeCopy strong { font-size: var(--text-input); }
 .typeCopy > span, .hint { color: var(--color-ink-muted); font-size: var(--text-meta); font-weight: 500; }
 .radioMark, .checkMark {
   display: grid;
@@ -162,14 +162,14 @@
 .fields { display: grid; gap: .85rem; }
 .field { display: grid; min-width: 0; gap: .28rem; color: var(--color-ink); font-size: var(--text-label); font-weight: 700; }
 .field :is(input, select) {
-  min-height: 3rem;
+  min-height: var(--spacing-touch);
   width: 100%;
   min-width: 0;
   padding: .55rem .72rem;
   border: 1px solid var(--color-control-border);
   border-radius: var(--radius-control);
   background: var(--color-surface);
-  font-size: var(--text-body);
+  font-size: var(--text-input);
   font-weight: 500;
 }
 .field input::placeholder { color: var(--color-ink-muted); opacity: 1; }
@@ -205,7 +205,7 @@
 }
 .profileBody { position: relative; min-width: 0; padding: 0 .95rem 1rem; overflow-wrap: anywhere; }
 .profileBody .avatar { width: 3.7rem; height: 3.7rem; margin-top: -1.65rem; border-color: var(--color-surface); font-size: 1.2rem; }
-.profileBody h2 { margin-block: .25rem .55rem; font: 800 clamp(1.5rem, 4vw, 2.05rem)/1.08 var(--font-display); letter-spacing: -.035em; }
+.profileBody h2 { margin-block: .25rem .55rem; font: 800 var(--text-section)/1.2 var(--font-display); letter-spacing: -.035em; }
 .profileMeta, .profileInterests { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .55rem; }
 .profileMeta li, .profileInterests li { display: inline-flex; align-items: center; gap: .32rem; font-size: var(--text-label); font-weight: 660; }
 .profileMeta li { color: var(--color-ink-muted); }
@@ -280,7 +280,7 @@
   }
   .editorialPhoto svg { flex: none; color: var(--color-teal-dark); }
   .editorialPhoto small { display: block; color: var(--color-ink-muted); font-size: var(--text-meta); font-weight: 500; }
-  .intro h1 { font-size: clamp(2.65rem, 4.15vw, 3.6rem); }
+  .intro h1 { font-size: var(--text-page-title); }
   .progress { margin-block-end: 1.35rem; }
   .actionBar { position: static; padding: 0; margin-block-start: 1rem; border: 0; }
 }

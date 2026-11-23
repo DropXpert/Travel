@@ -141,7 +141,7 @@ export function ProfileEditor({ initial, covers, tones }: {
     try {
       localStorage.removeItem(storageKey);
       window.dispatchEvent(new Event(profileChanged));
-      setStatus("Demo profile reset on this device.");
+      setStatus("Profile reset on this device.");
     } catch {
       setStatus("Device storage is unavailable. Your saved profile is still in place.");
     }
@@ -155,7 +155,7 @@ export function ProfileEditor({ initial, covers, tones }: {
           <button type="button" className={site.buttonPrimary} aria-haspopup="dialog" onClick={edit}>
             <Pencil size={17} aria-hidden="true" />Edit profile
           </button>
-          <DialogButton dialogId="reset-profile" className={styles.resetButton}>Reset demo profile</DialogButton>
+          <DialogButton dialogId="reset-profile" className={styles.resetButton}>Reset profile</DialogButton>
           <p className={styles.actionStatus} role="status">{status}</p>
         </>
       } />
@@ -255,11 +255,11 @@ export function ProfileEditor({ initial, covers, tones }: {
           </div>
         </form>
       </Dialog>
-      <Dialog id="reset-profile" title="Reset demo profile?" dialogRef={reset}>
-        <p>This restores the original demo profile and clears its saved edits on this device.</p>
+      <Dialog id="reset-profile" title="Reset profile?" dialogRef={reset}>
+        <p>This restores the sample profile and clears its saved edits on this device.</p>
         <div className={site.dialogActions}>
           <form method="dialog"><button type="submit" className={site.buttonOutline}>Keep profile</button></form>
-          <form onSubmit={resetProfile}><button type="submit" className={styles.resetConfirm}>Reset demo profile</button></form>
+          <form onSubmit={resetProfile}><button type="submit" className={styles.resetConfirm}>Reset profile</button></form>
         </div>
       </Dialog>
     </>

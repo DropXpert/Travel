@@ -24,8 +24,8 @@
 .discard { color: var(--color-danger); }
 .intro h1 {
   margin-block: .35rem .45rem;
-  font: 800 clamp(2.25rem, 7.9vw, 3.9rem)/1.015 var(--font-display);
-  letter-spacing: -.056em;
+  font: 800 var(--text-page-title)/1.2 var(--font-display);
+  letter-spacing: -.025em;
 }
 .intro h1 span { color: var(--color-teal-dark); }
 .intro p { color: var(--color-ink-muted); }
@@ -46,7 +46,7 @@
 .section + .section { border-top: 1px solid var(--color-divider); }
 
 .section h2, .livePreview h2 {
-  font: 800 clamp(1.65rem, 4vw, 2.05rem)/1.08 var(--font-display);
+  font: 800 var(--text-section)/1.2 var(--font-display);
   letter-spacing: -.04em;
 }
 
@@ -80,13 +80,13 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 .field :is(input, textarea, select) {
   width: 100%;
   min-width: 0;
-  min-height: 3rem;
+  min-height: var(--spacing-touch);
   padding: .58rem .75rem;
   border: 1px solid var(--color-control-border);
   border-radius: var(--radius-control);
   background: var(--color-surface);
   color: var(--color-ink);
-  font-size: var(--text-body);
+  font-size: var(--text-input);
   font-weight: 450;
 }
 .field textarea { resize: vertical; }
@@ -233,7 +233,7 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 }
 
 .previewBody h3 {
-  font: 800 1.52rem/1.1 var(--font-display);
+  font: 800 var(--text-card-title)/1.25 var(--font-display);
   letter-spacing: -.035em;
 }
 
@@ -272,7 +272,7 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 
 .discardConfirm {
   @apply inline-flex min-h-touch items-center justify-center;
-  min-height: 3rem;
+  min-height: var(--spacing-touch);
   padding-inline: .9rem;
   border-radius: var(--radius-control);
   background-color: var(--color-danger);

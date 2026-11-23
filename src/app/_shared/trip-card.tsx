@@ -58,7 +58,7 @@ export function TripCard({ listing, showTravelDetails = false, eagerImage = fals
           <span className={styles.avatar} data-group={host.group} aria-hidden="true">{initials}</span>
           <div>
             <span className={styles.hostName}>{hostName}</span>
-            <span className={styles.hostType}>{local ? "Published demo trip" : "Community trip"}</span>
+            <span className={styles.hostType}>{local ? "Published trip" : "Community trip"}</span>
           </div>
         </div>
         {showTravelDetails && (
@@ -89,7 +89,7 @@ export function TripCard({ listing, showTravelDetails = false, eagerImage = fals
         </dl>
         <p>{host.bio}</p>
         <p>{sharedExpenseNote}</p>
-        <p className={styles.previewNote}>Free to join. The demo host reviews requests in this browser.</p>
+        <p className={styles.previewNote}>Free to join. Requests and host decisions stay in this browser.</p>
         <div className={styles.dialogActions}>
           <Link className={styles.buttonPrimary} href={tripHref(trip.slug)} onNavigate={() => rememberTripOpening(trip.slug)}>
             View trip details

@@ -4,13 +4,13 @@ Open the public HTTPS demo link in Safari, Chrome or Firefox. Keep the whole tes
 
 ## Try a trip from both sides
 
-1. **Choose a host.** Open **Demo account** near the top of the page and select **Solo traveller · Meera Kulkarni**. Close the panel.
-2. **Publish a trip.** Open **Create** and title it `Sunrise chai hike`. Enter `Sinhagad` as the destination and `Pune` as the starting city. Pick a future date for both start and end, select **Couples** under traveller groups and enter `4` for maximum participants. Leave available spots and estimated budget blank. Tap **Preview listing → Publish trip (demo)**.
-3. **Switch travellers.** Open **Demo account** again and choose **Couple · Kavya & Dev**. Close the panel.
-4. **Discover and request.** On Trip Details, use the **Back to trips** arrow to reach **Explore**. Search for `Sunrise chai hike`, open its card and choose **View trip details**. Tap **Request to Join → Send demo request**. Kavya & Dev request two spots. Open **View My Requests** and look for **Pending**.
+1. **Choose a host.** Open **Switch Traveller** near the top of the page and select **Solo traveller · Meera Kulkarni**. Close the panel.
+2. **Publish a trip.** Open **Create** and title it `Sunrise chai hike`. Enter `Sinhagad` as the destination and `Pune` as the starting city. Pick a future date for both start and end, select **Couples** under traveller groups and enter `4` for maximum participants. Leave available spots and estimated budget blank. Tap **Preview listing → Publish Trip**.
+3. **Switch travellers.** Open **Switch Traveller** again and choose **Couple · Kavya & Dev**. Close the panel.
+4. **Discover and request.** On Trip Details, use the **Back to trips** arrow to reach **Explore**. Search for `Sunrise chai hike`, open its card and choose **View trip details**. Tap **Request to Join → Send request**. Kavya & Dev request two spots. Open **View My Requests** and look for **Pending**.
 5. **Accept as the host.** Switch the demo account back to **Meera Kulkarni**. Open **My Trips → Hosting**. Under `Sunrise chai hike`, choose **Manage requests**, then **Accept request → Confirm acceptance**. Check that **Spots left** shows `2`.
 6. **Open the group.** Switch back to **Kavya & Dev**. In **My Trips → Join Requests**, look for **Accepted** and open **Trip Group Space**. In **Members**, check that you see Meera as host and Kavya & Dev as the accepted party. Try the checklist.
-7. **Reset.** Open **Demo account → Reset Demo Data → Confirm reset**. The published demo trip and your request changes are cleared from this browser. Saved drafts and bookmarks stay in place.
+7. **Reset.** Open **Switch Traveller → Reset Demo Data → Confirm reset**. The published demo trip and your request changes are cleared from this browser. Saved drafts and bookmarks stay in place.
 
 Trips and requests are shared across tabs on the same site address in the same browser profile. A different browser, device or domain has its own demo data. Private browsing is separate from your regular browser session. Switch accounts in the app to try both sides of the same trip. Use the main demo URL when inviting another tester.
 

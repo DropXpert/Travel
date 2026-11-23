@@ -43,8 +43,8 @@ export function CommunityJoinRequest({ groups, expectations, focusOnMount = fals
     return (
       <section className={styles.done} aria-labelledby="community-done-title">
         <span className={styles.doneIcon}><Check size={23} aria-hidden="true" /></span>
-        <h3 tabIndex={-1} ref={heading} id="community-done-title">Local preview</h3>
-        <p>Join request preview created. This is a demo. No request has been sent.</p>
+        <h3 tabIndex={-1} ref={heading} id="community-done-title">Your request</h3>
+        <p>Your request is shown here only. Nothing has been sent.</p>
         <form method="dialog"><button className={site.buttonPrimary} type="submit">Done</button></form>
       </section>
     );
@@ -52,7 +52,7 @@ export function CommunityJoinRequest({ groups, expectations, focusOnMount = fals
 
   return (
     <section className={styles.joinStep} aria-labelledby="community-request-title">
-      <h3 tabIndex={-1} ref={heading} id="community-request-title">Preview your join request</h3>
+      <h3 tabIndex={-1} ref={heading} id="community-request-title">Join request</h3>
       <p>{expectations}</p>
       <form className={styles.joinForm} onSubmit={submitRequest} noValidate>
         <label htmlFor="community-traveller-type">Traveller type</label>
@@ -78,7 +78,7 @@ export function CommunityJoinRequest({ groups, expectations, focusOnMount = fals
           aria-describedby="community-introduction-hint" placeholder="What kind of trips do you enjoy?" />
         <p className={styles.fieldHint} id="community-introduction-hint">Up to 240 characters. Leave out contact details and children’s personal information.</p>
         <p className={styles.fieldHint}>This preview stays on this screen.</p>
-        <button type="submit" className={site.buttonPrimary + " " + styles.joinButton}>Preview join request</button>
+        <button type="submit" className={site.buttonPrimary + " " + styles.joinButton}>Review request</button>
       </form>
     </section>
   );

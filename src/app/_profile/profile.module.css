@@ -26,7 +26,7 @@
   border-radius: 50%;
   background: var(--color-teal-soft);
   color: var(--color-teal-dark);
-  font: 800 1.55rem/1 var(--font-display);
+  font: 800 var(--text-card-title)/1.25 var(--font-display);
   letter-spacing: -.03em;
 }
 .avatar[data-tone="clay"] {
@@ -44,8 +44,8 @@
 
 .identity h1, .missing h1 {
   margin: .24rem 0 .65rem;
-  font: 800 clamp(2.1rem, 8.5vw, 3.7rem)/1.02 var(--font-display);
-  letter-spacing: -.055em;
+  font: 800 var(--text-page-title)/1.2 var(--font-display);
+  letter-spacing: -.025em;
   overflow-wrap: anywhere;
 }
 .metadata {
@@ -97,7 +97,7 @@
 .trust { grid-area: trust; min-width: 0; }
 .profileBody h2 {
   margin-bottom: .7rem;
-  font: 800 clamp(1.55rem, 4vw, 1.9rem)/1.1 var(--font-display);
+  font: 800 var(--text-section)/1.2 var(--font-display);
   letter-spacing: -.04em;
 }
 
@@ -172,13 +172,13 @@
 .field :is(input, select, textarea) {
   width: 100%;
   min-width: 0;
-  min-height: 3rem;
+  min-height: var(--spacing-touch);
   padding: .55rem .7rem;
   border: 1px solid var(--color-control-border);
   border-radius: var(--radius-control);
   background: var(--color-surface);
   color: var(--color-ink);
-  font-size: var(--text-body);
+  font-size: var(--text-input);
   font-weight: 480;
 }
 .field textarea { resize: vertical; }
@@ -263,7 +263,7 @@ dialog.editorDialog[open] { display: flex; flex-direction: column; }
 .editFooter > div > button:last-child { flex: 1; }
 .resetConfirm {
   @apply inline-flex min-h-touch items-center justify-center;
-  min-height: 3rem;
+  min-height: var(--spacing-touch);
   padding-inline: .8rem;
   border-radius: var(--radius-control);
   background: var(--color-danger);
@@ -271,7 +271,7 @@ dialog.editorDialog[open] { display: flex; flex-direction: column; }
   font-size: var(--text-label);
   font-weight: 680;
 }
-.missing { padding-block: clamp(2rem, 7vw, 5rem); }
+.missing { padding-block: var(--space-section); }
 .missing p { margin-bottom: .85rem; color: var(--color-ink-muted); }
 
 @media (width >= 640px) {
@@ -286,12 +286,12 @@ dialog.editorDialog[open] { display: flex; flex-direction: column; }
 
 @media (width >= 768px) {
   .profile { padding-top: 1.8rem; }
-  .hero { display: grid; grid-template-columns: 1fr; align-items: center; gap: 2rem; padding-bottom: 1.8rem; }
+  .hero { display: grid; grid-template-columns: 1fr; align-items: center; gap: var(--space-section); padding-bottom: 1.8rem; }
   .hero[data-cover] { grid-template-columns: minmax(0, .96fr) minmax(0, 1.04fr); }
   .cover { grid-column: 2; grid-row: 1; aspect-ratio: 1.9; }
   .identity { grid-column: 1; grid-row: 1; padding: 0; }
   .hero[data-cover] .identity > .avatar { margin-top: 0; }
-  .identity h1 { font-size: clamp(2.55rem, 5vw, 3.7rem); }
+  .identity h1 { font-size: var(--text-page-title); }
 }
 
 @media (width >= 1024px) {

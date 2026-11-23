@@ -77,10 +77,10 @@ export function AuthEntry({ mode, returnTo }: { mode: AuthMode; returnTo: string
           <span className={styles.previewIcon}><MessageSquareText size={25} strokeWidth={1.8} aria-hidden="true" /></span>
           <h1 ref={previewHeading} id="auth-title" tabIndex={-1}>OTP preview<span>.</span></h1>
           <p><strong>No OTP has been sent.</strong> On live Share Yarana, you’d enter a one-time code here to verify your mobile number.</p>
-          {signUp && traveller && <p className={styles.selection}>Traveller type preview · {profileTypeLabels[traveller]}</p>}
-          <p className={styles.demoNote}>This demo never sends or saves your details.</p>
+          {signUp && traveller && <p className={styles.selection}>Traveller type · {profileTypeLabels[traveller]}</p>}
+          <p className={styles.demoNote}>Your details are never sent or saved.</p>
           <Link href={onboardingHref(returnTo, signUp ? traveller : undefined)} className={site.buttonPrimary + " " + styles.fullButton}>
-            Preview onboarding
+            Set travel preferences
           </Link>
           <button type="button" className={site.buttonOutline + " " + styles.fullButton} onClick={editDetails}>Edit details</button>
         </div>
@@ -88,9 +88,9 @@ export function AuthEntry({ mode, returnTo }: { mode: AuthMode; returnTo: string
         <>
           <div className={styles.intro}>
             <h1 id="auth-title">{signUp ? "Good trips start here" : "Welcome back, explorer"}<span>.</span></h1>
-            <p>{signUp ? "Registration is free. Meet your people and go somewhere new." : "Your next adventure is waiting."}</p>
+            <p>{signUp ? "Registration is free. Meet your people and go somewhere new." : "Pick up where you left off."}</p>
           </div>
-          <p className={styles.demoNote} id="auth-demo-note"><strong>Account demo.</strong> Use sample details.</p>
+          <p className={styles.demoNote} id="auth-demo-note"><strong>Use sample details.</strong> This walkthrough creates no account and sends no OTP.</p>
           <form className={styles.form} aria-describedby="auth-demo-note" onSubmit={continuePreview} noValidate autoComplete="off">
             {signUp && (
               <div className={styles.field}>
@@ -117,7 +117,7 @@ export function AuthEntry({ mode, returnTo }: { mode: AuthMode; returnTo: string
             </div>
             {signUp && (
               <fieldset className={styles.travellers}>
-                <legend>How do you travel? <span>Optional preview</span></legend>
+                <legend>How do you travel? <span>Optional</span></legend>
                 <div className={styles.options}>
                   {travellerTypes.map(({ id, icon: Icon, description }) => (
                     <label className={styles.option} key={id}>

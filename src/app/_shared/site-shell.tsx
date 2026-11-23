@@ -11,8 +11,9 @@ import { Dialog } from "./dialog";
 import { LoginLink } from "./login-link";
 import styles from "./site.module.css";
 
-export function SiteShell({ children, isExplore = false, isCommunity = false, isCommunityDetail = false, isDashboard = false, isTrip = false, isTripGroup = false, isCreate = false, isVerification = false, profilePage, mobileAction }: {
+export function SiteShell({ children, isHome = false, isExplore = false, isCommunity = false, isCommunityDetail = false, isDashboard = false, isTrip = false, isTripGroup = false, isCreate = false, isVerification = false, profilePage, mobileAction }: {
   children: ReactNode;
+  isHome?: boolean;
   isExplore?: boolean;
   isCommunity?: boolean;
   isCommunityDetail?: boolean;
@@ -60,21 +61,24 @@ export function SiteShell({ children, isExplore = false, isCommunity = false, is
         <div className={styles.container + " " + styles.headerInner}>
           <SiteBrand href={brandHref} />
           <nav className={styles.desktopNav} aria-label={`${brandName} main navigation`}>
-            <Link href={exploreHref} aria-current={isExplore ? "page" : undefined} data-section-active={isTrip || isTripGroup || undefined}>Explore Trips</Link>
-            <Link href="/community" aria-current={isCommunity ? "page" : undefined} data-section-active={isCommunityDetail || undefined}>Communities</Link>
-            <Link href={homePath + "#how-it-works"}>How It Works</Link>
+            <Link href={exploreHref} aria-current={isExplore ? "page" : undefined} data-section-active={isTrip || isTripGroup || undefined}>{isHome ? "Explore" : "Explore Trips"}</Link>
+            <Link href="/community" aria-current={isCommunity ? "page" : undefined} data-section-active={isCommunityDetail || undefined}>{isHome ? "Community" : "Communities"}</Link>
+            {isHome ? <Link href="/trips/new">Create Trip</Link> : <Link href={homePath + "#how-it-works"}>How It Works</Link>}
             <Link href="/dashboard" aria-current={isDashboard === true ? "page" : undefined} data-section-active={dashboardDetail || undefined}>My trips</Link>
+            {isHome && <Link href="/profile">Profile</Link>}
           </nav>
           <div className={styles.mobileAccount}>
             <LoginLink className={styles.buttonText} />
             {profileLink}
           </div>
           <div className={styles.desktopActions}>
+            {isHome ? <LoginLink className={styles.buttonText} /> : <>
             <LoginLink className={styles.buttonText} />
             {profileLink}
             <Link href={createHref} aria-current={isCreate ? "page" : undefined} className={styles.buttonPrimary}>
               <Plus size={18} aria-hidden="true" />Create a Trip
             </Link>
+            </>}
           </div>
         </div>
       </header>

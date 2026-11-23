@@ -69,7 +69,7 @@ export default async function CommunityDetailsPage({ params }: Props) {
             </figcaption>
           </figure>
           <div className={styles.identity}>
-            <p className={styles.eyebrow}>Demo community · {communityCategories[category]}</p>
+            <p className={styles.eyebrow}>{communityCategories[category]}</p>
             <h1 id="community-title">{name}</h1>
             <ul className={styles.meta}>
               <li><MapPin size={17} aria-hidden="true" />{city}</li>
@@ -99,7 +99,7 @@ export default async function CommunityDetailsPage({ params }: Props) {
             <div className={styles.joinAction}>
               <DialogButton dialogId={joinDialogId} className={site.buttonPrimary + " " + styles.joinButton}>Request to Join</DialogButton>
             </div>
-            <p className={styles.joinNote}>Free to participate. Demo join requests stay on this screen.</p>
+            <p className={styles.joinNote}>Free to participate. Requests stay on this screen.</p>
           </aside>
 
           <section className={styles.related} aria-labelledby="community-trips">

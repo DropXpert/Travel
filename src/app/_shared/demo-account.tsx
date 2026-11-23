@@ -25,17 +25,17 @@ export function DemoAccount() {
       <div className={styles.container}>
         <button type="button" className={styles.buttonText} aria-haspopup="dialog" disabled={!ready}
           onClick={() => { setNotice(""); dialog.current?.showModal(); }}>
-          Demo account <span>· {profileTypeLabels[account.group]}</span>
+          Switch Traveller <span>· {profileTypeLabels[account.group]}</span>
         </button>
       </div>
-      <Dialog id="demo-account" title="Demo account" dialogRef={dialog} onClose={() => setConfirming(false)}>
+      <Dialog id="demo-account" title="Switch Traveller" dialogRef={dialog} onClose={() => setConfirming(false)}>
         <p>Switch fictional travellers to try hosting and joining. Trips and requests stay in this browser.</p>
         {damaged && <p role="alert">Demo data could not be read. Reset it to continue.</p>}
         <label className={styles.demoField}>
-          Switch demo traveller
+          Choose traveller
           <select value={state.account} disabled={damaged || confirming} onChange={async (event) => {
             const result = await updateDemo({ type: "switch", account: event.currentTarget.value });
-            setNotice(result.ok ? "Demo traveller switched." : result.error);
+            setNotice(result.ok ? "Traveller switched." : result.error);
           }}>
             {demoAccounts.map(({ id, group, displayName }) => <option value={id} key={id}>{profileTypeLabels[group]} · {displayName}</option>)}
           </select>

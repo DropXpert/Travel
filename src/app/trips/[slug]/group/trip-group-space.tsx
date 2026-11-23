@@ -53,8 +53,8 @@ export function ConnectedTripGroup({ slug }: { slug: string }) {
 
   if (!ready || !canOpen) return <div className={site.container + " " + site.demoPanel}>
     <h1>Trip Group Space</h1>
-    <p>{!ready ? "Loading demo group..." : !listing ? "This demo group is unavailable in this browser."
-      : listing.cancelled ? "This demo trip was cancelled." : "Switch to the demo host or an accepted traveller to open the group."}</p>
+    <p>{!ready ? "Loading group..." : !listing ? "This group is unavailable in this browser."
+      : listing.cancelled ? "This trip was cancelled." : "Switch to the host or an accepted traveller to open the group."}</p>
     <Link className={site.buttonOutline} href={tripHref(slug)}>Back to trip details</Link>
   </div>;
 
@@ -120,7 +120,7 @@ function TripGroupSpace({ group }: { group: TripGroupDemo }) {
             sizes="(min-width: 1152px) 485px, (min-width: 900px) 44vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)" />
         </figure>
         <div className={styles.identity}>
-          <p className={styles.eyebrow}>Trip group space · Browser demo</p>
+          <p className={styles.eyebrow}>Trip group space</p>
           <h1 id="group-title">{trip.title}</h1>
           <ul className={styles.facts}>
             <li><MapPin size={17} aria-hidden="true" />{trip.destination}</li>
@@ -145,7 +145,7 @@ function TripGroupSpace({ group }: { group: TripGroupDemo }) {
             <div className={styles.overview}>
               <section className={styles.announcements} aria-labelledby="group-announcements">
                 <h2 id="group-announcements"><Megaphone size={23} aria-hidden="true" />Host announcements</h2>
-                <p className={styles.lead}>{announcements.length ? "Fictional examples from " + host.displayName + "." : "No demo announcements for this trip yet."}</p>
+                <p className={styles.lead}>{announcements.length ? "Fictional examples from " + host.displayName + "." : "No announcements for this trip yet."}</p>
                 <ul>{announcements.map(({ title, text }) => <li key={title}><h3>{title}</h3><p>{text}</p></li>)}</ul>
               </section>
               <section className={styles.meeting} aria-labelledby="group-meeting">
@@ -159,7 +159,7 @@ function TripGroupSpace({ group }: { group: TripGroupDemo }) {
 
           {id === active && id === "members" && (
             <>
-              <h2>Meet the demo crew</h2>
+              <h2>Meet the crew</h2>
               <p className={styles.lead}>{partySize} accepted {partySize === 1 ? "participant" : "participants"} in the request roster. Adults manage family participation.</p>
               {alreadyFilled > 0 && <p>{alreadyFilled} {alreadyFilled === 1 ? "spot was" : "spots were"} already filled when this listing was created.</p>}
               <ul className={styles.members}>
@@ -195,7 +195,7 @@ function TripGroupSpace({ group }: { group: TripGroupDemo }) {
               <h2><MessageCircle size={23} aria-hidden="true" />Group Chat</h2>
               <p className={styles.lead}>Fictional conversation · All times IST</p>
               <aside className={styles.chatAnnouncement}><Megaphone size={19} aria-hidden="true" /><div>
-                <h3>Sample host announcement</h3><p>{announcements[0]?.text ?? "No demo messages for this trip."}</p>
+                <h3>Sample host announcement</h3><p>{announcements[0]?.text ?? "No messages for this trip."}</p>
               </div></aside>
               <ol className={styles.messages}>
                 {messages.map(({ id, traveller, host: isHost, text, time }) => (
@@ -211,14 +211,14 @@ function TripGroupSpace({ group }: { group: TripGroupDemo }) {
               <label className={styles.composer}>Message
                 <input disabled placeholder="Messaging is unavailable" aria-describedby="group-chat-note" />
               </label>
-              <p id="group-chat-note" className={styles.lead}>This demo shows example messages only.</p>
+              <p id="group-chat-note" className={styles.lead}>Sample messages only. Chat is not connected.</p>
             </div>
           )}
 
           {id === active && id === "checklist" && (
             <div className={styles.checklist}>
               <h2><ClipboardList size={23} aria-hidden="true" />Your travel checklist</h2>
-              <p className={styles.lead}>Your checks stay in this preview and reset on refresh.</p>
+              <p className={styles.lead}>Your checklist resets when you refresh.</p>
               <p className={styles.progress} role="status">{checked.length} of {checklist.length} ready</p>
               <fieldset>
                 <legend className="sr-only">Trip preparation</legend>

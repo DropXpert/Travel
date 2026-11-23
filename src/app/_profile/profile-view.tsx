@@ -66,7 +66,7 @@ export function ProfileView({ profile, cover, hostedTrips = [], own = false, act
             <li className={styles.type}>{profileTypeLabels[profile.group]}</li>
           </ul>
           {profile.bio && <p className={styles.bio}>{profile.bio}</p>}
-          {own && <p className={styles.profileNote}>Profile edits are separate from the Demo account used for trips.</p>}
+          {own && <p className={styles.profileNote}>Profile edits are separate from the selected traveller used for trips.</p>}
           {profile.group === "couple" && profile.partnerDisplayName && (
             <p className={styles.profileNote}>Travels with {profile.partnerDisplayName}</p>
           )}

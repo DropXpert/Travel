@@ -33,9 +33,9 @@ export function TripEditor({ covers, editId }: { covers: readonly DraftCover[]; 
   const published = state.trips.find(({ id }) => id === editId);
   if (editId && (!ready || !published || published.cancelled || published.hostId !== state.account)) {
     return <div className={site.container + " " + site.demoPanel}>
-      <h1>Edit demo trip</h1>
-      <p>{!ready ? "Loading demo trip..." : !published ? "This demo trip is unavailable in this browser."
-        : published.cancelled ? "Cancelled trips can’t be edited." : "Switch to the host’s demo account to edit this trip."}</p>
+      <h1>Edit trip</h1>
+      <p>{!ready ? "Loading trip..." : !published ? "This trip is unavailable in this browser."
+        : published.cancelled ? "Cancelled trips can’t be edited." : "Switch to the host’s traveller profile to edit this trip."}</p>
       <Link className={site.buttonOutline} href="/dashboard?tab=hosting">Back to Hosting</Link>
     </div>;
   }
@@ -180,8 +180,8 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
               discard.current?.showModal();
             }}>Discard draft</button>}
           </div>
-          <h1>{published ? "Edit demo trip" : <>Where are we going<span>?</span></>}</h1>
-          <p>{published ? "Update your published plan in this browser." : "Share a fictional travel plan. Hosting on Share Yarana is free."}</p>
+          <h1>{published ? "Edit trip" : <>Where are we going<span>?</span></>}</h1>
+          <p>{published ? "Update your published plan in this browser." : "Share a plan. Hosting is free."}</p>
           {!published && migrated && <p role="status">Your saved plan now uses the community-trip format. Review any previous amount as an estimated shared expense before saving. Your original draft will be backed up on this device.</p>}
           <div className={styles.progress}>
             <nav aria-label="Draft sections">
@@ -393,7 +393,7 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
         <div className={site.dialogActions}>
           <form method="dialog"><button type="submit" className={site.buttonOutline}>Keep editing</button></form>
           <button type="button" className={site.buttonPrimary} disabled={!ready || busy} onClick={publish}>
-            {published ? "Save demo changes" : "Publish trip (demo)"}
+            {published ? "Save changes" : "Publish Trip"}
           </button>
         </div>
       </Dialog>

@@ -35,7 +35,7 @@ export function HostWorkspace({ tripId }: { tripId: string }) {
   if (!listing || state.account !== listing.trip.hostId) {
     return <div className={site.container + " " + site.demoPanel}>
       <h1>Host Workspace</h1>
-      <p>{!ready ? "Loading demo trip..." : listing ? "Switch to " + listing.host.displayName + " to manage this trip." : "This demo trip is unavailable in this browser."}</p>
+      <p>{!ready ? "Loading trip..." : listing ? "Switch to " + listing.host.displayName + " to manage this trip." : "This trip is unavailable in this browser."}</p>
       <Link className={site.buttonOutline} href="/dashboard?tab=hosting">Back to Hosting</Link>
     </div>;
   }
@@ -75,7 +75,7 @@ function HostInbox({ listing, requests, account }: { listing: TripListing; reque
   async function confirmDecision() {
     if (!decision) return;
     const result = await updateDemo({ type: "decision", id: decision.requestId, status: decision.status }, account);
-    setNotice(result.ok ? labels[decision.status] + " the demo request." : result.error);
+    setNotice(result.ok ? labels[decision.status] + " the request." : result.error);
     confirmDialog.current?.close();
     requestAnimationFrame(() => {
       (document.getElementById("request-title-" + decision.requestId) ?? requestHeading.current)?.focus();
@@ -94,7 +94,7 @@ function HostInbox({ listing, requests, account }: { listing: TripListing; reque
             sizes="(min-width: 1264px) 505px, (min-width: 900px) 44vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)" />
         </div>
         <div className={styles.tripIdentity}>
-          <p className={styles.eyebrow}>Host workspace · {cancelled ? "Cancelled" : local ? "Published demo trip" : "Sample trip"}</p>
+          <p className={styles.eyebrow}>Host workspace · {cancelled ? "Cancelled" : local ? "Published trip" : "Sample trip"}</p>
           <h1 id="host-trip-title">{trip.title}</h1>
           <ul className={styles.tripFacts}>
             <li><MapPin size={17} aria-hidden="true" />{trip.destination}</li>
@@ -103,7 +103,7 @@ function HostInbox({ listing, requests, account }: { listing: TripListing; reque
           <p className={styles.hostName}>Hosted by {tripHostName(trip, host)} <span>· Community trip</span></p>
         </div>
       </header>
-      <dl className={styles.capacity} aria-label="Demo trip capacity">
+      <dl className={styles.capacity} aria-label="Trip capacity">
         <div><dt>Capacity</dt><dd>{trip.capacity}</dd></div>
         <div><dt>Spots filled</dt><dd>{trip.confirmedTravellers}</dd></div>
         <div><dt>Spots left</dt><dd>{cancelled ? 0 : remaining}</dd></div>
@@ -113,7 +113,7 @@ function HostInbox({ listing, requests, account }: { listing: TripListing; reque
       <div className={styles.layout}>
         <section className={styles.inbox} aria-labelledby="host-inbox-title">
           <h2 id="host-inbox-title" ref={requestHeading} tabIndex={-1}>Join requests</h2>
-          <p className={styles.lead}>Review requests from demo travellers. Your decisions stay in this browser.</p>
+          <p className={styles.lead}>Review requests. Your decisions stay in this browser.</p>
           <div className={styles.filters} role="group" aria-label="Filter join requests">
             {filters.map((item) => (
               <button type="button" key={item} aria-pressed={filter === item} onClick={() => setFilter(item)}>
@@ -179,7 +179,7 @@ function HostInbox({ listing, requests, account }: { listing: TripListing; reque
                   <span className={styles.status} data-status="accepted">Accepted</span>
                 </li>
               ))}
-            </ul> : <p>No travellers accepted in this preview yet.</p>}
+            </ul> : <p>No travellers accepted yet.</p>}
           </section>
           <section className={styles.safety} aria-labelledby="host-safety-title">
             <h2 id="host-safety-title"><Shield size={22} aria-hidden="true" />Before you head out</h2>
@@ -219,8 +219,8 @@ function HostInbox({ listing, requests, account }: { listing: TripListing; reque
           <>
             <p>{deciding.traveller.displayName} requested {participantLabel(deciding.partySize)}.</p>
             <p>{decision.status === "accepted"
-              ? "Accepting confirms " + (deciding.partySize === 1 ? "1 spot" : deciding.partySize + " spots") + " in this demo."
-              : "Declining keeps the same number of spots open in this demo."}</p>
+              ? "Accepting confirms " + (deciding.partySize === 1 ? "1 spot" : deciding.partySize + " spots") + " for this trip."
+              : "Declining keeps the same number of spots open for this trip."}</p>
             <div className={site.dialogActions}>
               <form method="dialog"><button type="submit" className={site.buttonOutline}>Cancel</button></form>
               <button type="button" className={decision.status === "accepted" ? site.buttonPrimary : styles.declineConfirm} onClick={confirmDecision}>

@@ -40,11 +40,15 @@ The Tailwind theme lives in `src/app/globals.css`. Nunito ExtraBold (800) is sel
 | Text token | Size / line height | Weight and use |
 | --- | --- | --- |
 | `meta` | 13 / 20px | 400, secondary metadata |
-| `label` | 14 / 20px | 600, actions, dates and status labels |
-| `body` | 16 / 24px | 400, paragraphs and form inputs |
-| `section` | 24 / 30px | 800, section headings and trip titles |
-| `display` | 32 / 36px | 800, mobile editorial headings |
-| `display-wide` | 48 / 52px | 800, wide editorial headings |
+| `label` | 13 / 20px | 600, actions, dates and status labels |
+| `body` | 15 / 24px | 400, paragraphs |
+| `input` | 16px minimum | Form controls; avoid mobile focus zoom |
+| `small` | 12px | Supporting labels |
+| `card-title` | 18 / 22.5px | 800, trip and community cards |
+| `page-title` | 28px mobile / 40px tablet and desktop | 800, page headings with 1.2 line height |
+| `section` | 24 / 30px | 800, section headings |
+| `display` | 28 / 34px | 800, mobile editorial headings |
+| `display-wide` | 44 / 52px | 800, wide editorial headings |
 
 Typography is defined in rem. Keep long reading blocks near 65 characters per line. White on dark teal is approximately 6.2:1 and charcoal on coral is 6.0:1. Use those pairings for normal-sized text.
 
@@ -102,7 +106,7 @@ The landing page gives public entry points into Explore and Community. Dashboard
 2. **Scan.** Show the destination photo, title, dates, departure city, activity, host, places and optional estimated budget. All listings are community trips. Display positive estimates in INR with “est. budget / person”, zero as “No expected expenses”, and omitted amounts as “Budget not specified”. Never interpret an omitted budget as zero.
 3. **Decide.** Group details into overview, itinerary, suitability, estimated shared expenses and host information. Keep **Request to Join** reachable and sticky on mobile. Explain that travel budgets cover transport, accommodation, food or common expenses, are estimates rather than booking fees, and are never collected by Share Yarana. Show full status in place of the request action when appropriate.
 4. **Request.** Joining is free. Confirm party size using the selected demo traveller’s category. Save a pending demo request under the selected traveller. My Trips shows Pending, Accepted, Declined and Cancelled. A trip has one request per demo traveller. The host can accept or decline eligible parties, with availability checked again at the point of acceptance. A traveller can cancel a pending or accepted request.
-5. **Host.** Start with title, destination, starting city, dates and description, then traveller eligibility and available places. Budget is optional. Keep itinerary, cover selection, Save draft and Preview listing. Publish trip (demo) creates a listing with a stable ID. Edit or cancel it through My Trips > Hosting. Put optional expense details in a disclosure. Hosting feels like sharing a plan with friends and never asks for a listing type or selling price.
+5. **Host.** Start with title, destination, starting city, dates and description, then traveller eligibility and available places. Budget is optional. Keep itinerary, cover selection, Save draft and Preview listing. Publish Trip creates a listing with a stable ID. Edit or cancel it through My Trips > Hosting. Put optional expense details in a disclosure. Hosting feels like sharing a plan with friends and never asks for a listing type or selling price.
 6. **Messaging.** “Find your people. Share the adventure.” Pair it with “Create trips, meet fellow travellers and explore together. No platform fees.” Explain free registration, hosting, joining and participation at relevant decision points without promotional FREE badges.
 
 ### Trip data and local draft compatibility
@@ -115,7 +119,7 @@ The landing page gives public entry points into Explore and Community. Dashboard
 
 ### Connected browser demo
 
-- Use the Demo account control in the shared shell to switch between Meera (solo), Kavya & Dev (couple) and the Nair family. The selected account persists and is shared across tabs on the same origin. Party sizes are one for solo travellers, two for couples and two or more for families.
+- Use the Switch Traveller control in the shared shell to switch between Meera (solo), Kavya & Dev (couple) and the Nair family. The selected account persists and is shared across tabs on the same origin. Party sizes are one for solo travellers, two for couples and two or more for families.
 - Publish from the listing preview. The store copies the draft and assigns a UUID-based route. An edit starts from the saved listing, preserves the route and checks its revision before writing. Drafts and bookmarks use their existing keys. Demo publishing, edits and reset leave those keys alone.
 - Capacity uses originally occupied places plus accepted party sizes. Seeded acceptances are taken out of the original fixture baseline before applying current request statuses. Pending, declined and cancelled requests do not occupy places. Hosts cannot remove places or eligibility that an accepted party requires. Cancelling a trip removes it from Explore, cancels its pending and accepted requests, and closes its group.
 - The host and accepted travellers can open Trip Group Space. The roster shows the host and current accepted requests. Places occupied before listing are reported separately. The space retains itinerary, announcements, a checklist for the current visit and read-only sample messages. New groups begin with empty announcement and chat states.
@@ -142,3 +146,9 @@ The landing page gives public entry points into Explore and Community. Dashboard
 - Make mobile filter sheets labelled modal dialogs. Move focus inside on open, keep it in the dialog, support Escape and a labelled close control, and restore focus when the sheet closes. Provide button and keyboard alternatives to swipe and drag gestures. [WAI modal dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
 - Use visible labels and appropriate input types and autocomplete. Keep entered values after errors, mark fields in error, and announce submission and filtering feedback with a polite status region. Use plain request statuses with recovery instructions where applicable.
 - Respect reduced motion with instant or minimal transitions. Verify keyboard-only use, screen-reader announcements, 200% text zoom and reflow before shipping screens.
+
+### Compact interface polish
+
+Use the shared type scale above across routes. Keep Nunito ExtraBold headings, the existing body font, brand assets and teal/coral palette. Use 24px section spacing on phones and 28px on larger screens where appropriate, 16px card corners, and 44px minimum action targets. Shared trip cards use a 3:2 photo and quiet borders rather than resting shadows.
+
+Action labels stay short: Publish Trip, Switch Traveller, Send request and Save changes. Explain fictional travellers and browser-local data in the switcher and at publishing/request actions. Retain Reset Demo Data and all privacy, safety, sample-account and unavailable-verification explanations. A listing preview is still a preview; account and verification screens do not perform real authentication or identity checks.

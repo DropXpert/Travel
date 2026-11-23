@@ -21,8 +21,8 @@ export function TripDetails({ slug }: { slug: string }) {
   const { state, ready, listings } = useDemoTravel();
   const listing = listings.find(({ trip }) => trip.slug === slug);
   if (!listing) return <div className={site.container + " " + site.demoPanel}>
-    <h1>{ready ? "Trip unavailable" : "Loading demo trip..."}</h1>
-    <p>{ready && "This demo listing may be on another browser or have been reset."}</p>
+    <h1>{ready ? "Trip unavailable" : "Loading trip..."}</h1>
+    <p>{ready && "This listing may be on another browser or have been reset."}</p>
     <Link className={site.buttonOutline} href="/explore">Explore trips</Link>
   </div>;
 
@@ -40,7 +40,7 @@ export function TripDetails({ slug }: { slug: string }) {
   const minParty = traveller.group === "solo" ? 1 : 2;
   const canRequest = ready && !cancelled && !owner && !request && eligible && spots >= minParty;
   const requestUnavailable = ready && !cancelled && !owner && !request
-    ? !eligible ? "Your demo traveller isn’t eligible for this trip." : spots > 0 && spots < minParty ? "Too few spots for your party." : ""
+    ? !eligible ? "Your traveller isn’t eligible for this trip." : spots > 0 && spots < minParty ? "Too few spots for your party." : ""
     : "";
   const action = !cancelled && owner ? (
     <Link className={site.buttonPrimary} href={"/dashboard/requests?trip=" + encodeURIComponent(trip.id)}>Manage requests</Link>
@@ -72,7 +72,7 @@ export function TripDetails({ slug }: { slug: string }) {
               />
             </figure>
             <header className={styles.overview}>
-              <p className={styles.kicker}><span>{activityLabels[trip.activity]}</span><span>{local ? "Published demo trip" : "Community trip"}</span></p>
+              <p className={styles.kicker}><span>{activityLabels[trip.activity]}</span><span>{local ? "Published trip" : "Community trip"}</span></p>
               <h1 id="trip-title">{trip.title}</h1>
               <p className={styles.location}><MapPin size={19} aria-hidden="true" />{trip.destination}</p>
             </header>
@@ -184,8 +184,8 @@ export function TripDetails({ slug }: { slug: string }) {
             <div><dt>Departing from</dt><dd>{trip.departureCity}</dd></div>
           </dl>
           {action}
-          {!cancelled && <p className={styles.panelNote}>{requestUnavailable || "Demo requests and decisions stay in this browser."}</p>}
-          {!cancelled && owner && local && <Link className={site.buttonOutline} href={"/trips/new?edit=" + trip.slug}>Edit demo trip</Link>}
+          {!cancelled && <p className={styles.panelNote}>{requestUnavailable || "Requests and decisions stay in this browser."}</p>}
+          {!cancelled && owner && local && <Link className={site.buttonOutline} href={"/trips/new?edit=" + trip.slug}>Edit trip</Link>}
         </aside>
       </div>
 

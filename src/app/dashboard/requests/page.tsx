@@ -3,7 +3,7 @@ import { SiteShell } from "../../_shared/site-shell";
 import { HostWorkspace } from "./host-workspace";
 
 export const metadata: Metadata = {
-  title: "Host workspace demo",
+  title: "Host workspace",
   description: "Try reviewing fictional join requests and managing places for a sample Share Yarana trip.",
 };
 

@@ -34,7 +34,7 @@ const headings = [
   ["What gets you out the door?", "Pick as many things as you like."],
   ["Make it your kind of trip.", "Tell us where you start from and how you like to travel."],
   ["Here’s your profile preview.", "See how your choices come together on Share Yarana."],
-  ["See you out there.", "You’ve reached the end of Share Yarana’s onboarding demo. Explore the sample trips whenever you’re ready."],
+  ["See you out there.", "You’re all set to explore the trips."],
 ] as const;
 
 const listFormat = new Intl.ListFormat("en-IN", { style: "long", type: "conjunction" });
@@ -136,12 +136,12 @@ export function TravellerOnboarding({ options, preselected }: {
     <section className={styles.flow} aria-labelledby="onboarding-title">
       <div className={styles.progress}>
         <div className={styles.progressText}>
-          <span>Onboarding demo</span>
+          <span>Your travel style</span>
           <span>{complete ? "Preview complete" : `Step ${step + 1} of ${steps.length}`}</span>
         </div>
         <div className={styles.segments} role="progressbar" aria-label="Onboarding progress" aria-valuemin={0}
           aria-valuemax={steps.length} aria-valuenow={Math.min(step + 1, steps.length)}
-          aria-valuetext={complete ? "Demo complete" : `Step ${step + 1} of ${steps.length}, ${steps[step]}`}>
+          aria-valuetext={complete ? "All set" : `Step ${step + 1} of ${steps.length}, ${steps[step]}`}>
           {steps.map((label, index) => <span key={label} data-active={index <= step || undefined} aria-hidden="true" />)}
         </div>
       </div>
@@ -260,14 +260,14 @@ export function TravellerOnboarding({ options, preselected }: {
         </form>
       )}
 
-      {complete && <p className={styles.demoNote}>Your choices stay in this demo and clear when you leave or refresh.</p>}
+      {complete && <p className={styles.demoNote}>These choices clear when you leave or refresh. This flow creates no account.</p>}
 
       <div className={styles.actionBar}>
         <div className={styles.actions}>
           {step > 0 && <button type="button" className={site.buttonOutline + " " + styles.back} onClick={() => changeStep(step - 1)}>Back</button>}
           {complete ? <Link href="/explore" className={site.buttonPrimary + " " + styles.primary}>Explore Trips</Link> : (
             <button type="submit" form="traveller-onboarding" className={site.buttonPrimary + " " + styles.primary}>
-              {step === 2 ? "Preview profile" : step === 3 ? "Finish demo" : "Continue"}
+              {step === 2 ? "Preview profile" : step === 3 ? "Finish" : "Continue"}
             </button>
           )}
         </div>

@@ -25,7 +25,7 @@ async function main() {
   const errors = [];
   const results = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text() + " (" + message.location().url + ")"); });
   async function settleBeforeNavigation() {
     // WebKit can report a retiring document's cancelled Next.js prefetch as an access-control error.
     if (engine === "webkit" && page.url().startsWith(base)) await page.waitForLoadState("networkidle");
@@ -46,20 +46,33 @@ async function main() {
     const dimensions = await page.evaluate(() => ({ width: innerWidth, scroll: document.documentElement.scrollWidth }));
     assert.ok(dimensions.scroll <= dimensions.width, name + " overflows: " + JSON.stringify(dimensions));
   };
+  const assertTypography = async (route) => {
+  const typography = await page.evaluate(() => {
+    const visible = el => el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0;
+    const controls = [...document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea')].filter(visible);
+    return {
+      smallInputs: controls.filter(el => parseFloat(getComputedStyle(el).fontSize) < 16).map(el => el.name || el.id),
+      largeHeadings: [...document.querySelectorAll('h1')].filter(visible).filter(el => parseFloat(getComputedStyle(el).fontSize) > (innerWidth < 768 ? 28 : 44)).map(el => el.textContent),
+    };
+  });
+  assert.deepEqual(typography.smallInputs, [], route + " input font must remain at least 16px");
+  assert.deepEqual(typography.largeHeadings, [], route + " headings stay compact");
+  };
   const switchDemo = async (id) => {
-    await page.getByRole("button", { name: /^Demo account/ }).click();
+    await page.getByRole("button", { name: /^Switch Traveller/ }).click();
     const dialog = page.locator("#demo-account");
-    await dialog.getByLabel("Switch demo traveller").selectOption(id);
-    await dialog.getByText("Demo traveller switched.", { exact: true }).waitFor();
+    await dialog.getByLabel("Choose traveller").selectOption(id);
+    await dialog.getByText("Traveller switched.", { exact: true }).waitFor();
     await dialog.getByRole("button", { name: "Close", exact: true }).click();
   };
   const requestToJoin = async () => {
     await page.getByRole("button", { name: "Request to Join", exact: true }).click();
-    await page.getByRole("button", { name: "Send demo request", exact: true }).click();
-    await page.getByRole("heading", { name: "Demo request saved" }).waitFor();
+    await page.getByRole("button", { name: "Send request", exact: true }).click();
+    await page.getByRole("heading", { name: "Request saved" }).waitFor();
     await page.getByRole("link", { name: "View My Requests", exact: true }).click();
   };
   try {
+    assert.equal((await context.request.get(base + "/favicon.ico")).status(), 200);
     for (const width of process.env.SIDETRAIL_FLOWS_ONLY ? [] : widths) {
       await page.setViewportSize({ width, height: 900 });
       for (const route of routes) {
@@ -74,10 +87,16 @@ async function main() {
           assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), "https://shareyarana.com");
           assert.equal(await page.locator('meta[property="og:site_name"]').getAttribute("content"), "Share Yarana");
           assert.equal(await page.locator('link[rel="icon"]').getAttribute("href"), "/share-yarana-icon.png");
+          const headingSize = await page.locator("#hero-title").evaluate(el => parseFloat(getComputedStyle(el).fontSize));
+          assert.ok(headingSize <= (width < 768 ? 28 : 44), "compact hero heading");
+          await page.getByRole("button", { name: "Everyone", exact: true }).waitFor();
+          assert.equal(await page.getByRole("button", { name: "Everyone", exact: true }).getAttribute("aria-pressed"), "true");
+          if ([375, 1440].includes(width)) await page.screenshot({ path: path.join(artifacts, "homepage-" + width + ".png"), fullPage: true });
         }
+        await assertTypography(route);
         results.push({ width, route, status: "pass" });
-        if ([375, 1440].includes(width) && ["/explore", "/trips/new"].includes(route)) {
-          await page.screenshot({ path: path.join(artifacts, width + route.replaceAll("/", "-") + ".png"), fullPage: true });
+        if ([375, 1440].includes(width) && route !== "/") {
+          await page.screenshot({ path: path.join(artifacts, width + route.replaceAll("/", "-").replaceAll("?", "-") + ".png"), fullPage: true });
         }
         if (width === 320 && route === "/trips/riverside-rishikesh-weekend") {
           await page.screenshot({ path: path.join(artifacts, "320-budget-unspecified.png") });
@@ -85,6 +104,32 @@ async function main() {
       }
       console.log("Responsive routes passed at " + width + "px");
     }
+
+    await visit("/");
+    await page.getByRole("button", { name: "Everyone", exact: true }).waitFor();
+    const initialCards = await page.locator("#trips article").count();
+    assert.ok(initialCards >= 7, "homepage includes all sample listings");
+    for (const label of ["Solo", "Couples", "Families"]) {
+      await page.getByRole("button", { name: label, exact: true }).click();
+      const expected = label === "Solo" ? "Solo travellers" : label;
+      await page.waitForFunction((expected) => [...document.querySelectorAll("#trips article")].every(card => [...card.querySelectorAll("p")].some(p => p.textContent.startsWith("Open to ") && p.textContent.includes(expected))), expected);
+      assert.ok(await page.locator("#trips article").count() > 0);
+    }
+    await reload();
+    assert.equal(await page.getByRole("button", { name: "Families", exact: true }).getAttribute("aria-pressed"), "true");
+    await page.goBack();
+    await page.waitForFunction(() => new URLSearchParams(location.search).get("traveller") === "couple");
+    assert.equal(await page.getByRole("button", { name: "Couples", exact: true }).getAttribute("aria-pressed"), "true");
+    await page.getByRole("button", { name: "Everyone", exact: true }).click();
+    assert.equal(await page.locator("#trips article").count(), initialCards);
+    const bookmark = page.locator("#trips article").first().getByRole("button", { name: /^Save / });
+    await bookmark.click();
+    await reload();
+    assert.equal(await bookmark.getAttribute("aria-pressed"), "true");
+    await bookmark.click();
+    const destination = page.getByRole("region", { name: "Somewhere worth sharing" }).getByRole("link").nth(1);
+    await destination.click();
+    await page.waitForURL(/\/explore\?destination=/);
 
     await page.setViewportSize({ width: 375, height: 812 });
     await visit("/trips/new");
@@ -179,8 +224,8 @@ async function main() {
     await switchDemo("traveller-nairs");
     await page.getByRole("button", { name: "Request to Join", exact: true }).filter({ visible: true }).click();
     await page.locator('#join-trip [name="participants"]').fill("2");
-    await page.getByRole("button", { name: "Send demo request", exact: true }).click();
-    await page.getByRole("heading", { name: "Demo request saved" }).waitFor();
+    await page.getByRole("button", { name: "Send request", exact: true }).click();
+    await page.getByRole("heading", { name: "Request saved" }).waitFor();
     assert.ok((await page.locator("#join-trip").innerText()).includes("Your request is pending"));
     await assertFits("join preview");
     await page.getByRole("button", { name: "Done", exact: true }).click();
@@ -191,8 +236,8 @@ async function main() {
     await page.locator("dialog[open]").waitFor();
     await page.locator("dialog[open]").getByRole("button", { name: "Confirm acceptance", exact: true }).click();
     await assertFits("host decision");
-    await page.getByText("Accepted the demo request.", { exact: true }).waitFor();
-    assert.deepEqual(await page.locator('dl[aria-label="Demo trip capacity"] dd').allTextContents(), ["8", "6", "2", "1"]);
+    await page.getByText("Accepted the request.", { exact: true }).waitFor();
+    assert.deepEqual(await page.locator('dl[aria-label="Trip capacity"] dd').allTextContents(), ["8", "6", "2", "1"]);
     await visit("/trips/sinhagad-sunrise-hike/group?tab=members");
     await page.getByRole("link", { name: "Ananya Rao", exact: true }).waitFor();
     await page.getByRole("link", { name: "Kavya & Dev", exact: true }).waitFor();
@@ -211,7 +256,7 @@ async function main() {
     await page.locator('[name="capacity"]').fill("4");
     await page.locator('[name="spots"]').fill("3");
     await page.getByRole("button", { name: "Preview listing", exact: true }).click();
-    await page.getByRole("button", { name: "Publish trip (demo)", exact: true }).click();
+    await page.getByRole("button", { name: "Publish Trip", exact: true }).click();
     await page.waitForURL(/\/trips\/demo-[0-9a-f-]+$/);
     const tripPath = new URL(page.url()).pathname;
     const tripId = tripPath.split("/").at(-1);
@@ -224,11 +269,19 @@ async function main() {
     assert.equal(await page.getByRole("button", { name: "Request to Join", exact: true }).count(), 0, "host cannot request own trip");
 
     await switchDemo("traveller-nairs");
+    await visit("/");
+    const localCard = page.locator("#trips article").filter({ has: page.getByRole("heading", { name: title, exact: true }) });
+    await localCard.getByRole("link", { name: "Request to Join", exact: true }).waitFor();
+    await localCard.getByRole("link", { name: "Request to Join", exact: true }).click();
+    await page.waitForURL("**" + tripPath);
+    await page.goBack();
+    await localCard.getByRole("heading", { name: title, exact: true }).waitFor();
+    await assertFits("homepage published trip with long text");
     await visit("/trips/nandi-hills-morning-hike");
-    await page.getByRole("region", { name: "Trip availability and join" }).getByText(/Your demo traveller isn’t eligible/).waitFor();
+    await page.getByRole("region", { name: "Trip availability and join" }).getByText(/Your traveller isn’t eligible/).waitFor();
     assert.equal(await page.getByRole("button", { name: "Request to Join", exact: true }).count(), 0, "ineligible family cannot join");
     await visit(group);
-    await page.getByText(/Switch to the demo host or an accepted traveller/).waitFor();
+    await page.getByText(/Switch to the host or an accepted traveller/).waitFor();
     await visit("/explore?q=Coorg%20together%20demo");
     await page.getByRole("button", { name: title, exact: true }).click();
     await page.getByRole("link", { name: "View trip details", exact: true }).click();
@@ -251,33 +304,33 @@ async function main() {
     await competingTab.getByRole("button", { name: "Accept request from The Nair family", exact: true }).click();
     await acceptCouple.click();
     await page.getByRole("button", { name: "Confirm acceptance", exact: true }).click();
-    await page.getByText("Accepted the demo request.", { exact: true }).waitFor();
+    await page.getByText("Accepted the request.", { exact: true }).waitFor();
     assert.equal(await acceptFamily.isDisabled(), true, "pending family party cannot overbook");
     await competingTab.getByRole("button", { name: "Confirm acceptance", exact: true }).click();
     await competingTab.getByRole("status").getByText(/no longer fits/).waitFor();
     await competingTab.close();
-    assert.match((await page.locator('dl[aria-label="Demo trip capacity"] dd').allTextContents()).join(","), /^4,3,1,1$/);
+    assert.match((await page.locator('dl[aria-label="Trip capacity"] dd').allTextContents()).join(","), /^4,3,1,1$/);
     await page.getByRole("button", { name: "Decline request from The Nair family", exact: true }).click();
     await page.getByRole("button", { name: "Confirm decline", exact: true }).click();
-    await page.getByText("Declined the demo request.", { exact: true }).waitFor();
+    await page.getByText("Declined the request.", { exact: true }).waitFor();
 
     await visit(hosting);
     const row = page.locator("li").filter({ has: page.getByRole("link", { name: title, exact: true }) });
-    await row.getByRole("link", { name: "Edit demo trip" }).click();
+    await row.getByRole("link", { name: "Edit trip" }).click();
     await page.locator('[name="spots"]').fill("1");
     await page.getByRole("button", { name: "Preview listing", exact: true }).click();
-    await page.getByRole("button", { name: "Save demo changes", exact: true }).click();
+    await page.getByRole("button", { name: "Save changes", exact: true }).click();
     await page.getByText("Keep enough offered spots and the traveller categories for all accepted parties.", { exact: true }).waitFor();
     await page.getByRole("button", { name: "Keep editing", exact: true }).click();
     const revised = title + " revised";
     await page.locator('[name="spots"]').fill("3");
     await page.locator('[name="title"]').fill(revised);
     await page.getByRole("button", { name: "Preview listing", exact: true }).click();
-    await page.getByRole("button", { name: "Save demo changes", exact: true }).click();
+    await page.getByRole("button", { name: "Save changes", exact: true }).click();
     await page.waitForURL("**" + tripPath);
     await page.getByRole("heading", { name: revised, exact: true }).waitFor();
     await page.getByRole("button", { name: "View local trip link", exact: true }).click();
-    await page.getByText("This link opens the demo trip in this browser only.", { exact: true }).waitFor();
+    await page.getByText("This link opens the trip in this browser only.", { exact: true }).waitFor();
     await page.keyboard.press("Escape");
 
     await visit("/travellers/meera-wanders");
@@ -301,6 +354,7 @@ async function main() {
       for (const route of [tripPath, group + "?tab=members", requests]) {
         await visitAtWidth(route, width);
         await assertFits("connected " + route + " at " + width);
+        await assertTypography(route);
         results.push({ width, route, status: "pass" });
       }
     }
@@ -320,21 +374,30 @@ async function main() {
     const otherTab = await page.context().newPage();
     await otherTab.goto(base + tripPath, { waitUntil: "domcontentloaded" });
     await otherTab.getByText("1 spot available", { exact: true }).first().waitFor();
+    const homeTab = await context.newPage();
+    await homeTab.goto(base + "/", { waitUntil: "domcontentloaded" });
+    const homeCard = homeTab.locator("#trips article").filter({ has: homeTab.getByRole("heading", { name: revised, exact: true }) });
+    await homeCard.getByText("1 spot left", { exact: true }).waitFor();
+    await homeCard.getByRole("link", { name: "Accepted request", exact: true }).waitFor();
     await visit(requests);
-    await sentRow.getByRole("button", { name: "Cancel demo request", exact: true }).click();
+    await sentRow.getByRole("button", { name: "Cancel request", exact: true }).click();
     await page.getByRole("button", { name: "Confirm cancellation", exact: true }).click();
     await sentRow.getByText("Cancelled", { exact: true }).waitFor();
     await otherTab.getByText("3 spots available", { exact: true }).first().waitFor();
+    await homeCard.getByText("3 spots left", { exact: true }).waitFor();
+    await homeCard.getByRole("link", { name: "Request to Join", exact: true }).waitFor();
     await otherTab.close();
     await visit(group);
-    await page.getByText(/Switch to the demo host or an accepted traveller/).waitFor();
+    await page.getByText(/Switch to the host or an accepted traveller/).waitFor();
 
     await switchDemo("traveller-meera");
     await visit(hosting);
     const revisedRow = page.locator("li").filter({ has: page.getByRole("link", { name: revised, exact: true }) });
-    await revisedRow.getByRole("button", { name: "Cancel demo trip", exact: true }).click();
+    await revisedRow.getByRole("button", { name: "Cancel trip", exact: true }).click();
     await page.getByRole("button", { name: "Confirm cancellation", exact: true }).click();
-    await revisedRow.getByText(/Cancelled demo trip/).waitFor();
+    await revisedRow.getByText(/Cancelled trip/).waitFor();
+    await homeCard.waitFor({ state: "detached" });
+    await homeTab.close();
     await visit("/explore?q=Coorg%20together%20demo");
     await page.getByText("No trips match that search", { exact: true }).waitFor();
     await visit(tripPath);
@@ -343,7 +406,7 @@ async function main() {
     // Corrupt only the demo key and verify reset is explicit and drafts/bookmarks survive.
     await page.evaluate((key) => localStorage.setItem(key, "{broken"), demoKey);
     await reload();
-    await page.getByRole("button", { name: /^Demo account/ }).click();
+    await page.getByRole("button", { name: /^Switch Traveller/ }).click();
     await page.getByRole("alert").getByText(/Demo data could not be read/).waitFor();
     await page.getByRole("button", { name: "Reset Demo Data", exact: true }).click();
     await page.waitForFunction(() => document.activeElement?.textContent === "Keep demo data");
@@ -382,13 +445,13 @@ async function main() {
     }
     const localGroupResponse = await draftTab.goto(base + group + "?audit=missing");
     assert.equal(localGroupResponse.status(), 200);
-    await draftTab.getByText("This demo group is unavailable in this browser.", { exact: true }).waitFor();
+    await draftTab.getByText("This group is unavailable in this browser.", { exact: true }).waitFor();
     await draftTab.close();
     const unsupported = await context.newPage();
     await unsupported.addInitScript(() => Object.defineProperty(navigator, "locks", { value: undefined }));
     await unsupported.goto(base + "/explore");
-    await unsupported.getByRole("button", { name: /^Demo account/ }).click();
-    await unsupported.getByLabel("Switch demo traveller").selectOption("traveller-kavya-dev");
+    await unsupported.getByRole("button", { name: /^Switch Traveller/ }).click();
+    await unsupported.getByLabel("Choose traveller").selectOption("traveller-kavya-dev");
     await unsupported.getByText("Open Share Yarana over HTTPS or localhost to save demo changes.", { exact: true }).waitFor();
     await unsupported.close();
     console.log("Connected demo journey passed, including editing, eligibility, overbooking, cross-tab cancellation, reset and protected data.");

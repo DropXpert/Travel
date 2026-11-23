@@ -1,4 +1,4 @@
-.page { padding-block: .65rem clamp(1.75rem, 4vw, 3.5rem); }
+.page { padding-block: .65rem var(--space-section); }
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -64,8 +64,8 @@
 .eyebrow { color: var(--color-teal-dark); font-size: var(--text-label); font-weight: 720; }
 .identity h1 {
   color: var(--color-ink);
-  font: 800 clamp(2.2rem, 6vw, 4.05rem)/.99 var(--font-display);
-  letter-spacing: -.06em;
+  font: 800 var(--text-page-title)/1.2 var(--font-display);
+  letter-spacing: -.025em;
   overflow-wrap: anywhere;
 }
 .meta, .tags { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .7rem; }
@@ -77,7 +77,7 @@
 .content > * { min-width: 0; }
 .content h2, .missing h1 {
   margin-block-end: .55rem;
-  font: 800 clamp(1.65rem, 3.4vw, 2.25rem)/1.08 var(--font-display);
+  font: 800 var(--text-section)/1.2 var(--font-display);
   letter-spacing: -.04em;
 }
 .content h3 { margin-block-end: .3rem; }
@@ -100,7 +100,7 @@
   border-radius: var(--radius-card);
   background: var(--color-teal-soft);
 }
-.content .join h2 { display: flex; align-items: center; gap: .5rem; margin: 0; font-size: clamp(1.5rem, 2.6vw, 1.85rem); }
+.content .join h2 { display: flex; align-items: center; gap: .5rem; margin: 0; font-size: var(--text-section); }
 .join h2 svg { flex: none; color: var(--color-teal-dark); }
 .join .tags li { background: var(--color-surface); color: var(--color-ink); }
 .joinAction { display: none; }
@@ -130,7 +130,7 @@
 .guidelines ul { display: grid; gap: .42rem; padding-inline-start: 1.25rem; list-style: disc; }
 .guidelines li::marker { color: var(--color-teal-dark); }
 .guidelines .textLink { margin-block-start: .35rem; }
-.missing { display: grid; justify-items: start; gap: .65rem; padding-block: clamp(2rem, 8vw, 5rem); }
+.missing { display: grid; justify-items: start; gap: .65rem; padding-block: var(--space-section); }
 .missing p { color: var(--color-ink-muted); }
 
 @media (width >= 640px) {
@@ -146,7 +146,7 @@
     aspect-ratio: auto;
     border-radius: calc(var(--radius-card) - 1px) 0 0 calc(var(--radius-card) - 1px);
   }
-  .identity h1 { font-size: clamp(2.65rem, 4.25vw, 4.05rem); }
+  .identity h1 { font-size: var(--text-page-title); }
 }
 
 @media (width >= 1024px) {

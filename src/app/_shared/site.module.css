@@ -99,7 +99,7 @@ html:has(.site dialog[open]) { overflow: hidden; }
 
 .buttonPrimary, .buttonOutline, .buttonCoral, .buttonOnDark {
   @apply inline-flex min-h-touch items-center justify-center gap-2 font-semibold;
-  min-height: 3rem;
+  min-height: var(--spacing-touch);
   max-width: 100%;
   padding: .65rem clamp(.65rem, 3vw, 1.125rem);
   border: 1px solid transparent;
@@ -174,7 +174,6 @@ html:has(.site dialog[open]) { overflow: hidden; }
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-card);
   background: var(--color-surface);
-  box-shadow: 0 2px 6px #20252508;
 }
 
 .tripCard:focus-within {
@@ -182,7 +181,7 @@ html:has(.site dialog[open]) { overflow: hidden; }
   outline-offset: 3px;
 }
 
-.tripPhoto { aspect-ratio: 4 / 3; }
+.tripPhoto { aspect-ratio: 3 / 2; }
 .tripCard[data-detail] .tripPhoto { aspect-ratio: 3 / 2; }
 
 .activity {
@@ -217,7 +216,7 @@ html:has(.site dialog[open]) { overflow: hidden; }
 .tripTitle {
   min-height: var(--spacing-touch);
   color: var(--color-ink);
-  font: 800 1.42rem/1.1 var(--font-display);
+  font: 800 var(--text-card-title)/1.25 var(--font-display);
   letter-spacing: -.035em;
   padding-block: .4rem .45rem;
   text-align: start;
@@ -280,12 +279,13 @@ a.tripTitle { display: inline-block; }
 .demoBar button > span { margin-inline-start: .3em; color: var(--color-ink-muted); }
 .demoField { display: grid; gap: .35rem; font-weight: 650; }
 .demoField select, .demoField input {
+  font-size: var(--text-input);
   width: 100%; min-width: 0; min-height: var(--spacing-touch); padding: .45rem .65rem;
   background: var(--color-surface); border: 1px solid var(--color-control-border); border-radius: var(--radius-control);
 }
 .demoPanel { padding-block: 1.25rem; overflow-wrap: anywhere; }
-.demoPanel h1 { font: 800 clamp(1.75rem, 5vw, 2.7rem)/1.1 var(--font-display); }
-.demoPanel h2 { font: 800 1.45rem/1.2 var(--font-display); }
+.demoPanel h1 { font: 800 var(--text-section)/1.2 var(--font-display); }
+.demoPanel h2 { font: 800 var(--text-card-title)/1.25 var(--font-display); }
 .demoPanel ul { display: grid; gap: .8rem; margin-block: .75rem; }
 .demoPanel li { background: var(--color-surface); border: 1px solid var(--color-divider); border-radius: var(--radius-card); padding: .85rem; }
 .demoPanel li > * + * { margin-block-start: .35rem; }
@@ -407,7 +407,7 @@ a.tripTitle { display: inline-block; }
 }
 
 .dialogHeader h2 {
-  font: 800 1.85rem/1.08 var(--font-display);
+  font: 800 var(--text-card-title)/1.25 var(--font-display);
   letter-spacing: -.04em;
 }
 
@@ -437,7 +437,7 @@ a.tripTitle { display: inline-block; }
   border: 1px solid var(--color-control-border);
   border-radius: var(--radius-control);
   background: var(--color-surface);
-  font-size: var(--text-body);
+  font-size: var(--text-input);
   font-weight: 400;
 }
 .draftForm > button { justify-self: start; }
@@ -459,7 +459,7 @@ a.tripTitle { display: inline-block; }
     width: min(calc(100% - 2rem), 33rem);
     max-height: calc(100dvh - 2rem);
     margin: auto;
-    padding: 1.5rem;
+    padding: 1.25rem;
     border-radius: var(--radius-sheet);
   }
 }
@@ -475,7 +475,7 @@ a.tripTitle { display: inline-block; }
   .headerInner { min-height: 4.75rem; }
   .desktopNav, .desktopActions { display: flex; }
   .mobileAccount, .bottomNav, .mobileDock { display: none; }
-  .tripGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+  .tripGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 }
 
 @media (hover: hover) {
@@ -484,7 +484,7 @@ a.tripTitle { display: inline-block; }
   .buttonOutline:hover, .iconButton:hover { background-color: var(--color-teal-soft); }
   .buttonCoral:hover { background-color: #ff9276; }
   .buttonOnDark:hover { background-color: #ffffff17; }
-  .tripCard:hover { box-shadow: 0 8px 18px #20252513; }
+  .tripCard:hover { border-color: var(--color-control-border); }
   .tripCard:hover .tripTitle { color: var(--color-teal-dark); }
 }
 

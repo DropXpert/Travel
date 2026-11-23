@@ -30,7 +30,7 @@ export function CommunityPreview({ community, onClose }: { community: DiscoveryC
     <Dialog id="community-preview" title={name} className={styles.preview} dialogRef={dialog} onClose={onClose}>
       {showRequest ? <CommunityJoinRequest groups={groups} expectations={expectations} focusOnMount /> : (
         <>
-          <p className={styles.previewMeta}><MapPin size={16} aria-hidden="true" />{city} · {communityCategories[category]} · Demo community</p>
+          <p className={styles.previewMeta}><MapPin size={16} aria-hidden="true" />{city} · {communityCategories[category]}</p>
           <figure className={styles.previewPhoto}>
             <Image fill src={photo.src} alt={photo.alt} loading="eager" sizes="(min-width: 640px) 560px, calc(100vw - 36px)" />
           </figure>

@@ -1,8 +1,8 @@
-import { Backpack, Compass, HeartHandshake, MapPin, Plus, Send, UserRound, UsersRound } from "lucide-react";
+﻿import { ArrowRight, Compass, MapPin, Plus, UsersRound } from "lucide-react";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { brandTagline } from "@/brand";
 import { photos, tripListings } from "@/data/trip-listings";
 import { TripDiscovery } from "./_home/trip-discovery";
 import styles from "./_home/home.module.css";
@@ -15,100 +15,62 @@ export const metadata: Metadata = {
   openGraph: { ...siteOpenGraph, url: "/", images: [{ url: photos.hero.src, alt: photos.hero.alt }] },
 };
 
-const communities = [
-  { title: "Solo travellers", icon: UserRound, copy: "Pick a trail or a new town and share the day with a small group." },
-  { title: "Couples", icon: HeartHandshake, copy: "Find a road trip or a weekend away with room for two." },
-  { title: "Families", icon: UsersRound, copy: "Find gentler trails, slower mornings and room for the whole family." },
-];
-
-const steps = [
-  { title: "Find a trip", icon: Compass, copy: "Pick a travel style and see the dates, budget and host at a glance." },
-  { title: "Request to join", icon: Send, copy: "Tell the host who’s coming. They’ll review your request and confirm your place." },
-  { title: "Travel together", icon: Backpack, copy: "Get the meetup details, pack your bag and go meet your crew." },
-];
-
 export default function HomePage() {
   return (
-    <SiteShell>
-      <section className={site.container + " " + styles.hero} aria-labelledby="hero-title">
-        <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}>Travel together in India</p>
-          <h1 id="hero-title">Good trips.<br /><span>Better company.</span></h1>
-          <p className={styles.heroDescription}>Create trips, meet fellow travellers and explore together. No platform fees.</p>
-          <div className={styles.heroActions}>
-            <Link href="/explore" className={site.buttonPrimary}>
-              <Compass size={19} aria-hidden="true" />Explore Trips
-            </Link>
-            <Link href="/trips/new" className={site.buttonOutline}>
-              <Plus size={19} aria-hidden="true" />Create a Trip
-            </Link>
+    <SiteShell isHome>
+      <div className={styles.home + " " + site.container}>
+        <section className={styles.hero} aria-labelledby="hero-title">
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}>A little adventure. A lot of connection.</p>
+            <h1 id="hero-title">Find your people.<br /><span>Share the adventure.</span></h1>
+            <p>Weekend trails, open roads, and people you’ll be glad you met. Make your next plan together.</p>
+            <div className={styles.actions}>
+              <Link href="/explore" className={styles.coralButton}><Compass size={17} aria-hidden="true" />Explore Trips</Link>
+              <Link href="/trips/new" className={styles.heroLink}><Plus size={17} aria-hidden="true" />Create Trip</Link>
+            </div>
           </div>
-        </div>
-        <figure className={styles.heroPhoto}>
-          <Image
-            src={photos.hero.src}
-            alt={photos.hero.alt}
-            fill
-            preload
-            sizes="(min-width: 1264px) 630px, (min-width: 1024px) 50vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
-          />
-          <figcaption><MapPin size={16} aria-hidden="true" />Gui campsite, Uttarakhand</figcaption>
-        </figure>
-      </section>
+          <figure className={styles.heroPhoto}>
+            <Image src={photos.hero.src} alt={photos.hero.alt} fill preload sizes="(min-width: 1264px) 520px, (min-width: 768px) 45vw, calc(100vw - 32px)" />
+            <figcaption><MapPin size={14} aria-hidden="true" />Gui campsite, Uttarakhand</figcaption>
+          </figure>
+        </section>
 
-      <TripDiscovery listings={tripListings.slice(0, 6)} />
-
-      <section id="communities" className={site.container + " " + styles.people} aria-labelledby="people-title">
-        <div className={styles.peoplePhoto}>
-          <Image
-            fill
-            src={photos.people.src}
-            alt={photos.people.alt}
-            sizes="(min-width: 1264px) 530px, (min-width: 768px) 45vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
-          />
-        </div>
-        <div className={styles.peopleCopy}>
-          <div className={styles.sectionIntro}>
-            <h2 id="people-title">Find your travel people.</h2>
-            <p>Good company means something different to everyone. Find a trip that feels like yours.</p>
-          </div>
-          <ul className={styles.peopleList}>
-            {communities.map(({ title, copy, icon: Icon }) => (
-              <li key={title}>
-                <span className={styles.peopleIcon}><Icon size={21} aria-hidden="true" /></span>
-                <div><h3>{title}</h3><p>{copy}</p></div>
-              </li>
+        <section className={styles.destinations} aria-labelledby="destinations-title">
+          <div className={styles.sectionHeading}><h2 id="destinations-title">Somewhere worth sharing</h2><Link href="/explore">Explore all <ArrowRight size={15} aria-hidden="true" /></Link></div>
+          <ul className={styles.destinationStrip}>
+            {tripListings.map(({ trip, photo }) => (
+              <li key={trip.id}><Link href={"/explore?destination=" + encodeURIComponent(trip.destination)}>
+                <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 768px) 160px, 120px" />
+                <span>{trip.destination.split(",")[0]}</span>
+              </Link></li>
             ))}
           </ul>
-        </div>
-      </section>
+        </section>
 
-      <section id="how-it-works" className={styles.how} aria-labelledby="how-title">
-        <div className={site.container}>
-          <div className={styles.sectionIntro}><h2 id="how-title">How it works.</h2></div>
-          <ol className={styles.steps}>
-            {steps.map(({ title, copy, icon: Icon }) => (
-              <li key={title}>
-                <span className={styles.stepIcon}><Icon size={25} aria-hidden="true" /></span>
-                <div><h3>{title}</h3><p>{copy}</p></div>
-              </li>
-            ))}
-          </ol>
+        <div className={styles.discoveryLayout}>
+          <Suspense fallback={<p>Loading travel plans…</p>}><TripDiscovery /></Suspense>
+          <aside className={styles.sidebar}>
+            <section className={styles.hostPanel}>
+              <span className={styles.panelIcon}><Plus size={22} aria-hidden="true" /></span>
+              <h2>Got a plan?<br />Host it.</h2>
+              <p>A sunrise hike or a slow weekend. Put your plan out there and find your crew.</p>
+              <Link href="/trips/new" className={site.buttonPrimary}>Create a Trip <ArrowRight size={16} aria-hidden="true" /></Link>
+              <small>Free to host. Always your call who joins.</small>
+            </section>
+            <section className={styles.communityPanel}>
+              <UsersRound size={22} aria-hidden="true" /><h2>Find your kind of crew</h2>
+              <p>Meet people who share your pace, your interests, and your love for getting out.</p>
+              <Link href="/community">Discover communities <ArrowRight size={16} aria-hidden="true" /></Link>
+            </section>
+            <section id="how-it-works" className={styles.how}>
+              <h2>A plan becomes a shared adventure</h2>
+              <p>Find a trip, get to know the host, and request to join. The host reviews your request before you coordinate in the group space.</p>
+              <Link href="/verification">Travel together, thoughtfully <ArrowRight size={15} aria-hidden="true" /></Link>
+            </section>
+          </aside>
         </div>
-      </section>
-
-      <section className={site.container} aria-labelledby="final-title">
-        <div className={styles.finalCta}>
-          <div>
-            <h2 id="final-title">Where to next?</h2>
-            <p>Free to explore, free to host, free to join. {brandTagline}</p>
-          </div>
-          <div className={styles.finalActions}>
-            <Link href="/explore" className={site.buttonCoral}>Explore Trips</Link>
-            <Link href="/trips/new" className={site.buttonOnDark}>Create a Trip</Link>
-          </div>
-        </div>
-      </section>
+        <p className={styles.closing}>Free to explore, free to host, free to join. Find your people. Share the adventure.</p>
+      </div>
     </SiteShell>
   );
 }

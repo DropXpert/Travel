@@ -43,8 +43,8 @@ export function JoinRequestDialog({ tripId, title, hostName, account, spots, das
       {submitted ? (
         <div className={styles.confirmation}>
           <span><Check size={23} aria-hidden="true" /></span>
-          <h3 ref={confirmation} tabIndex={-1}>Demo request saved</h3>
-          <p>Your request is pending. Switch to the host’s demo account to review it in this browser.</p>
+          <h3 ref={confirmation} tabIndex={-1}>Request saved</h3>
+          <p>Your request is pending. Switch to the host’s traveller profile to review it in this browser.</p>
           <div className={site.dialogActions}>
             <Link href={dashboardHref} className={site.buttonPrimary}>View My Requests</Link>
             <form method="dialog"><button type="submit" className={site.buttonOutline}>Done</button></form>
@@ -53,7 +53,7 @@ export function JoinRequestDialog({ tripId, title, hostName, account, spots, das
       ) : (
         <>
           <div className={styles.requestTrip}><strong>{title}</strong><span>Hosted by {hostName}</span></div>
-          <p>Join for free as {account.displayName} · {profileTypeLabels[account.group]}.</p>
+          <p>Join for free as {account.displayName} · {profileTypeLabels[account.group]}. Requests stay in this browser.</p>
           <div className={site.verificationNotice + " " + styles.verificationNotice}>
             <Shield size={17} aria-hidden="true" />
             <div>
@@ -68,7 +68,7 @@ export function JoinRequestDialog({ tripId, title, hostName, account, spots, das
               <input name="participants" type="number" inputMode="numeric" min={min} max={max} defaultValue={min} required />
             </label>
             {error && <p className={styles.formError} role="alert">{error}</p>}
-            <button type="submit" disabled={busy} className={site.buttonPrimary}>Send demo request</button>
+            <button type="submit" disabled={busy} className={site.buttonPrimary}>Send request</button>
           </form>
         </>
       )}

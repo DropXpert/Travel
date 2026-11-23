@@ -71,7 +71,7 @@ export function TripToolbar({ id, title, slug, local }: { id: string; title: str
       <p className={styles.toolbarStatus} role="status">{feedback}</p>
 
       <Dialog id="share-trip" title={local ? "Local trip link" : "Share this trip"} dialogRef={shareDialog}>
-        <p>{local ? "This link opens the demo trip in this browser only." : "Select and copy the link to share it with someone."}</p>
+        <p>{local ? "This link opens the trip in this browser only." : "Select and copy the link to share it with someone."}</p>
         <label className={styles.shareField}>
           Trip link
           <input readOnly value={shareLink} onFocus={(event) => event.currentTarget.select()} />

@@ -51,7 +51,7 @@ export function VerificationMethods({ requestedMethod }: { requestedMethod?: str
             <span className={styles.methodIcon}><MethodIcon size={24} aria-hidden="true" /></span>
             <h2 id="verification-methods-title">{method.title}</h2>
           </div>
-          <p className={styles.unavailable}>Verification isn’t available in this demo yet.</p>
+          <p className={styles.unavailable}>Identity checks are not available yet.</p>
           <dl className={styles.previewDetails}>
             <div><dt>What a live check could involve</dt><dd>{method.process}</dd></div>
             <div><dt>Why we would ask</dt><dd>An identity check would help confirm that an adult traveller matches the identity they use on Share Yarana.</dd></div>
@@ -65,7 +65,7 @@ export function VerificationMethods({ requestedMethod }: { requestedMethod?: str
         </>
       ) : (
         <>
-          <h2 id="verification-methods-title">Preview a verification method</h2>
+          <h2 id="verification-methods-title">How identity checks would work</h2>
           <p>These are proposed options. Availability and legal requirements would be reviewed before any method goes live.</p>
           <ul className={styles.methodList}>
             {methods.map(({ id, title, hint, icon: Icon }) => (

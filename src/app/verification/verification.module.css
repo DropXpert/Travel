@@ -1,7 +1,7 @@
 .page {
   display: grid;
   gap: clamp(1.6rem, 4vw, 3.15rem);
-  padding-block: clamp(1.35rem, 4vw, 3.2rem) clamp(1.75rem, 5vw, 3.8rem);
+  padding-block: var(--space-section);
 }
 
 .intro, .verification, .privacy { display: grid; gap: 1.1rem; }
@@ -14,8 +14,8 @@
 }
 .intro h1 {
   max-width: 21ch;
-  font: 800 clamp(2.35rem, 6.4vw, 4.3rem)/.99 var(--font-display);
-  letter-spacing: -.06em;
+  font: 800 var(--text-page-title)/1.2 var(--font-display);
+  letter-spacing: -.025em;
   text-wrap: balance;
 }
 .intro h1 span { color: var(--color-teal-dark); }
@@ -43,11 +43,11 @@
   background: #ffffff15;
 }
 :is(.methods, .why, .privacy, .safety) h2 {
-  font: 800 clamp(1.65rem, 3.3vw, 2.25rem)/1.08 var(--font-display);
+  font: 800 var(--text-section)/1.2 var(--font-display);
   letter-spacing: -.04em;
   text-wrap: balance;
 }
-.policy h2 { margin-block-end: .25rem; font: 800 1.4rem/1.12 var(--font-display); letter-spacing: -.025em; }
+.policy h2 { margin-block-end: .25rem; font: 800 var(--text-card-title)/1.25 var(--font-display); letter-spacing: -.025em; }
 .policy p { color: #e2f1ec; }
 
 .methods { min-width: 0; }

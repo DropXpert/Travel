@@ -1,4 +1,4 @@
-.workspace { padding-block: .65rem clamp(1.75rem, 4vw, 3.5rem); }
+.workspace { padding-block: .65rem var(--space-section); }
 .workspaceLinks { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .25rem .7rem; }
 .textLink {
   display: inline-flex;
@@ -32,8 +32,8 @@
 .tripIdentity { display: grid; align-content: center; gap: .5rem; min-width: 0; padding: clamp(.95rem, 3vw, 1.9rem); }
 .eyebrow { color: var(--color-teal-dark); font-size: var(--text-label); font-weight: 740; }
 .tripIdentity h1 {
-  font: 800 clamp(2.05rem, 6vw, 3.8rem)/1.01 var(--font-display);
-  letter-spacing: -.055em;
+  font: 800 var(--text-page-title)/1.2 var(--font-display);
+  letter-spacing: -.025em;
   text-wrap: balance;
 }
 .tripFacts { display: flex; flex-wrap: wrap; gap: .22rem .75rem; }
@@ -53,10 +53,10 @@
 .capacity > div { display: flex; flex-direction: column-reverse; justify-content: start; gap: .2rem; padding-inline: .35rem; }
 .capacity > div + div { border-inline-start: 1px solid var(--color-divider); }
 .capacity dt { color: var(--color-ink-muted); font-size: var(--text-meta); font-weight: 620; line-height: 1.18; overflow-wrap: anywhere; }
-.capacity dd { color: var(--color-teal-dark); font: 800 1.65rem/1 var(--font-display); }
+.capacity dd { color: var(--color-teal-dark); font: 800 var(--text-card-title)/1.25 var(--font-display); }
 .layout { display: grid; gap: 1.6rem; margin-block-start: clamp(1.35rem, 3vw, 2.25rem); }
 .inbox, .rail { min-width: 0; }
-.inbox h2, .rail h2 { font: 800 clamp(1.6rem, 3.5vw, 2.1rem)/1.1 var(--font-display); letter-spacing: -.035em; }
+.inbox h2, .rail h2 { font: 800 var(--text-section)/1.2 var(--font-display); letter-spacing: -.035em; }
 .lead { margin-block: .3rem .8rem; color: var(--color-ink-muted); }
 .filters { display: flex; flex-wrap: wrap; gap: .3rem; margin-block-end: .85rem; }
 .filters button {
@@ -83,7 +83,7 @@
 .empty { color: var(--color-ink-muted); }
 .requestHeading { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem .65rem; }
 .requestHeading > div { min-width: 0; }
-.requestHeading h3 { font: 800 1.42rem/1.13 var(--font-display); letter-spacing: -.026em; }
+.requestHeading h3 { font: 800 var(--text-card-title)/1.25 var(--font-display); letter-spacing: -.026em; }
 .requestHeading p, .rosterIdentity p { color: var(--color-ink-muted); font-size: var(--text-label); }
 .workspace .avatar { width: 2.75rem; height: 2.75rem; border-width: .15rem; font-size: 1.05rem; }
 .status {
@@ -126,7 +126,7 @@
 .profile p { color: var(--color-ink-muted); }
 .interests { display: flex; flex-wrap: wrap; gap: .35rem; }
 .interests li { padding: .22rem .55rem; border-radius: .55rem; background: var(--color-teal-soft); color: var(--color-teal-dark); font-size: var(--text-label); font-weight: 650; }
-.declineConfirm { min-height: 3rem; padding: .62rem 1rem; border-radius: var(--radius-control); background: var(--color-danger); color: white; font-size: var(--text-label); font-weight: 710; }
+.declineConfirm { min-height: var(--spacing-touch); padding: .62rem 1rem; border-radius: var(--radius-control); background: var(--color-danger); color: white; font-size: var(--text-label); font-weight: 710; }
 
 @media (width <= 360px) {
   .filters { column-gap: .23rem; }
@@ -143,7 +143,7 @@
 @media (width >= 900px) {
   .trip { grid-template-columns: minmax(0, .78fr) minmax(0, 1fr); }
   .cover { min-height: 14.5rem; aspect-ratio: auto; border-radius: calc(var(--radius-card) - 1px) 0 0 calc(var(--radius-card) - 1px); }
-  .tripIdentity h1 { font-size: clamp(2.75rem, 4.4vw, 3.8rem); text-wrap: initial; }
+  .tripIdentity h1 { font-size: var(--text-page-title); text-wrap: initial; }
 }
 @media (width >= 1024px) {
   .workspace { max-width: 68rem; }

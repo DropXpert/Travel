@@ -93,8 +93,8 @@ function CommunityCard({ community, lead, wide, eager, onOpen }: {
           <span><AccessIcon size={16} aria-hidden="true" />{participationLabels[participation]}</span>
           <div className={styles.cardActions}>
             <Link href={communityHref(community.id)} className={styles.detailsLink} aria-label={"View community, " + name}>View community</Link>
-            <button type="button" className={styles.previewButton} aria-haspopup="dialog" aria-label={"Preview group, " + name} onClick={onOpen}>
-              Preview group
+            <button type="button" className={styles.previewButton} aria-haspopup="dialog" aria-label={"View group, " + name} onClick={onOpen}>
+              View group
             </button>
           </div>
         </div>
@@ -187,7 +187,7 @@ export function CommunityDiscovery({ communities }: { communities: readonly Disc
       <section className={site.container + " " + styles.results} aria-labelledby="community-results">
         <div className={styles.resultsBar}>
           <h2 id="community-results" aria-live="polite">
-            {results.length} demo {results.length === 1 ? "community" : "communities"}{city && " in " + city}
+            {results.length} {results.length === 1 ? "community" : "communities"}{city && " in " + city}
           </h2>
           {hasFilters && <button type="button" className={styles.resetButton} onClick={resetFilters}>Reset filters</button>}
         </div>
