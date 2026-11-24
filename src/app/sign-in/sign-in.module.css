@@ -107,7 +107,7 @@
 .form, .field { display: grid; min-width: 0; }
 .form { gap: .8rem; }
 .field { gap: .3rem; }
-.field label, .travellers legend { font-size: var(--text-label); font-weight: 730; }
+.field label { font-size: var(--text-label); font-weight: 730; }
 .field > input, .mobileInput {
   width: 100%;
   min-width: 0;
@@ -137,40 +137,6 @@
 .field > input[aria-invalid="true"], .mobileInput:has(input[aria-invalid="true"]) { border-color: var(--color-danger); }
 .error { color: var(--color-danger); font-size: var(--text-label); font-weight: 650; }
 
-.travellers { min-inline-size: 0; }
-.travellers legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: .15rem .6rem;
-  width: 100%;
-  margin-block-end: .4rem;
-}
-.travellers legend span { color: var(--color-ink-muted); font-size: var(--text-meta); font-weight: 520; }
-.options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .4rem; }
-.option { display: grid; min-width: 0; cursor: pointer; }
-.optionBody {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  gap: .2rem;
-  min-height: var(--spacing-touch);
-  padding: .55rem .45rem;
-  border: 1px solid var(--color-control-border);
-  border-radius: var(--radius-control);
-  background: var(--color-surface);
-  overflow-wrap: anywhere;
-  line-height: 1.2;
-}
-.optionBody svg { margin-block-end: .17rem; color: var(--color-teal-dark); }
-.optionBody strong { font-size: var(--text-label); }
-.optionBody > span { color: var(--color-ink-muted); font-size: var(--text-meta); }
-.option input:checked + .optionBody {
-  border-color: var(--color-teal-dark);
-  background: var(--color-teal-soft);
-  box-shadow: inset 0 0 0 1px var(--color-teal-dark);
-}
-.option input:focus-visible + .optionBody { outline: 2px solid var(--color-teal-dark); outline-offset: 2px; }
-
 .fullButton { width: 100%; cursor: pointer; }
 .form .fullButton { margin-block-start: .12rem; }
 .confirmation { display: grid; align-content: start; justify-items: start; gap: .65rem; margin-block-start: .35rem; }
@@ -183,7 +149,6 @@
   background: var(--color-teal-soft);
   color: var(--color-teal-dark);
 }
-.confirmation p.selection { color: var(--color-teal-dark); font-size: var(--text-label); font-weight: 680; }
 .confirmation .fullButton { margin-block-start: .35rem; }
 
 @media (width >= 640px) {
@@ -193,7 +158,6 @@
   .header { min-height: 4.5rem; }
   .layout { gap: 1.45rem; }
   .panel { gap: 1rem; }
-  .optionBody { padding: .7rem .65rem; }
 }
 
 @media (width >= 900px) {
@@ -213,6 +177,62 @@
 
 @media (hover: hover) {
   .switcher a:not([aria-current="page"]):hover { background: var(--color-teal-soft); }
-  .option:hover .optionBody { border-color: var(--color-teal-dark); }
   .photo a:hover { text-decoration: underline; text-underline-offset: .13em; }
+}
+
+.methods { display: grid; gap: .75rem; }
+.methodButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid #747775;
+  border-radius: 4px;
+  background: #fff;
+  color: #1f1f1f;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  cursor: pointer;
+}
+.methodButton > :first-child { flex: none; }
+.methodButton > span { flex: 1; text-align: center; padding-inline-end: 30px; }
+.googleButton { font-family: var(--font-google-sans), var(--font-sans); }
+.googleButton img { width: 20px; height: auto; }
+.phoneButton > svg { color: var(--color-teal-dark); }
+.flowSteps { display: grid; gap: .65rem; padding-inline-start: 1.25rem; list-style: decimal; color: var(--color-ink-muted); }
+.flowSteps li::marker { color: var(--color-teal-dark); font-weight: 700; }
+.panel { overflow-wrap: anywhere; }
+.otpPreview { min-width: 0; width: 100%; margin-block: .35rem; }
+.otpPreview legend { font: 800 var(--text-card-title)/1.3 var(--font-display); }
+.otpDigits { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-top: .9rem; }
+.otpDigits input {
+  min-width: 0;
+  width: 100%;
+  height: 56px;
+  border: 1px solid var(--color-control-border);
+  border-radius: .65rem;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: 800 1.5rem/1 var(--font-display);
+  text-align: center;
+  caret-color: var(--color-teal-dark);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+.otpDigits input[data-filled] { background: var(--color-teal-soft); border-color: var(--color-teal-dark); animation: digitIn 180ms ease-out; }
+.otpDigits input:focus { outline: 2px solid var(--color-teal-dark); outline-offset: 2px; box-shadow: 0 0 0 4px var(--color-teal-soft); }
+.otpProgress { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-top: .7rem; }
+.otpProgress span { height: 3px; border-radius: 2px; background: var(--color-divider); transition: background-color 180ms ease; }
+.otpProgress span[data-filled] { background: var(--color-coral); }
+.otpFooter { display: flex; align-items: center; gap: .5rem; margin-top: .25rem; }
+.otpFooter p { flex: 1; min-width: 0; }
+.otpFooter button { flex: none; padding-inline: .3rem; color: var(--color-teal-dark); }
+@keyframes digitIn { from { transform: translateY(3px); opacity: .65; } to { transform: translateY(0); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .otpDigits input, .otpDigits input[data-filled], .otpProgress span { animation: none; transition: none; }
+}
+@media (hover: hover) {
+  .methodButton:hover { background: #f8faff; }
 }

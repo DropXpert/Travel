@@ -9,7 +9,7 @@ import styles from "./verification.module.css";
 
 export const metadata = publicPageMetadata(
   "Traveller Verification & Safety",
-  "Explore Share Yarana’s proposed identity checks, privacy approach and practical travel safety tips.",
+  "Understand required phone verification, separate government ID checks and travel safety on Share Yarana.",
   "/verification",
 );
 
@@ -52,10 +52,23 @@ export default async function VerificationPage({ searchParams }: {
             <span className={styles.shield}><Shield size={29} strokeWidth={1.7} aria-hidden="true" /></span>
             <div>
               <h2>Explore freely</h2>
-              <p>Anyone can browse trips. In the future, an identity check will be required to join or host a real trip.</p>
+              <p>Anyone can browse trips. Real participation will require phone verification and a separate government ID check. These checks are not active in the local demo.</p>
             </div>
           </div>
         </header>
+
+        <section className={styles.requirements} aria-label="Verification requirements">
+          <div>
+            <h2>Phone Verification <span>Required</span></h2>
+            <p>After Google sign-in, browse freely. Before requesting to join or creating a real trip, verify your phone by SMS OTP.</p>
+            <p>With Phone sign-in, the SMS check comes before signing in and browsing.</p>
+          </div>
+          <div>
+            <h2>Government ID Verification <span>Separate requirement</span></h2>
+            <p>Phone OTP confirms control of a number. It does not establish government ID verification.</p>
+            <p>A separate identity check will be required before joining or hosting. The methods below are proposals; no ID documents are collected here.</p>
+          </div>
+        </section>
 
         <div className={styles.verification}>
           <VerificationMethods requestedMethod={method} />

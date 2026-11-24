@@ -57,7 +57,7 @@ export function JoinRequestDialog({ tripId, title, hostName, account, spots, das
           <div className={site.verificationNotice + " " + styles.verificationNotice}>
             <Shield size={17} aria-hidden="true" />
             <div>
-              <p>Identity verification is a proposed requirement for real trips.</p>
+              <p>Real trips will require phone verification by SMS and a separate government ID check. This local demo stays open.</p>
               <Link href="/verification" target="_blank" rel="noopener noreferrer" className={site.verificationLink}>
                 Learn about verification<span className="sr-only"> (opens in a new tab)</span>
               </Link>

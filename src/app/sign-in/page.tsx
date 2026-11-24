@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
+import localFont from "next/font/local";
 import Link from "next/link";
 import { photos } from "@/data/trip-listings";
 import { safeAuthReturn } from "@/navigation/auth";
@@ -9,9 +10,16 @@ import site from "../_shared/site.module.css";
 import { AuthEntry } from "./auth-entry";
 import styles from "./sign-in.module.css";
 
+const googleSans = localFont({
+  src: "./google-sans-medium.woff2",
+  variable: "--font-google-sans",
+  weight: "500",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Login and Sign Up",
-  description: "Preview the Share Yarana account experience with sample details.",
+  title: "Sign In and Sign Up",
+  description: "Explore Share Yarana’s Google and Phone sign-in walkthrough. No account is created or verified.",
 };
 
 export default async function SignInPage({ searchParams }: {
@@ -22,7 +30,7 @@ export default async function SignInPage({ searchParams }: {
   const photo = photos.hero;
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page + " " + googleSans.variable}>
       <a className={site.skipLink} href="#auth-main">Skip to content</a>
       <header className={styles.header}>
         <SiteBrand href="/" />
@@ -39,7 +47,7 @@ export default async function SignInPage({ searchParams }: {
             </a>
           </figcaption>
         </figure>
-        <AuthEntry mode={mode === "signup" ? "signup" : "login"} returnTo={returnTo} />
+        <AuthEntry key={mode === "signup" ? "signup" : "login"} mode={mode === "signup" ? "signup" : "login"} returnTo={returnTo} />
       </main>
     </div>
   );

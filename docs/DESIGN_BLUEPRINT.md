@@ -152,3 +152,13 @@ The landing page gives public entry points into Explore and Community. Dashboard
 Use the shared type scale above across routes. Keep Nunito ExtraBold headings, the existing body font, brand assets and teal/coral palette. Use 24px section spacing on phones and 28px on larger screens where appropriate, 16px card corners, and 44px minimum action targets. Shared trip cards use a 3:2 photo and quiet borders rather than resting shadows.
 
 Action labels stay short: Publish Trip, Switch Traveller, Send request and Save changes. Explain fictional travellers and browser-local data in the switcher and at publishing/request actions. Retain Reset Demo Data and all privacy, safety, sample-account and unavailable-verification explanations. A listing preview is still a preview; account and verification screens do not perform real authentication or identity checks.
+
+### Google + Phone account entry (24 November 2026)
+
+`/sign-in` and `/sign-in?mode=signup` expose exactly two methods: Continue with Google and Continue with Phone. No email/password or email OTP entry exists. Registration asks for no display name or traveller type; existing onboarding still offers solo, couple and family preferences. Safe return URLs remain intact.
+
+Google opens an explanation only, with no OAuth request, popup, account selection or simulated success. Phone uses +91 and validates ten digits beginning with 6-9. The number exists only in the current input state and is cleared before the SMS explanation, when changing methods or when switching entry modes. Neither route persists phone data, emits an SMS or accepts an OTP as verification. The SMS explanation includes an animated six-digit interaction preview with numeric entry, paste, keyboard correction and reduced-motion support; sample digits exist only in component memory and are discarded when leaving that screen. No authentication or verification flag is set.
+
+Planned production participation requires two distinct checks. Google users can browse after sign-in, then must verify their phone by SMS and complete the separate government ID check before joining or hosting. Phone users complete SMS verification before signing in and browsing; government ID remains separate. The current browser-local demo is not gated by these future requirements.
+
+The Google control uses Google's supplied full-colour G and a locally served Google Sans Medium font limited to that button. Both method buttons have equal prominence and 48px minimum height. Existing Nunito headings, compact spacing, teal/coral colours and local fonts remain in place. See [Google's current branding guidance](https://developers.google.com/identity/branding-guidelines) and `docs/AUTH_UI_REPORT.md` for asset provenance and checks.

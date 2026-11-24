@@ -35,6 +35,7 @@ $env:NODE_PATH = Join-Path $demoTestTools "node_modules"
 $env:PLAYWRIGHT_SKIP_BROWSER_GC = "1"
 node (Join-Path $env:NODE_PATH "playwright/cli.js") install chromium
 node scripts/check-community-browser.cjs
+node scripts/check-auth-browser.cjs
 ```
 
 Set `SIDETRAIL_TEST_URL` to test an authorized HTTPS demo URL. Use a base URL without a trailing slash. The runner starts a separate browser context and exercises local creation, requests, approvals, cancellation and reset. To test Firefox or WebKit, install that browser with the same Playwright CLI and set `SIDETRAIL_BROWSER` to `firefox` or `webkit`. Test artifacts are written to the system temporary directory.

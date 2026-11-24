@@ -198,7 +198,7 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
             <div className={site.verificationNotice}>
               <Shield size={18} aria-hidden="true" />
               <div>
-                <p>Identity verification will be required before publishing a real trip.</p>
+                <p>Real hosting will require phone verification by SMS and a separate government ID check. This local demo stays open.</p>
                 <Link href="/verification" target="_blank" rel="noopener noreferrer" className={site.verificationLink}>
                   Learn about verification<span className="sr-only"> (opens in a new tab)</span>
                 </Link>
@@ -388,6 +388,7 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
 
       <Dialog id="listing-preview" title="Listing preview" dialogRef={preview} onClose={() => { setShowPreview(false); setPublishError(""); }}>
         <p>{published ? "Editing as " : "Publishing as "}{demoProfileFor(account).displayName}. Use fictional details only. The listing stays in this browser.</p>
+        <p className={site.previewNote}>For real trips, phone verification by SMS and a separate government ID check will be required.</p>
         {showPreview && <DraftPreview draft={draft} cover={cover} />}
         {publishError && <p role="alert" className={styles.fieldError}>{publishError}</p>}
         <div className={site.dialogActions}>

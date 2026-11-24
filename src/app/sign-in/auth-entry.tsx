@@ -1,140 +1,184 @@
 "use client";
 
-import { MessageSquareText, UserRound, Users, UsersRound } from "lucide-react";
+import { MessageSquareText, Phone } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { profileTypeLabels, type TravellerGroup } from "@/domain/travel";
 import { authHref, onboardingHref, type AuthMode } from "@/navigation/auth";
 import site from "../_shared/site.module.css";
 import styles from "./sign-in.module.css";
 
+type Step = "methods" | "phone" | "google-info" | "sms-info";
 const availableModes = [
-  { id: "login", label: "Login" },
+  { id: "login", label: "Sign In" },
   { id: "signup", label: "Sign Up" },
 ] as const;
 
-const travellerTypes = [
-  { id: "solo", icon: UserRound, description: "Find your crew." },
-  { id: "couple", icon: Users, description: "Explore together." },
-  { id: "family", icon: UsersRound, description: "Make memories outdoors." },
-] as const satisfies readonly { id: TravellerGroup; icon: typeof UserRound; description: string }[];
+function OtpEntryPreview() {
+  const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
+  const fields = useRef<(HTMLInputElement | null)[]>([]);
+  const filled = digits.filter(Boolean).length;
 
-function mobileError(value: string) {
-  const compact = value.replace(/[\s()-]/g, "").replace(/^\+91/, "");
-  if (!compact) return "Enter a mobile number.";
-  return /^[6-9][0-9]{9}$/.test(compact) ? "" : "Enter 10 digits starting with 6, 7, 8 or 9.";
+  function enter(index: number, text: string) {
+    const incoming = text.replace(/\D/g, "").slice(0, 6 - index);
+    setDigits(current => {
+      const next = [...current];
+      if (!incoming) next[index] = "";
+      else [...incoming].forEach((digit, offset) => { next[index + offset] = digit; });
+      return next;
+    });
+    if (incoming) fields.current[Math.min(index + incoming.length, 5)]?.focus();
+  }
+
+  return (
+    <fieldset className={styles.otpPreview} aria-describedby="otp-preview-note">
+      <legend>Try entering a code</legend>
+      <p id="otp-preview-note" className={styles.demoNote}>Use any six digits to try the animation. This does not verify your phone.</p>
+      <div className={styles.otpDigits}>
+        {digits.map((digit, index) => (
+          <input key={index} ref={field => { fields.current[index] = field; }}
+            type="text" inputMode="numeric" autoComplete="off" maxLength={6}
+            aria-label={`Digit ${index + 1} of 6`} value={digit} data-filled={Boolean(digit) || undefined}
+            onFocus={event => event.currentTarget.select()}
+            onChange={event => enter(index, event.currentTarget.value)}
+            onPaste={event => { event.preventDefault(); enter(index, event.clipboardData.getData("text")); }}
+            onKeyDown={event => {
+              if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+                event.preventDefault();
+                fields.current[Math.max(0, Math.min(5, index + (event.key === "ArrowLeft" ? -1 : 1)))]?.focus();
+              } else if (event.key === "Backspace" && !digit && index > 0) {
+                event.preventDefault();
+                setDigits(current => current.map((value, position) => position === index - 1 ? "" : value));
+                fields.current[index - 1]?.focus();
+              }
+            }} />
+        ))}
+      </div>
+      <div className={styles.otpProgress} aria-hidden="true">
+        {digits.map((digit, index) => <span key={index} data-filled={Boolean(digit) || undefined} />)}
+      </div>
+      <div className={styles.otpFooter}>
+        <p role="status" className={styles.demoNote}>{filled === 6 ? "All six digits entered. Preview only; nothing is verified." : `${filled} of 6 digits entered`}</p>
+        <button type="button" className={site.buttonText} onClick={() => {
+          setDigits(Array(6).fill(""));
+          fields.current[0]?.focus();
+        }}>Clear code</button>
+      </div>
+    </fieldset>
+  );
 }
 
 export function AuthEntry({ mode, returnTo }: { mode: AuthMode; returnTo: string }) {
-  const signUp = mode === "signup";
-  const [displayName, setDisplayName] = useState("");
+  const [step, setStep] = useState<Step>("methods");
   const [mobile, setMobile] = useState("");
-  const [traveller, setTraveller] = useState<TravellerGroup>();
-  const [attempt, setAttempt] = useState<AuthMode>();
-  const [preview, setPreview] = useState<AuthMode>();
-  const nameField = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState("");
+  const heading = useRef<HTMLHeadingElement>(null);
   const mobileField = useRef<HTMLInputElement>(null);
-  const previewHeading = useRef<HTMLHeadingElement>(null);
-  const showPreview = preview === mode;
-  const missingName = signUp && !displayName.trim();
-  const phoneError = mobileError(mobile);
-  const showNameError = attempt === mode && missingName;
-  const showPhoneError = attempt === mode && Boolean(phoneError);
+  const googleButton = useRef<HTMLButtonElement>(null);
+  const changingStep = useRef(false);
+  const explanation = step === "google-info" || step === "sms-info";
 
   useEffect(() => {
-    if (showPreview) previewHeading.current?.focus();
-  }, [showPreview]);
+    if (!changingStep.current) return;
+    changingStep.current = false;
+    if (step === "phone") mobileField.current?.focus();
+    else if (step === "methods") googleButton.current?.focus();
+    else heading.current?.focus();
+  }, [step]);
 
-  function continuePreview(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (missingName || phoneError) {
-      setAttempt(mode);
-      requestAnimationFrame(() => (missingName ? nameField : mobileField).current?.focus());
-      return;
-    }
-    setAttempt(undefined);
-    setPreview(mode);
+  function changeStep(next: Step) {
+    setMobile("");
+    setError("");
+    changingStep.current = true;
+    setStep(next);
   }
 
-  function editDetails() {
-    setPreview(undefined);
-    requestAnimationFrame(() => (signUp ? nameField : mobileField).current?.focus());
+  function explainSms(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!/^[6-9][0-9]{9}$/.test(mobile.trim())) {
+      setError(mobile.trim() ? "Enter 10 digits starting with 6, 7, 8 or 9." : "Enter a mobile number.");
+      mobileField.current?.focus();
+      return;
+    }
+    // Discard the input before showing information; this flow never authenticates.
+    changeStep("sms-info");
   }
 
   return (
     <section className={styles.panel} aria-labelledby="auth-title">
       <nav className={styles.switcher} aria-label="Account entry">
         {availableModes.map(({ id, label }) => (
-          <Link key={id} href={authHref(id, returnTo)} aria-current={id === mode ? "page" : undefined}
-            onNavigate={() => { setAttempt(undefined); setPreview(undefined); }}>
+          <Link key={id} href={authHref(id, returnTo)} aria-current={id === mode ? "page" : undefined}>
             {label}
           </Link>
         ))}
       </nav>
-
-      {showPreview ? (
+      {explanation ? (
         <div className={styles.confirmation}>
-          <span className={styles.previewIcon}><MessageSquareText size={25} strokeWidth={1.8} aria-hidden="true" /></span>
-          <h1 ref={previewHeading} id="auth-title" tabIndex={-1}>OTP preview<span>.</span></h1>
-          <p><strong>No OTP has been sent.</strong> On live Share Yarana, you’d enter a one-time code here to verify your mobile number.</p>
-          {signUp && traveller && <p className={styles.selection}>Traveller type · {profileTypeLabels[traveller]}</p>}
-          <p className={styles.demoNote}>Your details are never sent or saved.</p>
-          <Link href={onboardingHref(returnTo, signUp ? traveller : undefined)} className={site.buttonPrimary + " " + styles.fullButton}>
-            Set travel preferences
-          </Link>
-          <button type="button" className={site.buttonOutline + " " + styles.fullButton} onClick={editDetails}>Edit details</button>
+          {step === "sms-info" && <span className={styles.previewIcon}><MessageSquareText size={24} aria-hidden="true" /></span>}
+          <h1 ref={heading} id="auth-title" tabIndex={-1}>
+            {step === "google-info" ? "Google sign-in, explained." : "How SMS verification will work."}
+          </h1>
+          <p className={styles.demoNote}>
+            {step === "google-info"
+              ? "Google sign-in is not connected. No Google account has been accessed, and you are not signed in."
+              : "No SMS has been sent. You are not signed in, and your phone has not been verified. Your number is not saved."}
+          </p>
+          {step === "sms-info" && <OtpEntryPreview />}
+          {step === "google-info" ? (
+            <ol className={styles.flowSteps}>
+              <li>Choose your Google account on Google&apos;s secure sign-in screen.</li>
+              <li>Return to Share Yarana and browse trips.</li>
+              <li>Before joining or hosting a real trip, verify your phone by SMS OTP and complete the separate government ID check.</li>
+            </ol>
+          ) : (
+            <p>In the live service, an SMS code would confirm control of your number before you sign in and browse. A separate government ID check would still be required before joining or hosting a real trip.</p>
+          )}
+          <p className={styles.demoNote}>Phone OTP confirms control of a number, not government ID verification.</p>
+          <Link href="/verification" className={site.verificationLink}>See verification requirements</Link>
+          <Link href={onboardingHref(returnTo)} className={site.buttonPrimary + " " + styles.fullButton}>Try travel preferences</Link>
+          <p className={styles.demoNote}>You can explore the local walkthrough without creating an account.</p>
+          <button type="button" className={site.buttonOutline + " " + styles.fullButton} onClick={() => changeStep("methods")}>Back to sign-in methods</button>
         </div>
       ) : (
         <>
           <div className={styles.intro}>
-            <h1 id="auth-title">{signUp ? "Good trips start here" : "Welcome back, explorer"}<span>.</span></h1>
-            <p>{signUp ? "Registration is free. Meet your people and go somewhere new." : "Pick up where you left off."}</p>
+            <h1 id="auth-title">{step === "phone" ? "Continue with Phone" : mode === "signup" ? "Good trips start here" : "Welcome back, explorer"}<span>.</span></h1>
+            <p>{step === "phone" ? "Use a sample Indian mobile number to see the next step." : "Choose how you'd like to continue. It's free."}</p>
           </div>
-          <p className={styles.demoNote} id="auth-demo-note"><strong>Use sample details.</strong> This walkthrough creates no account and sends no OTP.</p>
-          <form className={styles.form} aria-describedby="auth-demo-note" onSubmit={continuePreview} noValidate autoComplete="off">
-            {signUp && (
-              <div className={styles.field}>
-                <label htmlFor="auth-name">Display name</label>
-                <input id="auth-name" ref={nameField} type="text" value={displayName} autoComplete="off"
-                  maxLength={80} required placeholder="Your display name"
-                  aria-invalid={showNameError || undefined} aria-describedby={showNameError ? "auth-name-error" : undefined}
-                  onChange={(event) => setDisplayName(event.currentTarget.value)} />
-                {showNameError && <p className={styles.error} id="auth-name-error" role="alert">Enter a display name.</p>}
-              </div>
-            )}
-            <div className={styles.field}>
-              <label htmlFor="auth-mobile">Mobile number</label>
-              <div className={styles.mobileInput}>
-                <span aria-hidden="true">+91</span>
-                <input id="auth-mobile" ref={mobileField} type="tel" inputMode="numeric" autoComplete="off"
-                  value={mobile} maxLength={24} required placeholder="10-digit mobile number"
-                  aria-invalid={showPhoneError || undefined}
-                  aria-describedby={showPhoneError ? "auth-country auth-mobile-error" : "auth-country"}
-                  onChange={(event) => setMobile(event.currentTarget.value)} />
-              </div>
-              <span id="auth-country" className="sr-only">India, country code +91.</span>
-              {showPhoneError && <p className={styles.error} id="auth-mobile-error" role="alert">{phoneError}</p>}
+          <p className={styles.demoNote} id="auth-demo-note">Frontend walkthrough only. No account is created, and no sign-in or verification takes place.</p>
+          {step === "methods" ? (
+            <div className={styles.methods} role="group" aria-label="Sign-in methods" aria-describedby="auth-demo-note">
+              <button ref={googleButton} type="button" className={styles.methodButton + " " + styles.googleButton} onClick={() => changeStep("google-info")}>
+                <Image src="/brand/google-g.png" width={200} height={204} alt="" unoptimized />
+                <span>Continue with Google</span>
+              </button>
+              <button type="button" className={styles.methodButton + " " + styles.phoneButton} onClick={() => changeStep("phone")}>
+                <Phone size={20} aria-hidden="true" /><span>Continue with Phone</span>
+              </button>
             </div>
-            {signUp && (
-              <fieldset className={styles.travellers}>
-                <legend>How do you travel? <span>Optional</span></legend>
-                <div className={styles.options}>
-                  {travellerTypes.map(({ id, icon: Icon, description }) => (
-                    <label className={styles.option} key={id}>
-                      <input type="radio" className="sr-only" name="traveller-type" value={id}
-                        checked={traveller === id} onChange={() => setTraveller(id)} />
-                      <span className={styles.optionBody}>
-                        <Icon size={19} strokeWidth={1.85} aria-hidden="true" />
-                        <strong>{profileTypeLabels[id]}</strong>
-                        <span>{description}</span>
-                      </span>
-                    </label>
-                  ))}
+          ) : (
+            <>
+              <form className={styles.form} aria-describedby="auth-demo-note phone-privacy" onSubmit={explainSms} noValidate autoComplete="off">
+                <div className={styles.field}>
+                  <label htmlFor="auth-mobile">Mobile number</label>
+                  <div className={styles.mobileInput}>
+                    <span aria-hidden="true">+91</span>
+                    <input id="auth-mobile" ref={mobileField} type="tel" inputMode="numeric" autoComplete="off"
+                      value={mobile} maxLength={24} required placeholder="10-digit mobile number"
+                      aria-invalid={Boolean(error) || undefined}
+                      aria-describedby={error ? "auth-country auth-mobile-error" : "auth-country"}
+                      onChange={(event) => setMobile(event.currentTarget.value)} />
+                  </div>
+                  <span id="auth-country" className="sr-only">India, country code +91.</span>
+                  {error && <p className={styles.error} id="auth-mobile-error" role="alert">{error}</p>}
                 </div>
-              </fieldset>
-            )}
-            <button type="submit" className={site.buttonPrimary + " " + styles.fullButton}>Continue</button>
-          </form>
+                <p id="phone-privacy" className={styles.demoNote}>Your number stays in this field only. It is never sent or saved.</p>
+                <button type="submit" className={site.buttonPrimary + " " + styles.fullButton}>Continue</button>
+              </form>
+              <button type="button" className={site.buttonOutline + " " + styles.fullButton} onClick={() => changeStep("methods")}>Back to sign-in methods</button>
+            </>
+          )}
         </>
       )}
     </section>
