@@ -56,7 +56,7 @@ export const communities: readonly Community[] = [
     groups: ["solo", "couple", "family"],
     activities: ["weekend-getaway", "hiking"],
     participation: "public",
-    expectations: "Share how much time you have and what pace works for your party. Check the route and shared costs before setting off.",
+    expectations: "Share how much time you have and what pace works for your party. Check the route and meeting point before setting off.",
     tripSlugs: ["nandi-hills-morning-hike", "coorg-coffee-country-road-trip"],
   },
   {
@@ -80,7 +80,7 @@ export const communities: readonly Community[] = [
     category: "road",
     photo: "coorg",
     description: "Scenic drives with time for roadside breakfasts, shared playlists and one more photo stop.",
-    about: "We enjoy the drive as much as getting there. Pick a scenic route together, agree on seats and shared costs, and leave enough time for breakfast and the photo stops along the way.",
+    about: "We enjoy the drive as much as getting there. Pick a scenic route together, agree on seats and pickup points, and leave enough time for breakfast and the photo stops along the way.",
     groups: ["solo", "couple", "family"],
     activities: ["road-trip", "photography"],
     participation: "public",
@@ -112,7 +112,7 @@ export const communities: readonly Community[] = [
     groups: ["couple"],
     activities: ["weekend-getaway", "photography"],
     participation: "private",
-    expectations: "Share the kind of weekend you both enjoy. Agree on the schedule and split costs with the group before committing.",
+    expectations: "Share the kind of weekend you both enjoy. Agree on the schedule and pace with the group before committing.",
     tripSlugs: [],
   },
   {

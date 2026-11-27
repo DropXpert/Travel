@@ -7,7 +7,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { profileTypeLabels, type TravellerGroup } from "@/domain/travel";
 import { ProfileAvatar } from "../_profile/profile-view";
 import site from "../_shared/site.module.css";
-import { ageBands, budgetBands, interestOptions, travelStyles } from "./onboarding-options";
+import { ageBands, interestOptions, travelStyles } from "./onboarding-options";
 import styles from "./onboarding.module.css";
 
 export interface TravellerOption {
@@ -23,7 +23,6 @@ type Choices = {
   interests: Interest[];
   city: string;
   style: string;
-  budget: string;
   activity: string;
   sharedStyle: string;
   childAge: string;
@@ -83,7 +82,7 @@ export function TravellerOnboarding({ options, preselected }: {
   const [step, setStep] = useState(0);
   const [triedContinue, setTriedContinue] = useState(false);
   const [choices, setChoices] = useState<Choices>({
-    group: preselected, interests: [], city: "", style: "", budget: "", activity: "", sharedStyle: "", childAge: "",
+    group: preselected, interests: [], city: "", style: "", activity: "", sharedStyle: "", childAge: "",
   });
   const [optionalOpen, setOptionalOpen] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
@@ -222,13 +221,6 @@ export function TravellerOnboarding({ options, preselected }: {
                     <select value={choices.activity} onChange={(event) => update({ activity: event.currentTarget.value })}>
                       <option value="">No preference</option>
                       {interestOptions.map(({ id, label }) => <option key={id} value={id}>{label}</option>)}
-                    </select>
-                  </label>
-                  <label className={styles.field}>
-                    Estimated travel budget per person
-                    <select value={choices.budget} onChange={(event) => update({ budget: event.currentTarget.value })}>
-                      <option value="">No preference</option>
-                      {budgetBands.map((band) => <option key={band}>{band}</option>)}
                     </select>
                   </label>
                   {choices.group === "couple" && (

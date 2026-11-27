@@ -3,7 +3,7 @@
 import { CalendarDays, Clock3, MapPin, Mountain, Route, ShieldCheck, UsersRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { activityLabels, availableSpots, travellerGroupLabels, travellerHref, travellerInitials, tripHostName, sharedExpenseNote, requestStatusLabels } from "@/domain/travel";
+import { activityLabels, availableSpots, travellerGroupLabels, travellerHref, travellerInitials, tripHostName, requestStatusLabels } from "@/domain/travel";
 import { DialogButton } from "../../_shared/dialog-button";
 import { demoProfileFor, useDemoTravel } from "../../_shared/demo-travel";
 import { tripGroupHref } from "../../_shared/trip-navigation";
@@ -26,8 +26,7 @@ export function TripDetails({ slug }: { slug: string }) {
     <Link className={site.buttonOutline} href="/explore">Explore trips</Link>
   </div>;
 
-  const { trip, host, photo, date, cost, local, cancelled } = listing;
-  const hasEstimate = (trip.estimatedSharePerPersonInr ?? 0) > 0;
+  const { trip, host, photo, date, local, cancelled } = listing;
   const hostName = tripHostName(trip, host);
   const hostCategory = host.group === "solo" ? "Solo traveller" : travellerGroupLabels[host.group];
   const groups = trip.welcomeGroups.map((group) => travellerGroupLabels[group]);
@@ -153,21 +152,10 @@ export function TripDetails({ slug }: { slug: string }) {
             {details?.suitability && <p>{details.suitability}</p>}
           </section>
 
-          <section className={styles.section} aria-labelledby="budget-title">
-            <h2 id="budget-title">Estimated trip budget</h2>
-            <p className={styles.budget}><strong>{cost}</strong> {hasEstimate && <span>approximate cost per person</span>}</p>
-            <p className={styles.expenseNotes}>
-              {details?.costNotes ?? (trip.estimatedSharePerPersonInr === 0
-                ? "No shared expenses are planned. Check any personal travel or food needs before setting off."
-                : "Check what the group plans to split and what you’ll cover separately.")}
-            </p>
-            <p>{sharedExpenseNote}</p>
-          </section>
-
           <section className={styles.safety} aria-labelledby="safety-title">
             <h2 id="safety-title"><ShieldCheck size={23} aria-hidden="true" />Before you set off</h2>
             <ul>
-              <li>Review the route, costs, and meeting arrangements with your host.</li>
+              <li>Review the route and meeting arrangements with your host.</li>
               <li>Speak with the host before travelling and share your plans with someone you trust.</li>
               <li>Avoid sending advance payments outside trusted channels.</li>
               <li>If something feels off, stop and report it through the platform where you were contacted.</li>
@@ -177,7 +165,6 @@ export function TripDetails({ slug }: { slug: string }) {
 
         <aside className={styles.joinPanel} aria-labelledby="join-title">
           <h2 id="join-title">{owner ? "Manage this trip" : "Join this trip"}</h2>
-          <p className={styles.panelBudget}><strong>{cost}</strong> {hasEstimate && <span>approximate cost per person</span>}</p>
           <p className={styles.panelAvailability}><UsersRound size={18} aria-hidden="true" />{availability}</p>
           <dl className={styles.panelFacts}>
             <div><dt>Dates</dt><dd>{date}</dd></div>
@@ -191,7 +178,6 @@ export function TripDetails({ slug }: { slug: string }) {
 
       <div className={styles.mobileAction} role="region" aria-label="Trip availability and join">
         <div>
-          <p><strong>{cost}</strong> {hasEstimate && <span>est. budget / person</span>}</p>
           <p>{availability}</p>
           {requestUnavailable && <p>{requestUnavailable}</p>}
         </div>

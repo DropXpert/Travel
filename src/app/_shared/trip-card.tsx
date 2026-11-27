@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { TripListing } from "@/data/trip-listings";
-import { activityLabels, availableSpots, travellerGroupLabels, travellerInitials, tripHostName, sharedExpenseNote } from "@/domain/travel";
+import { activityLabels, availableSpots, travellerGroupLabels, travellerInitials, tripHostName } from "@/domain/travel";
 import { useDemoTravel } from "./demo-travel";
 import { DialogButton } from "./dialog-button";
 import { Dialog } from "./dialog";
@@ -20,7 +20,7 @@ export function TripCard({ listing, showTravelDetails = false, eagerImage = fals
   linkToDetails?: boolean;
 }) {
   const { listings } = useDemoTravel();
-  const { trip, host, photo, date, cost, local, cancelled } = listings.find(({ trip }) => trip.id === listing.trip.id) ?? listing;
+  const { trip, host, photo, date, local, cancelled } = listings.find(({ trip }) => trip.id === listing.trip.id) ?? listing;
   const id = "preview-" + trip.slug;
   const available = availableSpots(trip);
   const availability = cancelled ? "Cancelled" : available === 1 ? "1 spot left" : available > 0 ? available + " spots left" : "Trip full";
@@ -68,10 +68,6 @@ export function TripCard({ listing, showTravelDetails = false, eagerImage = fals
           </p>
         )}
         <div className={styles.tripBottom}>
-          <div className={styles.tripCost}>
-            <strong>{cost}</strong>
-            {(trip.estimatedSharePerPersonInr ?? 0) > 0 && <span>est. budget / person</span>}
-          </div>
           <span className={styles.availability}><span aria-hidden="true" />{availability}</span>
         </div>
       </div>
@@ -83,12 +79,10 @@ export function TripCard({ listing, showTravelDetails = false, eagerImage = fals
           <div><dt>Departing from</dt><dd>{trip.departureCity}</dd></div>
           <div><dt>Difficulty</dt><dd className="capitalize">{trip.difficulty}</dd></div>
           <div><dt>Host</dt><dd>{hostName}</dd></div>
-          <div><dt>Estimated shared expenses per person</dt><dd>{cost}</dd></div>
           <div><dt>Availability</dt><dd>{availability}</dd></div>
           {showTravelDetails && <div><dt>Open to</dt><dd>{welcomeGroups}</dd></div>}
         </dl>
         <p>{host.bio}</p>
-        <p>{sharedExpenseNote}</p>
         <p className={styles.previewNote}>Free to join. Requests and host decisions stay in this browser.</p>
         <div className={styles.dialogActions}>
           <Link className={styles.buttonPrimary} href={tripHref(trip.slug)} onNavigate={() => rememberTripOpening(trip.slug)}>

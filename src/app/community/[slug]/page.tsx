@@ -21,7 +21,7 @@ const joinDialogId = "community-join-request";
 const guidelines = [
   "Respect fellow travellers and give everyone room to go at their own pace.",
   "Ask before sharing photos or contact details. Respect people’s privacy and boundaries.",
-  "Agree on shared costs and how you’ll split them before setting off.",
+  "Agree on the route and meeting point before setting off.",
   "Follow outdoor safety guidance and the safety plans your group has agreed on.",
   "Flag suspicious behaviour to the host or through reporting tools where available.",
 ] as const;

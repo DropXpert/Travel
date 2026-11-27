@@ -58,7 +58,17 @@ function OtpEntryPreview() {
         {digits.map((digit, index) => <span key={index} data-filled={Boolean(digit) || undefined} />)}
       </div>
       <div className={styles.otpFooter}>
-        <p role="status" className={styles.demoNote}>{filled === 6 ? "All six digits entered. Preview only; nothing is verified." : `${filled} of 6 digits entered`}</p>
+        <div role="status" className={styles.otpStatus}>
+          {filled === 6 ? (
+            <div className={styles.otpSuccess}>
+              <svg viewBox="0 0 40 40" aria-hidden="true">
+                <circle className={styles.successRing} cx="20" cy="20" r="17" pathLength="1" />
+                <path className={styles.successCheck} d="m12 20 5 5 11-11" pathLength="1" />
+              </svg>
+              <p><strong>Preview complete</strong><span>Animation only. Your phone is not verified.</span></p>
+            </div>
+          ) : <p className={styles.demoNote}>{filled} of 6 digits entered</p>}
+        </div>
         <button type="button" className={site.buttonText} onClick={() => {
           setDigits(Array(6).fill(""));
           fields.current[0]?.focus();

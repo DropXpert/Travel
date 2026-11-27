@@ -114,8 +114,13 @@ async function main() {
         await firstDigit.focus();
         await page.keyboard.type("482615");
         assert.deepEqual(await code.locator("input").evaluateAll(fields => fields.map(field => field.value)), [..."482615"]);
-        await code.getByRole("status").getByText("All six digits entered. Preview only; nothing is verified.", { exact: true }).waitFor();
+        await code.getByRole("status").getByText("Preview complete", { exact: true }).waitFor();
+        await code.getByText("Animation only. Your phone is not verified.", { exact: true }).waitFor();
+        const completion = code.getByRole("status").locator("svg");
+        assert.notEqual(await completion.locator("path").evaluate(el => getComputedStyle(el).animationName), "none");
+        assert.ok(await code.getByLabel("Digit 6 of 6").evaluate(el => el === document.activeElement), "completion keeps keyboard focus");
         await page.keyboard.press("Backspace");
+        assert.equal(await completion.count(), 0, "incomplete entry clears the success preview");
         await page.keyboard.press("Backspace");
         assert.ok(await code.getByLabel("Digit 5 of 6").evaluate(el => el === document.activeElement));
         await page.keyboard.press("ArrowLeft");
@@ -136,6 +141,7 @@ async function main() {
         assert.deepEqual(await storage(), before, "preview code is not stored");
         await page.emulateMedia({ reducedMotion: "reduce" });
         assert.equal(await firstDigit.evaluate(el => getComputedStyle(el).animationName), "none");
+        assert.deepEqual(await completion.locator("circle, path").evaluateAll(els => els.map(el => getComputedStyle(el).animationName)), ["none", "none"]);
         await page.emulateMedia({ reducedMotion: "no-preference" });
         if ([320, 375, 1440].includes(width)) await page.screenshot({ path: path.join(artifacts, "otp-" + mode + "-" + width + ".png"), fullPage: true });
         assert.doesNotMatch(await page.locator("main").innerText(), /9876501234/);

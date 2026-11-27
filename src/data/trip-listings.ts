@@ -1,5 +1,5 @@
 import { travellerProfiles, trips } from "@/data/fixtures";
-import { formatTripBudget, type TravellerGroup, type TravellerProfile, type Trip } from "@/domain/travel";
+import { type TravellerGroup, type TravellerProfile, type Trip } from "@/domain/travel";
 
 export interface TripListing {
   trip: Trip;
@@ -7,7 +7,6 @@ export interface TripListing {
   photo: { src: string; alt: string };
   suggestedFor: readonly TravellerGroup[];
   date: string;
-  cost: string;
   local?: boolean;
   cancelled?: boolean;
 }
@@ -127,6 +126,5 @@ export const tripListings: TripListing[] = trips.map((trip) => {
     photo: { src: photo.src, alt: photo.alt },
     suggestedFor,
     date: dateFormat.formatRange(new Date(trip.startsOn), new Date(trip.endsOn)),
-    cost: formatTripBudget((trip as Trip).estimatedSharePerPersonInr),
   };
 });

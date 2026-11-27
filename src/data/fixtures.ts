@@ -65,14 +65,12 @@ export const trips = [
     capacity: 8,
     confirmedTravellers: 4,
     welcomeGroups: allGroups,
-    estimatedSharePerPersonInr: 650,
     details: {
       description: "An early start from Pune for a climb to Sinhagad and a sunrise worth getting out of bed for. Come for the morning air, the views across the ridge, and an easy chat with people who like a good walk.",
       itinerary: [
         { title: "Pune to Sinhagad and back", note: "Head out for the sunrise hike, take a breather on the ridge, then make your way back to Pune." },
       ],
       suitability: "Expect a moderate uphill walk. Check the trail surface and pace with Meera if you’re coming as a family or are new to hiking.",
-      costNotes: "Treat the estimate as a starting point for splitting the day’s shared expenses. Check travel and any entry fees with Meera.",
     },
   },
   {
@@ -90,7 +88,6 @@ export const trips = [
     capacity: 10,
     confirmedTravellers: 5,
     welcomeGroups: allGroups,
-    estimatedSharePerPersonInr: 3800,
     details: {
       description: "A two-day road trip into Coorg’s coffee country with time for winding roads, good food and unhurried stops. Kavya and Dev are keeping the weekend loose enough for the group to choose what to linger over.",
       itinerary: [
@@ -115,7 +112,6 @@ export const trips = [
     capacity: 12,
     confirmedTravellers: 6,
     welcomeGroups: allGroups,
-    estimatedSharePerPersonInr: 2900,
     details: {
       description: "A relaxed weekend in Vagamon with rolling green hills and room to take the day at your own pace. The Nair family are planning it around short walks and slow mornings.",
       itinerary: [
@@ -140,11 +136,9 @@ export const trips = [
     capacity: 12,
     confirmedTravellers: 8,
     welcomeGroups: allGroups,
-    estimatedSharePerPersonInr: 2400,
     details: {
       description: "Meera is planning a weekend trek to Harishchandragad with fellow walkers from Pune. Work out the route together, share the ride and bring your own gear for a night near the trail.",
       suitability: "This is a challenging peer-planned trek. Discuss everyone’s experience, route conditions, fitness and gear with Meera before joining.",
-      costNotes: "Allow roughly ₹1,000 for shared transport, ₹600 for an overnight stay, ₹600 for food and ₹200 for common expenses per person. Agree on the plan and split together; nobody charges a hosting fee.",
     },
   },
   {
@@ -181,9 +175,8 @@ export const trips = [
     capacity: 10,
     confirmedTravellers: 6,
     welcomeGroups: allGroups,
-    estimatedSharePerPersonInr: 0,
     details: {
-      description: "Already in Udaipur? Join Kavya and Dev for relaxed walks along the public lakeside on either morning. Bring water and snacks from home. No shared transport, accommodation or paid activities are planned; any personal spending is your choice.",
+      description: "Already in Udaipur? Join Kavya and Dev for relaxed walks along the public lakeside on either morning. Bring water and snacks from home. Meet the group at the lakeside and explore at an easy pace.",
     },
   },
   {
@@ -202,7 +195,6 @@ export const trips = [
     capacity: 8,
     confirmedTravellers: 6,
     welcomeGroups: ["solo", "couple"],
-    estimatedSharePerPersonInr: 850,
     details: {
       description: "An early climb up Nandi Hills with Bengaluru Trail Circle, a volunteer walking group. The idea is to watch the light come up over the hills and head back to Bengaluru the same day.",
       itinerary: [

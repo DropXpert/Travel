@@ -141,7 +141,7 @@ export function ProfileView({ profile, cover, hostedTrips = [], own = false, act
             <summary>Community guidelines</summary>
             <ul>
               <li>Treat everyone with respect and honour their boundaries.</li>
-              <li>Agree on the route, cost and meeting plan before travelling.</li>
+              <li>Agree on the route and meeting plan before travelling.</li>
               <li>Keep personal contact and family information private.</li>
             </ul>
           </details>

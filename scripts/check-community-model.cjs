@@ -24,10 +24,9 @@ function load(file) {
   return mod.exports;
 }
 
-const { formatTripBudget } = load("src/domain/travel.ts");
 const { decodeDraft, emptyTripDraft, validateTripDraft, persistTripDraft, editTripDraft, discardTripDraft } = load("src/app/_shared/trip-draft.ts");
 const { tripListings } = load("src/data/trip-listings.ts");
-const { browseTrips, emptyFilters } = load("src/app/explore/browse-trips.ts");
+const { browseTrips, emptyFilters, readExploreState, exploreQuery } = load("src/app/explore/browse-trips.ts");
 const key = "sidetrail-trip-draft-v1";
 const bookmarkKey = "sidetrail-saved-trip-ids-v1";
 const validDraft = {
@@ -37,15 +36,10 @@ const validDraft = {
   cover: "/travel/coorg.webp", itinerary: [{ id: 1, title: "Drive", note: "Meet for breakfast" }],
   included: "Shared transport", excluded: "Personal snacks", costNotes: "Agree together",
 };
-for (const budget of ["", "0", "850.50"]) {
+// Retired amounts must not block editing or publishing an otherwise valid legacy draft.
+for (const budget of ["", "0", "850.50", "-1", "Infinity", "NaN", "abc"]) {
   assert.deepEqual(validateTripDraft({ ...validDraft, budget }, "2026-11-21"), {});
 }
-for (const budget of ["-1", "Infinity", "NaN", "abc"]) {
-  assert.ok(validateTripDraft({ ...validDraft, budget }, "2026-11-21").budget);
-}
-assert.equal(formatTripBudget(), "Budget not specified");
-assert.equal(formatTripBudget(0), "No expected expenses");
-assert.match(formatTripBudget(850), /850/);
 
 for (const kind of ["personal", "commercial"]) {
   const legacy = JSON.stringify({ ...validDraft, budget: "2400", kind, organizerName: "Fictional old host" });
@@ -104,19 +98,15 @@ assert.equal(discardTripDraft({ savedText: "stale", working: validDraft }), "cha
 assert.equal(discardTripDraft({ savedText, working: validDraft }), "discarded");
 assert.ok(storage.has(bookmarkKey));
 
-const state = { query: "", sort: "budget", filters: emptyFilters };
-const sorted = browseTrips(tripListings, state);
-assert.equal(sorted[0].trip.estimatedSharePerPersonInr, 0);
-assert.equal(sorted.at(-1).trip.estimatedSharePerPersonInr, undefined);
-assert.equal(sorted.length, tripListings.length);
-const noExpenses = browseTrips(tripListings, { ...state, filters: { ...emptyFilters, maxBudget: "0" } });
-assert.equal(noExpenses.length, 1);
-assert.equal(noExpenses[0].trip.id, "trip-udaipur");
-const range = browseTrips(tripListings, { ...state, filters: { ...emptyFilters, minBudget: "500", maxBudget: "1000" } });
-assert.ok(range.length > 0);
-assert.ok(range.every(({ trip }) => trip.estimatedSharePerPersonInr >= 500 && trip.estimatedSharePerPersonInr <= 1000));
+const state = { query: "", sort: "upcoming", filters: emptyFilters };
+const retiredFilters = readExploreState(new URLSearchParams("sort=budget&minBudget=500&maxBudget=1000&group=family"));
+assert.equal(retiredFilters.sort, "upcoming");
+assert.equal(exploreQuery(retiredFilters), "group=family");
+assert.deepEqual(browseTrips(tripListings, retiredFilters), browseTrips(tripListings, { ...state, filters: { ...emptyFilters, group: "family" } }));
+assert.equal(browseTrips(tripListings, state).length, tripListings.length);
+assert.ok(tripListings.every(listing => !("cost" in listing) && !("estimatedSharePerPersonInr" in listing.trip)));
 assert.equal(browseTrips(tripListings, { ...state, query: "Harishchandragad" })[0].trip.slug, "guided-harishchandragad-trek");
 assert.ok(tripListings.every(({ trip }) => !("kind" in trip) && !("pricePerPersonInr" in trip) && !("organizerName" in trip)));
 assert.ok(tripListings.every(({ trip, host }) => trip.hostId === host.id && trip.postedOn <= trip.startsOn
   && trip.startsOn <= trip.endsOn && trip.confirmedTravellers >= 0 && trip.confirmedTravellers <= trip.capacity));
-console.log("Community model checks passed: optional budgets, filters, legacy migration, backup failures, discard conflicts and bookmark preservation.");
+console.log("Community model checks passed: pricing-free listings, retired filters, legacy migration, backup failures, discard conflicts and bookmark preservation.");

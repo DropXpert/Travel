@@ -26,7 +26,7 @@ const privacy = [
 ];
 
 const safetyTips = [
-  { title: "Read the trip details", text: "Check the route, pace, costs and what the host expects from the group.", icon: CalendarDays },
+  { title: "Read the trip details", text: "Check the route, pace and what the host expects from the group.", icon: CalendarDays },
   { title: "Talk before meeting", text: "Ask questions and make sure everyone agrees on the plans.", icon: MessageCircle },
   { title: "Meet somewhere public", text: "Pick a well-used meeting point where you can arrive and leave on your own.", icon: MapPin },
   { title: "Share your plans", text: "Let someone you trust know where you’re going and when you expect to be back.", icon: Compass },

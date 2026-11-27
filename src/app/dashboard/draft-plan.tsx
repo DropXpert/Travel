@@ -7,7 +7,7 @@ import { useRef, useState, type FormEvent } from "react";
 import type { DraftCover } from "@/data/trip-covers";
 import { travellerGroupLabels } from "@/domain/travel";
 import { Dialog } from "../_shared/dialog";
-import { discardTripDraft, draftCost, draftDates, useTripDraft } from "../_shared/trip-draft";
+import { discardTripDraft, draftDates, useTripDraft } from "../_shared/trip-draft";
 import { TripPlanner } from "../_shared/trip-planner";
 import site from "../_shared/site.module.css";
 import { DraftPreview } from "../trips/new/draft-preview";
@@ -26,7 +26,6 @@ export function DraftPlan({ covers, emptyPhoto }: { covers: readonly DraftCover[
   const [showPreview, setShowPreview] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
-  const cost = draft ? draftCost(draft.budget) : "";
 
   function confirmDiscard(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -65,7 +64,7 @@ export function DraftPlan({ covers, emptyPhoto }: { covers: readonly DraftCover[
           <div className={styles.draftBody}>
             <p className={styles.draftStatus}>{working ? "Unsaved changes in this tab" : "Saved on this device"}</p>
             <h3>{draft.title.trim() || "Untitled trip plan"}</h3>
-            {migrated && <p>Your saved plan now uses the community-trip format. Review its estimated expenses in the editor.</p>}
+            {migrated && <p>Your saved plan now uses the community-trip format. Continue planning in the editor.</p>}
             <ul className={styles.facts}>
               <li><MapPin size={17} aria-hidden="true" />{draft.destination.trim() || "Destination to be decided"}</li>
               <li><CalendarDays size={17} aria-hidden="true" />{draftDates(draft.startsOn, draft.endsOn)}</li>
@@ -74,7 +73,6 @@ export function DraftPlan({ covers, emptyPhoto }: { covers: readonly DraftCover[
               </li>
             </ul>
             <p className={styles.draftType}>Community trip
-              {cost && <> · {cost} {Number(draft.budget) > 0 ? "estimated budget per person" : ""}</>}
             </p>
             <div className={styles.draftActions}>
               <Link href="/trips/new" className={site.buttonPrimary}>Continue editing</Link>

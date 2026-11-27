@@ -14,7 +14,6 @@ const categoryIcons = {
   all: Compass, solo: UserRound, couple: UsersRound, family: UsersRound, hiking: Mountain, weekend: TentTree, road: CarFront,
 };
 
-const money = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
 const date = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const queryChanged = "sidetrail-explore-query-changed";
 
@@ -36,12 +35,6 @@ function filterTags(filters: TripFilters) {
   if (filters.city) tags.push({ label: "From " + filters.city, reset: { city: "" } });
   if (filters.destination) tags.push({ label: filters.destination, reset: { destination: "" } });
   if (filters.group) tags.push({ label: travellerGroupLabels[filters.group], reset: { group: "" } });
-  if (filters.minBudget || filters.maxBudget) {
-    const min = filters.minBudget && money.format(Number(filters.minBudget));
-    const max = filters.maxBudget && money.format(Number(filters.maxBudget));
-    const label = min && max ? min + "–" + max : min ? min + "+" : "Up to " + max;
-    tags.push({ label, reset: { minBudget: "", maxBudget: "" } });
-  }
   if (filters.start || filters.end) {
     const start = filters.start && date.format(new Date(filters.start));
     const end = filters.end && date.format(new Date(filters.end));
@@ -191,7 +184,7 @@ export function ExploreTrips({ initialState }: { initialState: ExploreState }) {
           <div className={styles.empty}>
             <span className={styles.emptyIcon}><MapPinned size={26} aria-hidden="true" /></span>
             <h3>{query.trim() ? "No trips match that search" : "No trips fit these filters"}</h3>
-            <p>Try a nearby starting city, a wider budget, or a different travel style.</p>
+            <p>Try a nearby starting city, a different destination, or a different travel style.</p>
             <button type="button" className={site.buttonPrimary} onClick={clearFilters}>Clear filters</button>
           </div>
         )}

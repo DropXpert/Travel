@@ -1,5 +1,16 @@
 # Free community model — change report
 
+## 2026-11-27: focus on meeting fellow travellers
+
+Share Yarana now connects travellers without pricing or expense features. Removed estimated amounts, budget placeholders, shared-expense sections, budget filters/sorting, editor expense fields and onboarding budget preferences. Trip cards and join panels focus on people, plans and available spots. Updated host, community and profile copy to match. Safety guidance remains intact.
+
+The trip domain, fixture data and listing adapters no longer expose pricing. Legacy draft expense fields remain in the existing storage format solely to preserve saved data; they are neither rendered nor validated and never block publishing. Existing published trips retain their IDs and compatible data when edited. Storage keys, bookmarks, requests, approvals and capacity calculations are unchanged. Old Explore budget query parameters are ignored; other filters still apply.
+
+The earlier sections below record the previous optional-budget model and are retained as history. The current behavior is documented in `DESIGN_BLUEPRINT.md`.
+
+Validation for this update: ESLint, TypeScript, production build and community model checks passed. Chromium completed the full community regression (120 responsive checks and the connected publishing/request/approval journey) and authentication regression (54 layout/state checks), with no console/runtime errors. Widths: 320, 375, 390, 768, 1024 and 1440px. Legacy amount retention is checked through draft save, local publishing and published-trip editing; retired filters are ignored. Mobile Explore and desktop trip-detail screenshots were reviewed. Physical devices were not tested. Nothing was pushed or deployed.
+
+
 ## Product changes
 
 Share Yarana now uses one community-trip model. Registration, hosting, discovery, join requests and community participation are free. Shared travel expenses are optional estimates. Blank budgets mean “Budget not specified”; zero means “No expected expenses”. Share Yarana does not collect payments.

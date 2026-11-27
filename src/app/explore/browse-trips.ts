@@ -13,7 +13,6 @@ export const categories = [
 
 export const sortOptions = [
   { value: "upcoming", label: "Upcoming first" },
-  { value: "budget", label: "Lowest estimated budget" },
   { value: "newest", label: "Newest listings" },
 ] as const;
 
@@ -25,8 +24,6 @@ export interface TripFilters {
   city: string;
   destination: string;
   group: TravellerGroup | "";
-  minBudget: string;
-  maxBudget: string;
   start: string;
   end: string;
   spots: string;
@@ -39,7 +36,7 @@ export interface ExploreState {
 }
 
 export const emptyFilters: TripFilters = {
-  category: "all", city: "", destination: "", group: "", minBudget: "", maxBudget: "", start: "", end: "", spots: "",
+  category: "all", city: "", destination: "", group: "", start: "", end: "", spots: "",
 };
 
 const activitySearchWords: Record<Activity, string> = {
@@ -77,8 +74,6 @@ export function readTripFilters(params: { get: (name: string) => unknown }): Tri
     city: read("city"),
     destination: read("destination"),
     group: group === "solo" || group === "couple" || group === "family" ? group : "",
-    minBudget: validNumber(read("minBudget")),
-    maxBudget: validNumber(read("maxBudget")),
     start: validDate(read("start")),
     end: validDate(read("end")),
     spots: spots === "0" ? "" : spots,
@@ -130,13 +125,6 @@ export function browseTrips(listings: readonly TripListing[], { query, sort, fil
     if (filters.end && trip.endsOn > filters.end) return false;
     if (filters.spots && availableSpots(trip) < Number(filters.spots)) return false;
 
-    const cost = trip.estimatedSharePerPersonInr;
-    if ((filters.minBudget || filters.maxBudget) && cost === undefined) return false;
-    if (cost !== undefined) {
-      if (filters.minBudget && cost < Number(filters.minBudget)) return false;
-      if (filters.maxBudget && cost > Number(filters.maxBudget)) return false;
-    }
-
     const type = "community trip " + (trip.hostGroupName ?? "");
     const searchable = [
       trip.departureCity, trip.destination, trip.title, trip.activity, activityLabels[trip.activity],
@@ -146,10 +134,6 @@ export function browseTrips(listings: readonly TripListing[], { query, sort, fil
   });
 
   return matching.sort(({ trip: a }, { trip: b }) => {
-    if (sort === "budget") {
-      const costDifference = (a.estimatedSharePerPersonInr ?? Infinity) - (b.estimatedSharePerPersonInr ?? Infinity);
-      if (costDifference) return costDifference;
-    }
     if (sort === "newest") {
       const dateDifference = b.postedOn.localeCompare(a.postedOn);
       if (dateDifference) return dateDifference;

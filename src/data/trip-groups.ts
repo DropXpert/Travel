@@ -19,7 +19,7 @@ const fixtures: readonly GroupFixture[] = [{
   },
   announcements: [
     { title: "Pack for an early start", text: "Bring water, shoes with grip, and a light layer for the ridge." },
-    { title: "Agree on the ride together", text: "Check who needs a lift and agree on how to share the cost before setting out." },
+    { title: "Agree on the ride together", text: "Check who needs a lift and agree on the pickup points before setting out." },
   ],
   messages: [
     { id: "welcome", from: "traveller-meera", time: "18:10", text: "Hey everyone! The idea is an early start and a steady walk up to the ridge. We can work out the pickup plan together." },

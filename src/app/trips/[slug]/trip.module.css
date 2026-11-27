@@ -190,8 +190,7 @@
   font-weight: 650;
 }
 
-.budget, .panelBudget { display: flex; align-items: baseline; flex-wrap: wrap; gap: .15rem .4rem; }
-.budget strong, .panelBudget strong, .mobileAction strong {
+.mobileAction strong {
   color: var(--color-ink);
   font: 800 var(--text-card-title)/1.25 var(--font-display);
   letter-spacing: -.035em;
@@ -229,7 +228,6 @@
 .mobileAction p + p { margin-top: .2rem; color: var(--color-teal-dark); font-weight: 700; }
 .mobileAction strong { font-size: 1.4rem; }
 .mobileAction > div { flex: 1 1 7rem; min-width: 0; }
-.expenseNotes { white-space: pre-line; overflow-wrap: anywhere; }
 
 .requestTrip {
   display: grid;
@@ -330,8 +328,6 @@
     box-shadow: 0 8px 20px #2025250c;
   }
   .joinPanel h2 { font-size: 1.45rem; }
-  .panelBudget { color: var(--color-ink-muted); font-size: var(--text-label); }
-  .panelBudget strong { font-size: 2rem; }
   .panelAvailability { margin-top: .65rem; font-size: var(--text-label); }
   .panelFacts { display: grid; gap: .6rem; margin-block: .9rem; padding-block: .85rem; border-block: 1px solid var(--color-divider); }
   .panelFacts dt { color: var(--color-ink-muted); font-size: var(--text-meta); }

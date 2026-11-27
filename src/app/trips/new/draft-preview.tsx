@@ -1,8 +1,8 @@
 import { CalendarDays, ImageIcon, MapPin, Route, UsersRound } from "lucide-react";
 import Image from "next/image";
 import type { DraftCover } from "@/data/trip-covers";
-import { sharedExpenseNote, travellerGroupLabels } from "@/domain/travel";
-import { draftCost, draftDates, type TripDraft } from "../../_shared/trip-draft";
+import { travellerGroupLabels } from "@/domain/travel";
+import { draftDates, type TripDraft } from "../../_shared/trip-draft";
 import site from "../../_shared/site.module.css";
 import styles from "./create.module.css";
 
@@ -12,7 +12,6 @@ export function DraftPreview({ draft, cover, compact = false }: {
   compact?: boolean;
 }) {
   const groupNames = draft.groups.map((group) => travellerGroupLabels[group]);
-  const budget = draftCost(draft.budget);
   const spots = draft.spots || draft.capacity;
   const days = draft.itinerary.map((day, index) => ({ ...day, number: index + 1 }))
     .filter((day) => day.title.trim() || day.note.trim());
@@ -46,26 +45,16 @@ export function DraftPreview({ draft, cover, compact = false }: {
           <p><strong>You · host</strong><span>Community trip</span></p>
         </div>
         {groupNames.length > 0 && <p className={styles.previewFact}><UsersRound size={16} aria-hidden="true" />{groupNames.join(" · ")}</p>}
-        <div className={styles.previewCost}>
-          <p><strong>{budget}</strong> {Number(draft.budget) > 0 && <span>est. budget / person</span>}</p>
+        <div className={styles.previewAvailability}>
           {spots && <span>{Number(spots) === 0 ? "Trip full" : spots + (Number(spots) === 1 ? " spot available" : " spots available")}</span>}
         </div>
         {!compact && (
           <>
-            <p className={styles.hint}>{sharedExpenseNote}</p>
             <section className={styles.previewSection}>
               <h4>What to expect</h4>
               <p>{draft.description.trim() || "Trip description to be added."}</p>
               {draft.preferences.trim() && <p><strong>Traveller preferences</strong><br />{draft.preferences.trim()}</p>}
             </section>
-            {(draft.included.trim() || draft.excluded.trim() || draft.costNotes.trim()) && (
-              <section className={styles.previewSection}>
-                <h4>Estimated shared expenses</h4>
-                {draft.included.trim() && <p><strong>Covered by the estimate</strong><br />{draft.included.trim()}</p>}
-                {draft.excluded.trim() && <p><strong>Plan for separately</strong><br />{draft.excluded.trim()}</p>}
-                {draft.costNotes.trim() && <p><strong>Expense notes</strong><br />{draft.costNotes.trim()}</p>}
-              </section>
-            )}
             <section className={styles.previewSection}>
               <h4>Itinerary</h4>
               {days.length ? (

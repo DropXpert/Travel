@@ -5,7 +5,7 @@ import { demoRequestSeeds } from "@/data/host-workspace";
 import { publicTravellerProfiles } from "@/data/traveller-profiles";
 import { draftCovers } from "@/data/trip-covers";
 import { photos, tripListings, type TripListing } from "@/data/trip-listings";
-import { availableSpots, formatTripBudget, type Activity, type JoinRequest } from "@/domain/travel";
+import { availableSpots, type Activity, type JoinRequest } from "@/domain/travel";
 import { demoTripId } from "./demo-id";
 import { subscribeToStorage } from "./local-storage";
 import { decodeDraft, draftDates, todayInIndia, validateTripDraft, type TripDraft } from "./trip-draft";
@@ -49,7 +49,6 @@ function localListing({ id, hostId, postedOn, draft, cancelled }: PublishedTrip)
   return {
     local: true, cancelled, host: demoProfileFor(hostId),
     date: draftDates(draft.startsOn, draft.endsOn),
-    cost: formatTripBudget(draft.budget.trim() ? Number(draft.budget) : undefined),
     photo: draftCovers.find(({ src }) => src === draft.cover) ?? photos.hero,
     suggestedFor: draft.groups,
     trip: {
@@ -59,13 +58,10 @@ function localListing({ id, hostId, postedOn, draft, cancelled }: PublishedTrip)
       startsOn: draft.startsOn, endsOn: draft.endsOn,
       activity: activityByCategory[draft.category],
       difficulty: "easy", welcomeGroups: draft.groups,
-      estimatedSharePerPersonInr: draft.budget.trim() ? Number(draft.budget) : undefined,
       details: {
         description: draft.description.trim() || "The host is still putting together the trip description.",
         itinerary: draft.itinerary.filter(({ title, note }) => title.trim() || note.trim()),
         suitability: draft.preferences.trim(),
-        costNotes: [draft.included.trim() && "Covered by the estimate: " + draft.included.trim(),
-          draft.excluded.trim() && "Plan for separately: " + draft.excluded.trim(), draft.costNotes.trim()].filter(Boolean).join("\n") || undefined,
       },
     },
   };

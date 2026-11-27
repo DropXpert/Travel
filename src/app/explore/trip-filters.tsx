@@ -38,10 +38,6 @@ function FilterForm({ initial, cities, destinations, maxSpots, onApply }: Filter
   function applyFilters(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const filters = readTripFilters(new FormData(event.currentTarget));
-    if (filters.minBudget && filters.maxBudget && Number(filters.minBudget) > Number(filters.maxBudget)) {
-      setError("Enter a maximum budget that’s at least the minimum.");
-      return;
-    }
     if (filters.start && filters.end && filters.start > filters.end) {
       setError("Choose an end date on or after the start date.");
       return;
@@ -81,20 +77,6 @@ function FilterForm({ initial, cities, destinations, maxSpots, onApply }: Filter
             ))}
           </TripSelect>
         </label>
-        <fieldset>
-          <legend>Estimated budget per person (₹)</legend>
-          <p>Use 0 to find trips with no expected expenses. Budget ranges exclude unspecified estimates.</p>
-          <div className={styles.fieldPair}>
-            <label>
-              Minimum
-              <input name="minBudget" type="number" inputMode="numeric" min="0" max="9999999" placeholder="Any" value={draft.minBudget} onChange={changeField} />
-            </label>
-            <label>
-              Maximum
-              <input name="maxBudget" type="number" inputMode="numeric" min="0" max="9999999" placeholder="Any" value={draft.maxBudget} onChange={changeField} />
-            </label>
-          </div>
-        </fieldset>
         <fieldset>
           <legend>Trip dates</legend>
           <div className={styles.fieldPair + " " + styles.datePair}>

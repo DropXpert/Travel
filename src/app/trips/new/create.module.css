@@ -251,7 +251,7 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
 .previewHost p { display: grid; line-height: 1.35; font-size: var(--text-label); }
 .previewHost p span { color: var(--color-ink-muted); font-size: var(--text-meta); }
 
-.previewCost {
+.previewAvailability {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -263,8 +263,7 @@ fieldset > .fieldError { display: block; margin-top: .42rem; }
   color: var(--color-ink-muted);
   font-size: var(--text-meta);
 }
-.previewCost strong { color: var(--color-ink); font: 800 1.15rem/1.25 var(--font-display); }
-.previewCost > span { color: var(--color-teal-dark); font-weight: 700; }
+.previewAvailability > span { color: var(--color-teal-dark); font-weight: 700; }
 .previewSection { display: grid; gap: .35rem; padding-top: .7rem; border-top: 1px solid var(--color-divider); }
 .previewSection h4 { font: 800 1.14rem/1.2 var(--font-display); }
 .previewSection p { white-space: pre-wrap; color: var(--color-ink-muted); }

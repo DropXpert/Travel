@@ -51,7 +51,7 @@ export function TripDiscovery() {
       </div>
       <p className="sr-only" role="status">{feedback}</p>
       <ul className={styles.feed}>
-        {matching.map(({ trip, host, photo, date, cost, local }) => {
+        {matching.map(({ trip, host, photo, date, local }) => {
           const name = tripHostName(trip, host);
           const spots = availableSpots(trip);
           const owner = trip.hostId === state.account;
@@ -77,7 +77,7 @@ export function TripDiscovery() {
                   <p className={styles.facts}><MapPin size={15} aria-hidden="true" />From {trip.departureCity}</p>
                   <p className={styles.welcome}><UsersRound size={15} aria-hidden="true" /><span>Open to {trip.welcomeGroups.map(group => travellerGroupLabels[group]).join(" · ")}</span></p>
                   <div className={styles.cardBottom}>
-                    <div>{trip.estimatedSharePerPersonInr !== undefined && <p className={styles.budget}><strong>{cost}</strong>{trip.estimatedSharePerPersonInr > 0 && <small>estimated / person</small>}</p>}
+                    <div>
                       <span className={styles.spots}>{spots > 0 ? spots + (spots === 1 ? " spot left" : " spots left") : "Trip full"}</span>
                     </div>
                     <Link href={href} className={styles.join} onNavigate={() => rememberTripOpening(trip.slug)}>
@@ -91,7 +91,7 @@ export function TripDiscovery() {
         })}
       </ul>
       {matching.length === 0 && <p className={styles.empty}>No plans for this group yet. Try Everyone, or share a trip of your own.</p>}
-      <p className={styles.expenseNote}>Shared expenses are estimates agreed between travellers. Share Yarana collects no payments.</p>
+      <p className={styles.communityNote}>Meet fellow travellers. Make plans together.</p>
     </section>
   );
 }

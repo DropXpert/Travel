@@ -21,7 +21,7 @@ import styles from "./create.module.css";
 const groups = Object.keys(travellerGroupLabels) as TravellerGroup[];
 const sections = [
   ["trip-basics", "Trip basics"],
-  ["people-and-cost", "People & budget"],
+  ["people-and-cost", "People"],
   ["plan-and-cover", "Plan & cover"],
 ] as const;
 
@@ -182,7 +182,7 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
           </div>
           <h1>{published ? "Edit trip" : <>Where are we going<span>?</span></>}</h1>
           <p>{published ? "Update your published plan in this browser." : "Share a plan. Hosting is free."}</p>
-          {!published && migrated && <p role="status">Your saved plan now uses the community-trip format. Review any previous amount as an estimated shared expense before saving. Your original draft will be backed up on this device.</p>}
+          {!published && migrated && <p role="status">Your saved plan now uses the community-trip format. Your saved trip details are preserved. Your original draft will be backed up on this device.</p>}
           <div className={styles.progress}>
             <nav aria-label="Draft sections">
               {sections.map(([id, label]) => <a key={id} href={"#" + id}>{label}</a>)}
@@ -286,32 +286,6 @@ function Editor({ covers, published, account, ready }: { covers: readonly DraftC
               <textarea {...field("preferences")} rows={2} maxLength={draftLimits.preferences} placeholder="e.g. Happy to walk at a relaxed pace with plenty of breaks." />
             </label>
 
-            <div className={styles.subsection}>
-              <h3>Estimated trip budget</h3>
-              <label className={styles.field}>
-                <span>Approximate cost per person (₹) <span className={styles.optional}>Optional</span></span>
-                <input {...field("budget")} aria-describedby={errors.budget ? "budget-error budget-hint" : "budget-hint"} type="number" min="0" step="any" inputMode="decimal" placeholder="e.g. 850" />
-                <span id="budget-hint" className={styles.hint}>Leave blank if undecided. Enter 0 for no expected expenses. This is an estimate, not a booking fee; Share Yarana collects no payments.</span>
-                {errorFor("budget")}
-              </label>
-              <details>
-                <summary>Shared expense details (optional)</summary>
-                <div className={styles.pair}>
-                  <label className={styles.field}>
-                    <span>Expenses covered by the estimate <span className={styles.optional}>Optional</span></span>
-                    <textarea {...field("included")} rows={2} maxLength={draftLimits.included} placeholder="e.g. Transport ₹400, stay ₹300, food ₹150" />
-                  </label>
-                  <label className={styles.field}>
-                    <span>Expenses to plan for separately <span className={styles.optional}>Optional</span></span>
-                    <textarea {...field("excluded")} rows={2} maxLength={draftLimits.excluded} placeholder="e.g. Meals and entry fees" />
-                  </label>
-                </div>
-                <label className={styles.field}>
-                  <span>Shared expense notes <span className={styles.optional}>Optional</span></span>
-                  <textarea {...field("costNotes")} rows={2} maxLength={draftLimits.costNotes} placeholder="How will you split transport, accommodation, food or common expenses?" />
-                </label>
-              </details>
-            </div>
           </section>
 
           <section id="plan-and-cover" className={styles.section} aria-labelledby="plan-heading">

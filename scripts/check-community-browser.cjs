@@ -80,7 +80,7 @@ async function main() {
         await assertFits(route);
         await page.getByRole("link", { name: "Share Yarana home", exact: true }).first().waitFor();
         assert.match(await page.title(), /Share Yarana/);
-        assert.doesNotMatch(await page.locator("body").innerText(), /sidetrail|commercial trip|organiser price|book now|buy ticket|checkout|pay now/i);
+        assert.doesNotMatch(await page.locator("body").innerText(), /sidetrail|commercial trip|organiser price|book now|buy ticket|checkout|pay now|estimated.*(?:budget|expense)|budget not specified|no expected expenses|\u20b9/i);
         if (route === "/") {
           await page.getByRole("navigation", { name: "Share Yarana main navigation" }).waitFor();
           await page.getByText("Free to explore, free to host, free to join. Find your people. Share the adventure.").waitFor();
@@ -99,7 +99,7 @@ async function main() {
           await page.screenshot({ path: path.join(artifacts, width + route.replaceAll("/", "-").replaceAll("?", "-") + ".png"), fullPage: true });
         }
         if (width === 320 && route === "/trips/riverside-rishikesh-weekend") {
-          await page.screenshot({ path: path.join(artifacts, "320-budget-unspecified.png") });
+          await page.screenshot({ path: path.join(artifacts, "320-community-trip.png") });
         }
       }
       console.log("Responsive routes passed at " + width + "px");
@@ -159,7 +159,7 @@ async function main() {
     await reload();
     await page.waitForFunction(() => document.querySelector('[name="title"]')?.value === "My saved weekend");
     assert.equal(await page.locator('[name="title"]').inputValue(), legacy.title);
-    assert.equal(await page.locator('[name="budget"]').inputValue(), legacy.budget);
+    assert.equal(await page.locator('[name="budget"], [name="included"], [name="excluded"], [name="costNotes"]').count(), 0);
     assert.equal(await page.locator('[name="cover"]:checked').inputValue(), legacy.cover);
     assert.equal(await page.locator('[name="groups"]:checked').count(), 3);
     assert.equal(await page.locator('[name="kind"]').count(), 0);
@@ -167,35 +167,27 @@ async function main() {
     await assertFits("migrated draft");
     console.log("Legacy draft restored");
 
-    for (const [budget, text] of [["", "Budget not specified"], ["0", "No expected expenses"], ["850.50", "850.5"]]) {
-      await page.locator('[name="budget"]').fill(budget);
-      await page.getByRole("button", { name: "Preview listing", exact: true }).click();
-      await page.locator("#listing-preview[open]").waitFor();
-      assert.ok((await page.locator("#listing-preview").innerText()).includes(text));
-      await assertFits("listing preview " + budget);
-      await page.locator("#listing-preview").getByRole("button", { name: "Keep editing", exact: true }).click();
-    }
-    await page.locator('[name="budget"]').fill("-1");
     await page.getByRole("button", { name: "Preview listing", exact: true }).click();
-    await page.locator("#budget-error").waitFor();
-    assert.equal(await page.locator("#listing-preview[open]").count(), 0);
-    await page.locator('[name="budget"]').fill("0");
+    await page.locator("#listing-preview[open]").waitFor();
+    assert.doesNotMatch(await page.locator("#listing-preview").innerText(), /budget|expense|2400|\u20b9/i);
+    await assertFits("listing preview without pricing");
+    await page.locator("#listing-preview").getByRole("button", { name: "Keep editing", exact: true }).click();
     await page.getByRole("button", { name: "Save draft", exact: true }).click();
-    console.log("Budget previews and save passed");
+    console.log("Pricing-free preview and save passed");
     const storage = await page.evaluate(() => Object.fromEntries(Object.entries(localStorage)));
     assert.equal(storage["sidetrail-trip-draft-v1-original"], original);
     const saved = JSON.parse(storage["sidetrail-trip-draft-v1"]);
     assert.equal(saved.schemaVersion, 2);
     assert.equal("kind" in saved, false);
-    for (const key of ["title", "destination", "departureCity", "startsOn", "endsOn", "description", "itinerary", "cover", "included", "excluded", "costNotes"]) {
+    for (const key of ["title", "destination", "departureCity", "startsOn", "endsOn", "description", "itinerary", "cover", "budget", "included", "excluded", "costNotes"]) {
       assert.deepEqual(saved[key], legacy[key], key);
     }
     await reload();
-    await page.waitForFunction(() => document.querySelector('[name="budget"]')?.value === "0");
-    assert.equal(await page.locator('[name="budget"]').inputValue(), "0");
+    await page.waitForFunction(() => document.querySelector('[name="title"]')?.value === "My saved weekend");
+    assert.equal(await page.locator('[name="budget"]').count(), 0);
     await visit("/dashboard");
     await page.getByRole("heading", { name: "My saved weekend", exact: true }).waitFor();
-    assert.ok((await page.locator("main").innerText()).includes("No expected expenses"));
+    assert.doesNotMatch(await page.locator("main").innerText(), /budget|expense|2400|\u20b9/i);
     await page.getByRole("tab", { name: /Saved Trips/ }).click();
     await page.getByRole("link", { name: "Harishchandragad with fellow trekkers", exact: true }).waitFor();
     await page.getByRole("link", { name: "Harishchandragad with fellow trekkers", exact: true }).click();
@@ -205,7 +197,8 @@ async function main() {
     await visit("/explore");
     await page.getByRole("button", { name: "Filters", exact: true }).click();
     await page.locator("#trip-filters[open]").waitFor();
-    await page.locator('[name="maxBudget"]').fill("0");
+    assert.equal(await page.locator('[name="minBudget"], [name="maxBudget"]').count(), 0);
+    await page.locator('[name="destination"]').selectOption("Udaipur, Rajasthan");
     await page.getByRole("button", { name: "Apply filters", exact: true }).click();
     console.log("Filtered URL: " + page.url());
     await page.getByRole("button", { name: "Lakeside walks with new friends", exact: true }).waitFor();
@@ -216,7 +209,7 @@ async function main() {
     await page.waitForURL("**/trips/lake-pichola-weekend");
     await settleBeforeNavigation();
     await page.goBack();
-    await page.waitForURL("**/explore?maxBudget=0");
+    await page.waitForURL(/\/explore\?destination=Udaipur/);
     await page.getByRole("heading", { name: "1 trip", exact: true }).waitFor();
     assert.equal(await page.locator("dialog[open]").count(), 0);
     await page.goForward();
@@ -266,6 +259,8 @@ async function main() {
     const group = tripPath + "/group";
     const demoKey = "sidetrail-travel-demo-v1";
     await page.getByRole("heading", { name: title, exact: true }).waitFor();
+    assert.doesNotMatch(await page.locator("main").innerText(), /budget|expense|2400|\u20b9/i);
+    assert.equal(await page.evaluate(({ demoKey, tripId }) => JSON.parse(localStorage.getItem(demoKey)).trips.find(trip => trip.id === tripId).draft.budget, { demoKey, tripId }), legacy.budget, "publishing preserves retired draft data without displaying it");
     assert.equal(await page.getByRole("button", { name: "Request to Join", exact: true }).count(), 0, "host cannot request own trip");
 
     await switchDemo("traveller-nairs");
@@ -329,6 +324,7 @@ async function main() {
     await page.getByRole("button", { name: "Save changes", exact: true }).click();
     await page.waitForURL("**" + tripPath);
     await page.getByRole("heading", { name: revised, exact: true }).waitFor();
+    assert.equal(await page.evaluate(({ demoKey, tripId }) => JSON.parse(localStorage.getItem(demoKey)).trips.find(trip => trip.id === tripId).draft.budget, { demoKey, tripId }), legacy.budget, "editing preserves retired draft data");
     await page.getByRole("button", { name: "View local trip link", exact: true }).click();
     await page.getByText("This link opens the trip in this browser only.", { exact: true }).waitFor();
     await page.keyboard.press("Escape");
@@ -456,7 +452,7 @@ async function main() {
     await unsupported.close();
     console.log("Connected demo journey passed, including editing, eligibility, overbooking, cross-tab cancellation, reset and protected data.");
     assert.deepEqual(errors, [], "Browser console and runtime errors");
-    console.log("Browser flows passed: migrated drafts, blank/zero/positive budgets, validation, saved trips, filters, join preview and host acceptance.");
+    console.log("Browser flows passed: migrated drafts, pricing-free previews, validation, saved trips, filters, join preview and host acceptance.");
   } finally {
     await page.screenshot({ path: path.join(artifacts, "last-flow.png"), fullPage: true });
     fs.writeFileSync(path.join(artifacts, "results.json"), JSON.stringify({ results, errors }, null, 2));

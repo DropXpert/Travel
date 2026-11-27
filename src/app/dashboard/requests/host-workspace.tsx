@@ -20,7 +20,7 @@ type Decision = { requestId: string; status: "accepted" | "declined" };
 
 const safetyTips = [
   "Read the traveller’s profile and agree on the pace and expectations.",
-  "Be upfront about expenses and how the group will split them.",
+  "Agree on the meeting point and travel arrangements together.",
   "Keep personal details private and choose a public meeting point.",
   "Report suspicious behaviour through reporting tools where available.",
 ];

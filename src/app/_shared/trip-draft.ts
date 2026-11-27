@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useSyncExternalStore } from "react";
-import { formatTripBudget, type TravellerGroup } from "@/domain/travel";
+import { type TravellerGroup } from "@/domain/travel";
 import { subscribeToStorage } from "./local-storage";
 
 export const draftCategories = [
@@ -35,6 +35,7 @@ export interface TripDraft {
   capacity: string;
   spots: string;
   preferences: string;
+  // Legacy expense fields are preserved for saved data compatibility only; never rendered or validated.
   budget: string;
   included: string;
   excluded: string;
@@ -50,7 +51,7 @@ export const emptyTripDraft: TripDraft = {
 };
 
 export type DraftErrors = Partial<Record<
-  "title" | "destination" | "departureCity" | "startsOn" | "endsOn" | "groups" | "capacity" | "spots" | "budget",
+  "title" | "destination" | "departureCity" | "startsOn" | "endsOn" | "groups" | "capacity" | "spots",
   string
 >>;
 
@@ -68,11 +69,6 @@ export function draftDates(start: string, end: string) {
   return validDate(end) && end >= start
     ? draftDateFormat.formatRange(from, new Date(end))
     : draftDateFormat.format(from);
-}
-
-export function draftCost(budget: string) {
-  const amount = Number(budget);
-  return formatTripBudget(budget.trim() && Number.isFinite(amount) && amount >= 0 ? amount : undefined);
 }
 
 function validDate(value: unknown): value is string {
@@ -105,9 +101,6 @@ export function validateTripDraft(draft: TripDraft, today: string) {
   const spots = Number(draft.spots);
   if (draft.spots && (!Number.isSafeInteger(spots) || spots < 0 || (!errors.capacity && spots > capacity))) {
     errors.spots = "Enter a whole number between 0 and the maximum participants.";
-  }
-  if (draft.budget.trim() && (!Number.isFinite(Number(draft.budget)) || Number(draft.budget) < 0)) {
-    errors.budget = "Leave the budget empty or enter an amount of ₹0 or more.";
   }
   return errors;
 }

@@ -4,7 +4,7 @@ Share Yarana is a free, community-driven social travel frontend demo. All profil
 
 ## 1. Product vision and audience
 
-Help people across India find companions for hikes, treks, road trips and weekend breaks, then turn shared trips into lasting connections. The core journey is discover a trip, get to know the host, request places for your party and receive the host’s decision. Hosting is a parallel journey with a short listing form and a request inbox. Registration, listings, discovery, join requests and community participation are free. There are no platform fees, commissions or subscriptions. Optional shared travel expenses belong to the travellers; Share Yarana collects no payments.
+Help people across India find companions for hikes, treks, road trips and weekend breaks, then turn shared trips into lasting connections. The core journey is discover a trip, get to know the host, request places for your party and receive the host’s decision. Hosting is a parallel journey with a short listing form and a request inbox. Registration, listings, discovery, join requests and community participation are free. There are no platform fees, commissions or subscriptions. Share Yarana helps people meet and plan together. It has no pricing, budget or expense features and collects no payments.
 
 Solo travellers, couples and families have equal standing in discovery, hosting and community. Support first-time hikers, experienced trekkers and parents planning around pace, distance and school holidays. Treat group type as how someone travels. Match people around activities, departure city and pace.
 
@@ -12,7 +12,7 @@ Solo travellers, couples and families have equal standing in discovery, hosting 
 
 Use the horizontal Share Yarana logo in the header, footer and compact mobile trip toolbar. It pairs the coral sun and trail pin with the charcoal and teal wordmark. Use the square app mark as the browser icon. The intended production domain is `https://shareyarana.com`.
 
-Young, adventurous and welcoming. Speak like a friendly fellow traveller. Lead with specifics such as “Sunrise hike from Pune”, “2 spots left” and “Request sent to Meera”. Use a calm, candid tone for shared expenses, difficulty, request decisions and safety.
+Young, adventurous and welcoming. Speak like a friendly fellow traveller. Lead with specifics such as “Sunrise hike from Pune”, “2 spots left” and “Request sent to Meera”. Use a calm, candid tone for trip planning, difficulty, request decisions and safety.
 
 Use real, licensed travel photography from India, with a mix of landscapes and candid groups that reflects the audience. Give images room, with warm neutral surfaces and selective teal or coral accents. Use expressive headings, simple Lucide icons, and brief pressed and focus feedback. Keep gradients, overlays and motion to a minimum.
 
@@ -70,7 +70,7 @@ Use `next/image` with accurate `sizes`, intrinsic dimensions or a reserved aspec
 | --- | --- | --- |
 | `/` | Introduce the community with an authentic trip photo and an Explore trips action | Public |
 | `/explore` | Browse and filter community trips | Public |
-| `/trips/[slug]` | Review trip details, host, estimated expenses and availability, then request to join | Public detail and local demo join request |
+| `/trips/[slug]` | Review trip details, host and availability, then request to join | Public detail and local demo join request |
 | `/trips/new` | Draft, preview, publish and edit a local demo trip | Public demo |
 | `/community` | Discover people by city, interests and travel pace | Public discovery |
 | `/travellers/[handle]` | View a public traveller profile and their hosted trips | Public profile |
@@ -102,18 +102,18 @@ The landing page gives public entry points into Explore and Community. Dashboard
 
 ## 9. Trip listing and request UX
 
-1. **Browse.** Lead with results, activity chips and a Filters button. Filter by destination, departure city, dates, activity, traveller group, available spots and estimated budget. Use a bottom-sheet dialog on mobile. Numeric budget ranges exclude unspecified budgets. A maximum of 0 finds zero-expense trips. Lowest-budget sorting puts unspecified budgets last.
-2. **Scan.** Show the destination photo, title, dates, departure city, activity, host, places and optional estimated budget. All listings are community trips. Display positive estimates in INR with “est. budget / person”, zero as “No expected expenses”, and omitted amounts as “Budget not specified”. Never interpret an omitted budget as zero.
-3. **Decide.** Group details into overview, itinerary, suitability, estimated shared expenses and host information. Keep **Request to Join** reachable and sticky on mobile. Explain that travel budgets cover transport, accommodation, food or common expenses, are estimates rather than booking fees, and are never collected by Share Yarana. Show full status in place of the request action when appropriate.
+1. **Browse.** Lead with results, activity chips and a Filters button. Filter by destination, departure city, dates, activity, traveller group and available spots. Use a bottom-sheet dialog on mobile. Sort by upcoming or newest; old budget query parameters are ignored.
+2. **Scan.** Show the destination photo, title, dates, departure city, activity, host and available places. All listings are community trips. Do not display prices, budgets, expense estimates or zero-cost labels.
+3. **Decide.** Group details into overview, itinerary, suitability and host information. Keep **Request to Join** reachable and sticky on mobile alongside availability. Show full status in place of the request action when appropriate.
 4. **Request.** Joining is free. Confirm party size using the selected demo traveller’s category. Save a pending demo request under the selected traveller. My Trips shows Pending, Accepted, Declined and Cancelled. A trip has one request per demo traveller. The host can accept or decline eligible parties, with availability checked again at the point of acceptance. A traveller can cancel a pending or accepted request.
-5. **Host.** Start with title, destination, starting city, dates and description, then traveller eligibility and available places. Budget is optional. Keep itinerary, cover selection, Save draft and Preview listing. Publish Trip creates a listing with a stable ID. Edit or cancel it through My Trips > Hosting. Put optional expense details in a disclosure. Hosting feels like sharing a plan with friends and never asks for a listing type or selling price.
+5. **Host.** Start with title, destination, starting city, dates and description, then traveller eligibility and available places. Keep itinerary, cover selection, Save draft and Preview listing. Publish Trip creates a listing with a stable ID. Edit or cancel it through My Trips > Hosting. No budget or expense fields: hosting means sharing a plan and finding company.
 6. **Messaging.** “Find your people. Share the adventure.” Pair it with “Create trips, meet fellow travellers and explore together. No platform fees.” Explain free registration, hosting, joining and participation at relevant decision points without promotional FREE badges.
 
 ### Trip data and local draft compatibility
 
 - `src/data/fixtures.ts` provides sample trip facts and request seeds. `trip-listings.ts` derives fixture presentation. The browser store combines fixtures and published demo trips for discovery, details, hosting and group access. Public fixture cards use the same current availability.
-- `Trip` has one community model with optional `estimatedSharePerPersonInr`. There is no commercial discriminator, organiser identity or selling-price field. The former commercial sample is a peer-planned Harishchandragad outing. Its existing ID and URL are retained for bookmarks and links.
-- Continue reading `sidetrail-trip-draft-v1`. The decoder projects legacy drafts into the current form, ignoring removed fields while preserving compatible titles, locations, dates, descriptions, eligibility, capacity, itinerary, covers and expense notes. Existing amounts become editable estimates. A migration notice asks the traveller to review them.
+- `Trip` has one community model without pricing fields. Listing adapters expose no amounts or expense notes. Existing IDs and URLs remain unchanged for bookmarks and links.
+- Continue reading `sidetrail-trip-draft-v1` with the existing schema. Legacy budget, included, excluded and costNotes fields are retained only for storage compatibility, never rendered, used for filtering or validated. They remain intact when saving or editing older drafts and published demo trips. All other saved trip details remain usable.
 - Migration on read never writes or deletes storage. On the next explicit save, preserve the raw original under `sidetrail-trip-draft-v1-original` before writing `schemaVersion: 2` to the existing key. The backup is not overwritten. If backup or save fails, report the failure and keep the working draft. Malformed original content is also backed up before replacement.
 - Keep `sidetrail-saved-trip-ids-v1`, its contents and all trip IDs unchanged. Existing bookmark events, cross-tab updates and draft-discard conflict checks remain intact. Discard is still an explicit user action and does not remove the original migration backup.
 
@@ -137,7 +137,7 @@ The landing page gives public entry points into Explore and Community. Dashboard
 - Give users a visible way to report a trip or profile and block contact where applicable. Label the controls plainly. Explain what information a report sends and show a receipt once reporting exists.
 - Keep personal contact information, private join notes and precise meeting details out of public views. Use city-level locations in discovery. Share meeting arrangements only with accepted participants. A family profile represents the adult account holder. Keep children’s names, ages and photos out of public profile fields.
 - Verification badges belong in design concepts until a verification system is implemented. Never collect or store Aadhaar numbers, card images or related documents. Use fictional sample profiles, hosts and listings, with no implied endorsements.
-- Keep shared expense estimates transparent. Surface physical demands, gear, minimum age where relevant and the host’s change-of-plan expectations before someone requests a place. Preserve existing verification and safety UI. Do not collect Aadhaar information or introduce backend, database, payment, identity-provider or subscription integrations.
+- Surface physical demands, gear, minimum age where relevant and the host’s change-of-plan expectations before someone requests a place. Preserve existing verification and safety UI. Do not collect Aadhaar information or introduce backend, database, payment, identity-provider or subscription integrations.
 
 ## 12. Accessibility and interaction standards
 

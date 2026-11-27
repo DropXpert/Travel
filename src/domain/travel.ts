@@ -20,7 +20,6 @@ interface TripDetails {
   description: string;
   itinerary?: readonly { title: string; note: string }[];
   suitability?: string;
-  costNotes?: string;
 }
 
 interface TripSummary {
@@ -42,20 +41,7 @@ interface TripSummary {
 }
 
 export interface Trip extends TripSummary {
-  // Omitted means undecided; zero explicitly means no expected expenses.
-  estimatedSharePerPersonInr?: number;
   hostGroupName?: string;
-}
-
-export const sharedExpenseNote = "Travel budgets are estimates for transport, accommodation, food and common expenses. They are not booking fees. Share Yarana collects no payments.";
-
-const moneyFormat = new Intl.NumberFormat("en-IN", {
-  style: "currency", currency: "INR", maximumFractionDigits: 2,
-});
-
-export function formatTripBudget(amount?: number) {
-  if (amount === undefined) return "Budget not specified";
-  return amount === 0 ? "No expected expenses" : moneyFormat.format(amount);
 }
 
 export const activityLabels: Record<Activity, string> = {
