@@ -4,6 +4,7 @@ import { photos } from "@/data/trip-listings";
 import { publicPageMetadata } from "../_shared/public-metadata";
 import { SiteShell } from "../_shared/site-shell";
 import { CommunityDiscovery } from "./community-discovery";
+import { PhotoFeed } from "./photo-feed";
 
 export const metadata = publicPageMetadata(
   "Travel communities",
@@ -24,6 +25,7 @@ export default function CommunityPage() {
   return (
     <SiteShell isCommunity>
       <CommunityDiscovery communities={groups} />
+      <PhotoFeed />
     </SiteShell>
   );
 }

@@ -43,7 +43,7 @@ export function DemoAccount() {
         <p role="status">{notice}</p>
         {confirming ? (
           <>
-            <p>Reset demo data? This removes published demo trips and request changes and restores the sample accounts. Your drafts and bookmarks are kept.</p>
+            <p>Reset demo data? This removes published demo trips, request changes, photos, trip feedback and shared locations, and restores the sample accounts. Your drafts and bookmarks are kept.</p>
             <div className={styles.dialogActions}>
               <button ref={keep} className={styles.buttonOutline} type="button" onClick={() => changeConfirmation(false)}>Keep demo data</button>
               <button className={styles.buttonPrimary} type="button" onClick={async () => {

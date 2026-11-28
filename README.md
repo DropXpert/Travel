@@ -2,6 +2,8 @@
 
 Share Yarana is a free social travel demo for finding trips, hosting plans and travelling together. It uses fictional travellers and sample trips. Published demo trips, requests, drafts and bookmarks are stored in the browser. Data is scoped to the browser profile and site address.
 
+The Community page also previews photo posts; accepted travellers can leave trip feedback, and group members can add one-time location pins to Group Chat. These contributions stay in this browser and are not published online. Reset Demo Data removes them while keeping drafts and bookmarks. Photo uploads are resized and re-encoded locally without embedded metadata; the original file is never stored or transmitted.
+
 **Find your people. Share the adventure.** The intended production address is `https://shareyarana.com`. Opening a different site address starts with that origin’s own browser storage. Existing data stays available at the address where it was saved.
 
 Use the [five-minute tester guide](docs/DEMO_TESTING_GUIDE.md) for usability sessions. The [design blueprint](docs/DESIGN_BLUEPRINT.md), [connected demo report](docs/CONNECTED_DEMO_REPORT.md) and [frontend audit](docs/FRONTEND_AUDIT_REPORT.md) describe the existing app.
@@ -36,6 +38,7 @@ $env:PLAYWRIGHT_SKIP_BROWSER_GC = "1"
 node (Join-Path $env:NODE_PATH "playwright/cli.js") install chromium
 node scripts/check-community-browser.cjs
 node scripts/check-auth-browser.cjs
+node scripts/check-social-browser.cjs
 ```
 
 Set `SIDETRAIL_TEST_URL` to test an authorized HTTPS demo URL. Use a base URL without a trailing slash. The runner starts a separate browser context and exercises local creation, requests, approvals, cancellation and reset. To test Firefox or WebKit, install that browser with the same Playwright CLI and set `SIDETRAIL_BROWSER` to `firefox` or `webkit`. Test artifacts are written to the system temporary directory.

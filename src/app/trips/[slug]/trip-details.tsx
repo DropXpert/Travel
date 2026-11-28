@@ -11,6 +11,7 @@ import site from "../../_shared/site.module.css";
 import { JoinRequestDialog } from "./join-request";
 import { TripToolbar } from "./trip-toolbar";
 import styles from "./trip.module.css";
+import { TripReviews } from "./trip-reviews";
 
 function tripDuration(start: string, end: string) {
   const nights = (Date.parse(end) - Date.parse(start)) / 86_400_000;
@@ -151,6 +152,8 @@ export function TripDetails({ slug }: { slug: string }) {
             </div>
             {details?.suitability && <p>{details.suitability}</p>}
           </section>
+
+          <TripReviews tripId={trip.id} />
 
           <section className={styles.safety} aria-labelledby="safety-title">
             <h2 id="safety-title"><ShieldCheck size={23} aria-hidden="true" />Before you set off</h2>

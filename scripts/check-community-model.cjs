@@ -110,3 +110,51 @@ assert.ok(tripListings.every(({ trip }) => !("kind" in trip) && !("pricePerPerso
 assert.ok(tripListings.every(({ trip, host }) => trip.hostId === host.id && trip.postedOn <= trip.startsOn
   && trip.startsOn <= trip.endsOn && trip.confirmedTravellers >= 0 && trip.confirmedTravellers <= trip.capacity));
 console.log("Community model checks passed: pricing-free listings, retired filters, legacy migration, backup failures, discard conflicts and bookmark preservation.");
+
+async function socialChecks() {
+  const { decodeSocial, updateSocial } = load("src/app/_shared/social-state.ts");
+  const { updateDemo, demoStorageKey } = load("src/app/_shared/demo-travel.ts");
+  const { socialStorageKey } = load("src/app/_shared/local-storage.ts");
+  global.localStorage = window.localStorage;
+  Object.defineProperty(global, "navigator", { configurable: true, value: { locks: { request: async (_key, callback) => callback() } } });
+  const author = "traveller-meera";
+  const photo = { kind: "photo", image: "data:image/jpeg;base64,AA==", caption: "Trail together" };
+  const base = { id: "test", author, createdAt: "2026-11-28T10:00:00Z" };
+  for (const raw of ["{broken", JSON.stringify({ version: 2, entries: [] }), JSON.stringify({ version: 1, entries: [{ ...base, ...photo, image: "javascript:alert(1)" }] })]) assert.equal(decodeSocial(raw), null);
+  for (const coordinates of [{ latitude: 91, longitude: 0 }, { latitude: 1 }, { latitude: 0, longitude: -181 }]) {
+    assert.equal(decodeSocial(JSON.stringify({ version: 1, entries: [{ ...base, kind: "location", tripId: "trip-sinhagad", name: "Meet here", ...coordinates }] })), null);
+  }
+  assert.notEqual(await updateSocial({ add: photo }, "traveller-nairs"), "", "stale account cannot post");
+  assert.equal(await updateSocial({ add: photo }, author), "");
+  const originalPhoto = decodeSocial(storage.get(socialStorageKey))[0];
+  assert.ok((await updateDemo({ type: "switch", account: "traveller-kavya-dev" })).ok);
+  assert.notEqual(await updateSocial({ remove: originalPhoto.id }, "traveller-kavya-dev"), "", "other account cannot delete a post");
+  const review = { kind: "review", tripId: "trip-sinhagad", rating: 4, text: "Helpful planning" };
+  assert.notEqual(await updateSocial({ add: review }, "traveller-kavya-dev"), "", "pending travellers cannot review");
+  assert.notEqual(await updateSocial({ add: { kind: "location", tripId: "trip-sinhagad", name: "Meet here" } }, "traveller-kavya-dev"), "", "pending travellers cannot share pins");
+  await updateDemo({ type: "switch", account: author });
+  assert.ok((await updateDemo({ type: "decision", id: "request-sinhagad", status: "accepted" }, author)).ok);
+  await updateDemo({ type: "switch", account: "traveller-kavya-dev" });
+  assert.equal(await updateSocial({ add: review }, "traveller-kavya-dev"), "");
+  assert.equal(await updateSocial({ add: { ...review, rating: 5 } }, "traveller-kavya-dev"), "");
+  assert.equal(decodeSocial(storage.get(socialStorageKey)).filter(e => e.kind === "review").length, 1, "editing replaces own review");
+  await updateDemo({ type: "switch", account: author });
+  for (let i = 1; i < 6; i++) assert.equal(await updateSocial({ add: photo }, author), "");
+  assert.match(await updateSocial({ add: photo }, author), /full/);
+  const beforeFailure = storage.get(socialStorageKey);
+  failKey = socialStorageKey;
+  assert.notEqual(await updateSocial({ remove: originalPhoto.id }, author), "");
+  assert.equal(storage.get(socialStorageKey), beforeFailure, "failed writes preserve posts");
+  failKey = undefined;
+  storage.set(socialStorageKey, "{broken");
+  assert.notEqual(await updateSocial({ add: photo }, author), "");
+  assert.equal(storage.get(socialStorageKey), "{broken", "corruption is not silently overwritten");
+  const draftBefore = storage.get(key), bookmarksBefore = storage.get(bookmarkKey);
+  assert.ok((await updateDemo({ type: "reset" })).ok);
+  assert.equal(storage.has(socialStorageKey), false);
+  assert.equal(storage.has(demoStorageKey), false);
+  assert.equal(storage.get(key), draftBefore);
+  assert.equal(storage.get(bookmarkKey), bookmarksBefore);
+  console.log("Social model checks passed: validation, permissions, capacity, review edits, storage failures, corruption and reset protection.");
+}
+socialChecks().catch(error => { console.error(error); process.exitCode = 1; });

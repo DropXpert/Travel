@@ -1,0 +1,26 @@
+.section { padding-block: 1.4rem; min-width: 0; }
+.heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .75rem; margin-bottom: 1rem; }
+.section h2 { font: 800 var(--text-section)/1.25 var(--font-display); }
+.section h3 { font: 800 var(--text-card-title)/1.3 var(--font-display); }
+.note { color: var(--color-ink-muted); font-size: var(--text-label); margin-block: .4rem .75rem; }
+.form { display: grid; gap: .85rem; min-width: 0; }
+.form label { display: grid; gap: .35rem; font-weight: 700; font-size: var(--text-label); min-width: 0; }
+.form input, .form textarea, .form select { width: 100%; min-width: 0; min-height: 44px; padding: .6rem; font: inherit; font-size: 16px; font-weight: 400; border: 1px solid var(--color-control-border); border-radius: var(--radius-control); background: var(--color-surface); }
+.form textarea { resize: vertical; }
+.form .consent { display: flex; align-items: flex-start; gap: .6rem; min-height: 44px; font-weight: 400; }
+.consent input { width: 20px; height: 20px; min-height: 20px; margin-top: .2rem; flex: none; accent-color: var(--color-teal); }
+.actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.feed { display: grid; gap: 1rem; }
+.card { min-width: 0; overflow: hidden; border: 1px solid var(--color-divider); border-radius: var(--radius-card); background: var(--color-surface); }
+.photo { width: 100%; max-height: 28rem; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--radius-control); }
+.body { padding: .85rem; }
+.body p, .review p, .location p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.author { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; font-size: var(--text-label); margin-bottom: .5rem; }
+.author span { color: var(--color-ink-muted); }
+.review, .location { padding: .85rem; border-radius: var(--radius-control); background: var(--color-surface-soft); margin-block: .65rem; }
+.location { background: var(--color-teal-soft); }
+.location a { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-teal-dark); font-weight: 700; text-decoration: underline; }
+.empty { color: var(--color-ink-muted); padding-block: .6rem; }
+.status { color: var(--color-teal-dark); font-size: var(--text-label); overflow-wrap: anywhere; }
+@media (min-width: 640px) { .feed { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .feed { grid-template-columns: repeat(3, minmax(0, 1fr)); } }

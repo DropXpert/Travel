@@ -144,6 +144,7 @@ export function CommunityDiscovery({ communities }: { communities: readonly Disc
               <p className={styles.eyebrow}>Travel communities</p>
               <h1>Find your kind <span>of people.</span></h1>
               <p className={styles.subtitle}>From sunrise hikes to spontaneous weekend plans, find your crew. Community participation is free.</p>
+              <a className={site.buttonText} href="#traveller-photos">See and share traveller photos</a>
             </div>
             <div className={styles.controls}>
               <div className={styles.searchField} role="search">

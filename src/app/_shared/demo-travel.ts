@@ -7,7 +7,7 @@ import { draftCovers } from "@/data/trip-covers";
 import { photos, tripListings, type TripListing } from "@/data/trip-listings";
 import { availableSpots, type Activity, type JoinRequest } from "@/domain/travel";
 import { demoTripId } from "./demo-id";
-import { subscribeToStorage } from "./local-storage";
+import { socialStorageKey, subscribeToStorage } from "./local-storage";
 import { decodeDraft, draftDates, todayInIndia, validateTripDraft, type TripDraft } from "./trip-draft";
 
 const accounts = ["traveller-meera", "traveller-kavya-dev", "traveller-nairs"] as const;
@@ -32,6 +32,7 @@ type DemoState = {
 };
 const initial: DemoState = { version: 1, account: accounts[0], trips: [], requests: demoRequestSeeds };
 const key = "sidetrail-travel-demo-v1";
+export const demoStorageKey = key;
 const changed = key + "-changed";
 
 
@@ -151,7 +152,7 @@ const serverSnapshot = { state: initial, listings: demoListings(initial), ready:
 let cachedRaw: string | null | undefined;
 let cachedSnapshot = serverSnapshot;
 
-function getSnapshot() {
+export function getDemoSnapshot() {
   let raw: string | null;
   try { raw = localStorage.getItem(key); } catch { raw = ""; }
   if (raw !== cachedRaw) {
@@ -168,7 +169,7 @@ function subscribe(listener: () => void) {
 }
 
 export function useDemoTravel() {
-  return useSyncExternalStore(subscribe, getSnapshot, () => serverSnapshot);
+  return useSyncExternalStore(subscribe, getDemoSnapshot, () => serverSnapshot);
 }
 
 type Result = { ok: true; id?: string } | { ok: false; error: string };
@@ -194,6 +195,8 @@ export async function updateDemo(action: Action, expectedAccount?: string): Prom
         return { ok: true, id };
       }
       if (action.type === "reset") {
+        localStorage.removeItem(socialStorageKey);
+        window.dispatchEvent(new Event(socialStorageKey + "-changed"));
         localStorage.removeItem(key);
         window.dispatchEvent(new Event(changed));
         return { ok: true };

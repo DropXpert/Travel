@@ -1,3 +1,5 @@
+export const socialStorageKey = "share-yarana-social-demo-v1";
+
 export function subscribeToStorage(key: string, changed: string, listener: () => void) {
   function onStorage(event: StorageEvent) {
     if (event.key === key || event.key === null) listener();

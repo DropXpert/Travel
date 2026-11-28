@@ -11,6 +11,7 @@ import { demoProfileFor, useDemoTravel } from "../../../_shared/demo-travel";
 import { tripHref } from "../../../_shared/trip-navigation";
 import site from "../../../_shared/site.module.css";
 import styles from "./group.module.css";
+import { ChatLocation } from "./chat-location";
 
 const tabs = [
   { id: "overview", label: "Overview" },
@@ -208,10 +209,11 @@ function TripGroupSpace({ group }: { group: TripGroupDemo }) {
                   </li>
                 ))}
               </ol>
+              <ChatLocation tripId={trip.id} />
               <label className={styles.composer}>Message
                 <input disabled placeholder="Messaging is unavailable" aria-describedby="group-chat-note" />
               </label>
-              <p id="group-chat-note" className={styles.lead}>Sample messages only. Chat is not connected.</p>
+              <p id="group-chat-note" className={styles.lead}>Text messages are samples. Shared locations stay in this browser; chat is not connected.</p>
             </div>
           )}
 
